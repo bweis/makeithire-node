@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
-import '../semantic/dist/semantic.min.css';
+import {HashRouter, Route, Switch} from 'react-router-dom';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root'), // eslint-disable-line no-undef
-);
+// Containers
+import Full from './containers/Full.js'
+
+ReactDOM.render((
+    <HashRouter>
+        <Switch>
+            <Route path="/" name="Home" component={Full}/>
+        </Switch>
+    </HashRouter>
+), document.getElementById('root'));
