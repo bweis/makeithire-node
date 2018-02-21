@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {HashRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 // Containers
 import Full from './containers/Full.js'
+import 'bootstrap/dist/css/bootstrap.css';
+import styles from './index.css'
 
 ReactDOM.render((
-    <HashRouter>
+
+    <BrowserRouter>
         <Switch>
             <Route path="/" name="Home" component={Full}/>
         </Switch>
-    </HashRouter>
+    </BrowserRouter>
 ), document.getElementById('root'));

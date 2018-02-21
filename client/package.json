@@ -10,8 +10,13 @@
   },
   "dependencies": {
     "babel-plugin-transform-class-properties": "6.22.0",
-    "react": "15.6.0",
-    "react-dom": "15.4.0",
+    "bootstrap": "^4.0.0",
+    "popper": "^1.0.1",
+    "popper.js": "^1.12.9",
+    "react": "^15.6.0",
+    "react-dom": "^15.4.0",
+    "react-transition-group": "^1.1.2",
+    "reactstrap": "^5.0.0-beta",
     "semantic-ui-react": "0.78.2"
   },
   "scripts": {
