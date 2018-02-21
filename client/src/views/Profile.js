@@ -63,9 +63,17 @@ var degrees = [
     'Bachelor of Arts',
     'MBA',
     'PhD'
-]
+];
 
 class Profile extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {readOnly: true};
+        this._click = this._click.bind(this);
+    }
+    _click() {
+        this.setState(prevState => ({readOnly: !prevState.readOnly}))
+    }
     render() {
         return (
             <div>
@@ -81,9 +89,9 @@ class Profile extends Component {
                                 <h4>
                                     {user.firstName} {user.lastName}
                                 </h4>
-                                <Input className="profile-input align-middle" id="profile_email" type="email" value={user.email} readOnly/>
-                                <Input className="profile-input align-middle" id="profile_phoneNumber" type="email" value={user.phoneNumber} readOnly/>
-                                <Input className="profile-input align-middle" id="profile_university" type="select" value={user.university}>
+                                <Input className="profile-input align-middle" id="profile_email" type="email" defaultValue={user.email} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle" id="profile_phoneNumber" type="email" defaultValue={user.phoneNumber} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle" id="profile_university" type="select" defaultValue={user.university} readOnly={this.state.readOnly}>
                                     {universities.map(function(university, index){
                                         return <option key={ index }>{university}</option>;
                                     })}
@@ -93,14 +101,14 @@ class Profile extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <p className="col-small-margin">{user.bio}</p>
+                            <Input className="profile-input align-middle" id="profile_bio" type="textarea" name="bio" defaultValue={user.bio} readOnly={this.state.readOnly} />
                         </FormGroup>
                         <FormGroup row>
                             <Col>
                                 <Label className="col-form-label" for="profile_major">Major</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_major" type="select" className="profile-input align-middle" value={user.major}>
+                                <Input id="profile_major" type="select" className="profile-input align-middle" defaultValue={user.major} readOnly={this.state.readOnly}>
                                     {majors.map(function(major, index){
                                         return <option key={ index }>{major}</option>;
                                     })}
@@ -112,7 +120,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_currentDegree">Current Degree Pursuing</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_currentDegree" type="select" className="profile-input align-middle" value={user.degreePursuing}>
+                                <Input id="profile_currentDegree" type="select" className="profile-input align-middle" defaultValue={user.degreePursuing} readOnly={this.state.readOnly}>
                                     {degrees.map(function(degree, index){
                                         return <option key={ index }>{degree}</option>;
                                     })}
@@ -124,7 +132,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_gradYear">Grad Year</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" value={user.gradYear} />
+                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" defaultValue={user.gradYear} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -132,7 +140,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_cv">Cover Letter</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_cv" type="file" className="profile-input align-middle" value={user.coverLetter} />
+                                <Input id="profile_cv" type="file" accept="application/pdf" className="profile-input align-middle" defaultValue={user.coverLetter} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -140,7 +148,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_resume">Resume</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_resume" type="file" className="profile-input align-middle" value={user.resume} />
+                                <Input id="profile_resume" type="file" accept="application/pdf" className="profile-input align-middle" defaultValue={user.resume} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
 
@@ -149,23 +157,23 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_github">github</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_github" type="text" className="profile-input align-middle" value={user.professional_accounts["github"]} />
+                                <Input id="profile_github" type="text" className="profile-input align-middle" defaultValue={user.professional_accounts["github"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Col>
-                                <Label className="col-form-label" for="profile_linkedin">Cover Letter</Label>
+                                <Label className="col-form-label" for="profile_linkedin">LinkedIn</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_linkedin" type="text" className="profile-input align-middle" value={user.professional_accounts["linkedin"]} />
+                                <Input id="profile_linkedin" type="text" className="profile-input align-middle" value={user.professional_accounts["linkedin"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
                             <Col>
-                                <Label className="col-form-label" for="profile_facebook">Cover Letter</Label>
+                                <Label className="col-form-label" for="profile_facebook">Facebook</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_facebook" type="text" className="profile-input align-middle" value={user.professional_accounts["facebook"]} />
+                                <Input id="profile_facebook" type="text" className="profile-input align-middle" defaultValue={user.professional_accounts["facebook"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <br />
@@ -176,14 +184,21 @@ class Profile extends Component {
                         <FormGroup row>
                             Applications
                         </FormGroup>
-                        <FormGroup row>
+                        <FormGroup row hidden={!this.state.readOnly}>
                             <Col>
-                                <Button className="col-form-label">
+                                <Button onClick={this._click} className="col-form-label">
+                                    Edit Profile
+                                </Button>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row hidden={this.state.readOnly}>
+                            <Col>
+                                <Button onClick={this._click} className="col-form-label">
                                     Save Changes
                                 </Button>
                             </Col>
                             <Col>
-                                <Button>
+                                <Button onClick={this._click}>
                                     Deactivate Account
                                 </Button>
                             </Col>

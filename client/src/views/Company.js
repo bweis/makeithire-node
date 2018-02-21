@@ -9,7 +9,11 @@ import {
     FormGroup,
     Input,
     Label,
-    Button
+    Button,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    ModalFooter,
 } from 'reactstrap';
 
 var companies = [
@@ -61,6 +65,10 @@ var company = {
     openings: []
 };
 
+var user = {
+    isRecruiter: true
+};
+
 class Company extends Component {
     /*
     constructor(props) {
@@ -75,13 +83,36 @@ class Company extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {readOnly: true, modal: false};
+        this._click = this._click.bind(this);
+        this._toggle = this._toggle.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.location == this.props.location) {
             console.log('here')
         }
     }
+
+    _click() {
+        this.setState(prevState => ({readOnly: !prevState.readOnly}))
+    }
+
+    _toggle() {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
     render() {
+        var button;
+        if (user.isRecruiter) {
+            button = (
+                <FormGroup>
+                    <Button onClick={this._toggle}>Remove recruiter</Button>
+                    <Button onClick={this._click}>Edit Information</Button>
+                </FormGroup>
+            )
+        }
         return (
             <div>
                 <Container className="pad-top">
@@ -96,12 +127,12 @@ class Company extends Component {
                                 <h4>
                                     {company.companyName}
                                 </h4>
-                                <Input className="profile-input align-middle" id="company_hq" type="text" value={company.headquarters} readOnly/>
+                                <Input className="profile-input align-middle" id="company_hq" type="text" defaultValue={company.headquarters} readOnly={this.state.readOnly} />
 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <p className="col-small-margin">{company.description}</p>
+                            <Input className="profile-input align-middle" id="company_description" type="textarea" name="description" defaultValue={company.description} readOnly={this.state.readOnly}/>
                         </FormGroup>
                         <br />
                         <FormGroup row>
@@ -111,6 +142,17 @@ class Company extends Component {
                         <FormGroup row>
                             Tags
                         </FormGroup>
+                        <Modal isOpen={this.state.modal} toggle={this._toggle}>
+                            <ModalHeader toggle={this._toggle}>Modal title</ModalHeader>
+                            <ModalBody>
+                                <Input id="recruiters"></Input>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="primary" onClick={this._toggle}>Remove Recruiters</Button>
+                                <Button color="secondary" onClick={this._toggle}>Cancel</Button>
+                            </ModalFooter>
+                        </Modal>
+                        {button}
                     </Form>
                 </Container>
             </div>
