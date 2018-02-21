@@ -11,6 +11,20 @@ import {
     Button
 } from 'reactstrap';
 
+/*
+ {Object.keys(user.professional_accounts).map(function(keyName, keyIndex) {
+ return (
+ <FormGroup row key={keyIndex}>
+ <Col>
+ <Label className="col-form-label" for={"profile_"+keyName}>{keyName}</Label>
+ </Col>
+ <Col>
+ <Input id={"profile_"+keyName} type="text" className="profile-input align-middle" value={user.professional_accounts[keyName]} />
+ </Col>
+ </FormGroup>)
+ })}
+ */
+
 var user = {
     firstName: 'Zack',
     lastName: 'Fernandez',
@@ -23,7 +37,7 @@ var user = {
     resume: '',
     email: 'zfernand@purdue.edu',
     phoneNumber: '7609089377',
-    professional_accounts: [{'github': 'github.com/zfernand'}, {'linkedin': 'linkedin.com'}, {'facebook': 'facebook.com'}],
+    professional_accounts: {'github': 'github.com/zfernand', 'linkedin': 'linkedin.com', 'facebook': 'facebook.com'},
     skills: [],
     applications: []
 };
@@ -127,6 +141,31 @@ class Profile extends Component {
                             </Col>
                             <Col>
                                 <Input id="profile_resume" type="file" className="profile-input align-middle" value={user.resume} />
+                            </Col>
+                        </FormGroup>
+
+                        <FormGroup row>
+                            <Col>
+                                <Label className="col-form-label" for="profile_github">github</Label>
+                            </Col>
+                            <Col>
+                                <Input id="profile_github" type="text" className="profile-input align-middle" value={user.professional_accounts["github"]} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col>
+                                <Label className="col-form-label" for="profile_linkedin">Cover Letter</Label>
+                            </Col>
+                            <Col>
+                                <Input id="profile_linkedin" type="text" className="profile-input align-middle" value={user.professional_accounts["linkedin"]} />
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col>
+                                <Label className="col-form-label" for="profile_facebook">Cover Letter</Label>
+                            </Col>
+                            <Col>
+                                <Input id="profile_facebook" type="text" className="profile-input align-middle" value={user.professional_accounts["facebook"]} />
                             </Col>
                         </FormGroup>
                         <br />
