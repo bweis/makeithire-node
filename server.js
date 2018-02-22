@@ -25,6 +25,7 @@ app.listen(app.get('port'), () => {
 });
 
 // Server Launch (without any api)
+app.use(express.static("client"));
 app.use(express.static("client/src"));
 app.use(express.static("client/public"));
 app.get('/', function (req, res) {
