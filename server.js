@@ -32,7 +32,7 @@ app.get('/', function (req, res) {
 
 
 
-app.get('/home', function (req, res) {
+app.get('/main', function (req, res) {
     return res.sendFile(__dirname + '/client/public/index.html')
 });
 /*app.get('/', function (req, res) {

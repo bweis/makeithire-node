@@ -81,7 +81,7 @@ class Profile extends Component {
             .done(function (data, status, xhr) {
 
                 alert(data.response);
-                if(data.messsage === "Success") {
+                if(data.message === "Success") {
                     degrees = data.response;
                 }
 
@@ -108,7 +108,7 @@ class Profile extends Component {
 
             .done(function (data, status, xhr) {
                 alert(data.response);
-                if(data.messsage === "Success") {
+                if(data.message === "Success") {
                     majors = data.response;
                 }
             })
