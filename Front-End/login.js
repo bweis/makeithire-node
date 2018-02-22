@@ -1,6 +1,6 @@
 
-var signUpLink = "http://makeithire-node.herokuapp.com/api/signUpStudent";
-var logInLink = "http://makeithire-node.herokuapp.com/api/login"
+var signUpLink = "https://makeithire-node.herokuapp.com/api/signUpStudent";
+var logInLink = "https://makeithire-node.herokuapp.com/api/login"
 
 
 $("document").ready(function() {
