@@ -1,3 +1,11 @@
+
+var allMajors = "http://localhost:3001/api/getMajors";
+var allDegress = "http://localhost:3001/api/getDegrees";
+
+var majors = [];
+var degrees = [];
+
+import $ from 'jquery';
 import React, { Component } from 'react';
 
 import {
@@ -26,8 +34,8 @@ import {
  */
 
 var user = {
-    firstName: 'Zack',
-    lastName: 'Fernandez',
+    firstName: 'Nik',
+    lastName: 'Suprunov',
     university: 'Purdue University',
     bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
     major: 'Computer Science',
@@ -42,13 +50,7 @@ var user = {
     applications: []
 };
 
-var majors = [
-    'Computer Science',
-    'Computer Engineering',
-    'Marketing',
-    'Management',
-    'UX/UI Design'
-];
+
 
 var universities = [
     'Purdue University WL - Main Campus',
@@ -58,18 +60,79 @@ var universities = [
 
 ];
 
-var degrees = [
-    'Bachelor of Science',
-    'Bachelor of Arts',
-    'MBA',
-    'PhD'
-];
+
 
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {readOnly: true};
         this._click = this._click.bind(this);
+
+
+        //Run all initial post and get requests here
+
+
+
+
+        $.get(allDegress, {},function (data,status,xhr) {
+
+        })
+
+            .done(function (data, status, xhr) {
+
+                alert(data.response);
+                if(data.messsage === "Success") {
+                    degrees = data.response;
+                }
+
+            })
+
+
+
+            .fail(function(jqxhr, settings, ex) {
+
+                var dan = JSON.parse(jqxhr.responseText);
+                if(dan.message === "unauthorized access") {
+
+
+                }
+
+
+            });
+
+
+
+        $.get(allMajors, {},function (data,status,xhr) {
+
+            })
+
+            .done(function (data, status, xhr) {
+                alert(data.response);
+                if(data.messsage === "Success") {
+                    majors = data.response;
+                }
+            })
+
+
+
+            .fail(function(jqxhr, settings, ex) {
+
+                var dan = JSON.parse(jqxhr.responseText);
+                if(dan.message === "unauthorized access") {
+
+
+                }
+
+
+            })
+
+
+
+
+
+
+
+
     }
     _click() {
         this.setState(prevState => ({readOnly: !prevState.readOnly}))
@@ -110,7 +173,7 @@ class Profile extends Component {
                             <Col>
                                 <Input id="profile_major" type="select" className="profile-input align-middle" defaultValue={user.major} readOnly={this.state.readOnly}>
                                     {majors.map(function(major, index){
-                                        return <option key={ index }>{major}</option>;
+                                        return <option key={ index }>{major.MajorName}</option>;
                                     })}
                                 </Input>
                             </Col>
@@ -122,7 +185,7 @@ class Profile extends Component {
                             <Col>
                                 <Input id="profile_currentDegree" type="select" className="profile-input align-middle" defaultValue={user.degreePursuing} readOnly={this.state.readOnly}>
                                     {degrees.map(function(degree, index){
-                                        return <option key={ index }>{degree}</option>;
+                                        return <option key={ index }>{degree.Level}</option>;
                                     })}
                                 </Input>
                             </Col>
