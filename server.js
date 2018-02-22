@@ -25,17 +25,22 @@ app.listen(app.get('port'), () => {
 });
 
 // Server Launch (without any api)
+app.use(express.static("Front-End"));
 app.use(express.static("client"));
-app.use(express.static("client/src"));
 app.use(express.static("client/public"));
+app.use(express.static("client/semantic"));
+app.use(express.static("client/src"));
+app.use(express.static("client/src/components"));
+app.use(express.static("client/src/containers"));
+app.use(express.static("client/src/views"));
+
 app.get('/', function (req, res) {
-    return res.sendFile(__dirname + '/client/src/loginPage.html')
+    return res.sendFile(__dirname + '/Front-End/loginPage.html')
 });
 
 
-
 app.get('/main', function (req, res) {
-    return res.sendFile(__dirname + '/client/public/index.html')
+    return res.sendFile(__dirname + '/Front-End/index.html')
 });
 /*app.get('/', function (req, res) {
     res.send('MakeItHire Test Server');
