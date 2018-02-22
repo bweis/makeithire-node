@@ -358,7 +358,7 @@ app.get('/api/getMajors', (req, res) => {
             return res.status(400).json({ message: err });
         }
         else {
-            return res.status(200).json({ messsage: "Success", response: result });
+            return res.status(200).json({ message: "Success", response: result });
         }
     });
 });
@@ -372,7 +372,7 @@ app.get('/api/getDegrees', (req, res) => {
             return res.status(400).json({ error: err });
         }
         else {
-            return res.status(200).json({ messsage: "Success", response: result });
+            return res.status(200).json({ message: "Success", response: result });
         }
     });
 });
