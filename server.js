@@ -13,8 +13,10 @@ const mime = require('mime-types');
 const multer = require('multer');
 const fs = require('fs');
 const app = express();
+
 //Use bodyParser to read request body data
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors())
 app.use(bodyParser.json());
 // Set app port
 app.set('port', process.env.PORT || 3001);
@@ -352,7 +354,6 @@ app.post('/api/logout', verifyToken, (req, res) => {
 app.get('/api/getMajors', (req, res) => {
     let sql = 'SELECT * FROM Major';
     db.query(sql, (err, result) => {
-        console.log(result);
         if (err) {
             return res.status(400).json({ message: err });
         }
@@ -406,7 +407,7 @@ app.get('/api/getCompanyList', (req, res) => {
 
 // Multer Settings
 app.use(express.static('./public'));
-var email_string = 'rajat95@purdue.edu';
+var email_string = '';
 const storageR = multer.diskStorage({
     destination: './public/uploads/',
     filename: function (req, file, cb) {
@@ -465,13 +466,11 @@ app.post('/api/uploadResume', verifyToken, (req, res) => {
                     uploadR(req, res, (err) => {
                         if (err) {
                             res.status(400).json({ error: err });
-                            res.json({ "status": 400, "error": err, "response": null });
                         } else {
                             if (req.file == undefined) {
-                                res.json({ "status": 500, "error": null, "response": "No File Selected" });
+                                res.status(400).json({ error: err , message: "No File Selected"});
                             } else {
-                                res.json({ "status": 200, "error": null, "response": req.file })
-                                console.log(req.file);
+                                res.status(200).json({ message: "Success", response: req.file });
                             }
                         }
                     });
@@ -494,15 +493,14 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
                 }
                 else {
                     email_string = 'public/uploads/' + result[0].EmailID;
-                    uploadCL(req, res, (err) => {
+                    uploadCV(req, res, (err) => {
                         if (err) {
-                            res.json({ "status": 400, "error": err, "response": null });
+                            res.status(400).json({ error: err });
                         } else {
                             if (req.file == undefined) {
-                                res.json({ "status": 400, "error": null, "response": "No File Selected" });
+                                res.status(400).json({ error: err , message: "No File Selected"});
                             } else {
-                                res.json({ "status": 200, "error": null, "response": req.file })
-                                console.log(req.file);
+                                res.status(200).json({ message: "Success", response: req.file });
                             }
                         }
                     });
@@ -525,4 +523,3 @@ function verifyToken(req, res, next) {
         return res.sendFile(__dirname + '/Front-End/loginPage.html')
     }
 }
-
