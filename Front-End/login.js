@@ -68,7 +68,7 @@ $("document").ready(function() {
         })
 
             .done(function (data, status,xhr) {
-                if(data.message==="success") {
+                if(data.message==="Success") {
 
 
                     document.cookie="token="+data.Token;
