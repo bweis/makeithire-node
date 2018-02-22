@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
-// Containers
+// containers
 import Full from './containers/Full.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import styles from './index.css'

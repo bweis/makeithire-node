@@ -71,11 +71,12 @@ $("document").ready(function() {
                 if(data.message==="Success") {
 
 
-                    document.cookie="token="+data.Token;
+                    document.cookie="token="+data.token;
 
-                    alert("LOGGED IN!")
 
-                    window.location.href = "https://makeithire-node.herokuapp.com/main";
+                    alert("LOGGED IN!");
+
+                    window.location.href = "http://localhost:3000/home";
                 }
             })
 
