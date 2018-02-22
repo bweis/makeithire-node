@@ -1,10 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
-import '../semantic/dist/semantic.min.css';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root'), // eslint-disable-line no-undef
-);
+// Containers
+import Full from './containers/Full.js'
+import 'bootstrap/dist/css/bootstrap.css';
+import styles from './index.css'
+
+ReactDOM.render((
+
+    <BrowserRouter>
+        <Switch>
+            <Route path="/" name="Home" component={Full}/>
+        </Switch>
+    </BrowserRouter>
+), document.getElementById('root'));
