@@ -1,6 +1,6 @@
 
-var allMajors = "http://localhost:3001/api/getMajors";
-var allDegress = "http://localhost:3001/api/getDegrees";
+var allMajors = "https://makeithire-node.herokuapp.com/api/getMajors";
+var allDegress = "https://makeithire-node.herokuapp.com/api/getDegrees";
 
 var majors = [];
 var degrees = [];

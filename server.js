@@ -27,7 +27,13 @@ app.listen(app.get('port'), () => {
 // Server Launch (without any api)
 app.use(express.static("Front-End"));
 app.get('/', function (req, res) {
-    return res.sendFile(__dirname + '/Front-End/loginPage.html')
+    return res.sendFile(__dirname + '/client/src/loginPage.html')
+});
+
+
+
+app.get('/home', function (req, res) {
+    return res.sendFile(__dirname + '/client/public/index.html')
 });
 /*app.get('/', function (req, res) {
     res.send('MakeItHire Test Server');
@@ -56,6 +62,11 @@ db.connect(function (err) {
 });
 
 // POST API: Add Student into User Table
+
+
+
+
+
 app.post('/api/signUpStudent', (req, res) => {
     var fname = req.body.FirstName; var mname = req.body.MiddleName; var lname = req.body.LastName;
     var email = req.body.EmailID;
@@ -520,6 +531,6 @@ function verifyToken(req, res, next) {
         next();
     } else {
         // 403 Forbidden
-        return res.sendFile(__dirname + '/Front-End/loginPage.html')
+        return res.sendFile(__dirname + '/public/src/loginPage.html')
     }
 }
