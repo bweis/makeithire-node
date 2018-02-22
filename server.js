@@ -25,7 +25,8 @@ app.listen(app.get('port'), () => {
 });
 
 // Server Launch (without any api)
-app.use(express.static("Front-End"));
+app.use(express.static("client/src"));
+app.use(express.static("client/public"));
 app.get('/', function (req, res) {
     return res.sendFile(__dirname + '/client/src/loginPage.html')
 });
