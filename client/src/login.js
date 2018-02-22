@@ -75,7 +75,7 @@ $("document").ready(function() {
 
                     alert("LOGGED IN!")
 
-                    //window.location.href = "/client";
+                    window.location.href = "https://makeithire-node.herokuapp.com/main";
                 }
             })
 
