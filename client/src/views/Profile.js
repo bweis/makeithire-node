@@ -1,11 +1,7 @@
 
-<<<<<<< HEAD
-var allMajors = "https://makeithire-node.herokuapp.com/api/getMajors";
-var allDegress = "https://makeithire-node.herokuapp.com/api/getDegrees";
-=======
 var allMajors = "http://localhost:3001/api/getMajors";
 var allDegress = "http://localhost:3001/api/getDegrees";
->>>>>>> 135c77274366a0c66e6340e65ea7a082f5b51d38
+
 
 var majors = [];
 var degrees = [];
@@ -88,9 +84,7 @@ class Profile extends Component {
                 alert(data.response);
 <<<<<<< HEAD
                 if(data.message === "Success") {
-=======
-                if(data.messsage === "Success") {
->>>>>>> 135c77274366a0c66e6340e65ea7a082f5b51d38
+
                     degrees = data.response;
                 }
 
@@ -117,11 +111,9 @@ class Profile extends Component {
 
             .done(function (data, status, xhr) {
                 alert(data.response);
-<<<<<<< HEAD
+
                 if(data.message === "Success") {
-=======
-                if(data.messsage === "Success") {
->>>>>>> 135c77274366a0c66e6340e65ea7a082f5b51d38
+
                     majors = data.response;
                 }
             })
