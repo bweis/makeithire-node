@@ -39,26 +39,11 @@ class MyNav extends Component {
         $.ajax({
             type: 'GET',
             headers: {'authorization': cookie},
-            url: url + "/api/isRecruiter"
+            url: url + "/api/getUserDetails"
         })
             .done(function (data, status, xhr) {
                 if (data.message === "Success") {
-                    console.log('success on isRecruiter');
-                    console.log(data.response);
-                    lol.setState({isRecruiter: data.response})
-                }
-            })
-            .fail(function (jqxhr, settings, ex) {
-                console.log('failed on isRecruiter');
-            })
-        $.ajax({
-            type: 'GET',
-            headers: {'authorization': cookie},
-            url: url + "/api/isRecruiter"
-        })
-            .done(function (data, status, xhr) {
-                if (data.message === "Success") {
-                    console.log('success on isRecruiter');
+                    console.log('success on getDetails');
                     console.log(data.response);
                     lol.setState({isRecruiter: data.response})
                 }
@@ -79,7 +64,7 @@ class MyNav extends Component {
                 <Nav>
                     <UncontrolledDropdown>
                         <DropdownToggle nav caret>
-                            {this.state.user.firstName} {<this className="state"></this>.user.lastName}
+
                         </DropdownToggle>
                         <DropdownMenu >
                             <DropdownItem>

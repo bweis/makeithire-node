@@ -42,11 +42,11 @@ class Home extends Component {
         if (this.state.isRecruiter == -1) {
             //
         } else if (this.state.isRecruiter == 0) {
-            home = '<h1>Student Home Page</h1>';
+            home = <h1>Student Home Page</h1>;
         } else if (this.state.isRecruiter == 1) {
-            home = '<h1>Recruiter Home Page</h1>';
+            home = <h1>Recruiter Home Page</h1>;
         } else {
-            home = '<h1>Head Recruiter Home Page</h1>'
+            home = <h1>Head Recruiter Home Page</h1>;
         }
         /*
          if (isLoggedIn) {
