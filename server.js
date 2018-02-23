@@ -134,12 +134,12 @@ app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
 
 // GET API: Get Student Details
 app.get('/api/getStudentDetails', verifyToken, (req, res) => {
-    let sql = 'Select * U.UnivName As University, M.MajorName As Major, D1.Level As CurrentDegreePursuing, D2.Level As HighestDegreeLevel, S.GraduationYear, S.Skills, S.Projects, S.Bio, S.PhoneNumber, S.Links From Degree D1, Degree D2, Major M, University U, (Select * From Student Where idUser = (Select idUser From User Where TokenID = \'' + req.token + '\')) S WHERE U.idUniversity = S.University AND M.idMajor = S.Major AND D1.idDegree = S.CurrentPursuingDegree AND D2.idDegree = S.HighestDegreeLevel';
+    let sql = 'SELECT * FROM Student WHERE idUser = (SELECT idUser FROM User WHERE TokenID = ?)';
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             return res.status(401).json({ error: auth_err });
         } else {
-            db.query(sql, (err1, result) => {
+            db.query(sql, req.token, (err1, result) => {
                 console.log(result);
                 if (err1) {
                     return res.status(400).json({ message: err1 });
