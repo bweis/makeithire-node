@@ -91,7 +91,7 @@ class Company extends Component {
     }
 
     _updateInfo() {
-        alert('TODO: update details');
+         console.log('update')
     }
 
     _click() {
@@ -105,19 +105,18 @@ class Company extends Component {
     }
 
     _remove() {
-        var d = {
-            
-        };
+        var cookie = getCookie("token");
+        var email = {EmailToDelete: $('#recruiters').val()};
         $.ajax({
             type: 'POST',
-            url: url + '/api/deleteRecruiter',
-            data: u,
+            url: url + '/api/requestDelete',
+            headers: {'authorization': cookie},
+            data: email,
             success: function(msg) {
-                console.log("successful update");
-                mount(haha)
+                console.log("successful request to delete");
             },
             failure: function(msg) {
-                console.log("shit failed");
+                console.log("request to delete failed");
             }
         });
         this._toggle();
@@ -159,7 +158,7 @@ class Company extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Input className="profile-input align-middle" id="company_description" onChange={e => this.onTodoChange(e.target.value)} type="textarea" name="description" value={this.state.company.Description} readOnly={this.state.readOnly} />
+                            <Input className="profile-input align-middle" id="company_description" onChange={e => this.onTodoChange(e.target.value)} type="textarea" name="description" value={this.state.company.Description} readOnly={!this.state.readOnly} />
                         </FormGroup>
                         <br />
                         <FormGroup row>
@@ -182,7 +181,7 @@ class Company extends Component {
                         {button}
                         <FormGroup row hidden={!this.state.readOnly}>
                             <Col>
-                                <Button onClick={() => { this._updateInfo()}} className="col-form-label">
+                                <Button onClick={() => { this._click}} className="col-form-label">
                                     Save Changes
                                 </Button>
                             </Col>
