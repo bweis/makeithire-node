@@ -87,13 +87,18 @@ function  mount(yo) {
 
         .done(function (data, status, xhr) {
 
-
             if (data.message === "Success") {
 
-                let ref = data.response[0];
+                let ref = data.response;
                 name = ref.FirstName;
                 surName = ref.LastName;
                 mail = ref.EmailID;
+
+                var terra = yo.state.user;
+                terra.firstName = name;
+                terra.fastName = surName;
+                terra.email = mail;
+                yo.setState({user:terra});
 
 
 
@@ -172,7 +177,8 @@ function  mount(yo) {
                     .done(function (data, status, xhr) {
 
                         if (data.message === "Success") {
-                            let temp = user;
+                            let temp = lol.state.user;
+
 
                             let ref = data.response[0];
                             //  var day = universities[ref.University].UnivName
@@ -182,9 +188,9 @@ function  mount(yo) {
                             temp.bio = ref.Bio;
                             temp.gradYear = ref.GraduationYear;
                             temp.phoneNumber = ref.PhoneNumber;
-                            temp.email = mail;
-                            temp.name = name;
-                            temp.lastName = surName;
+                           // temp.email = mail;
+                           // temp.name = name;
+                           // temp.lastName = surName;
                             temp.firstName = name;
 
                             lol.setState({user:temp});
