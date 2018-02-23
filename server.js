@@ -28,7 +28,8 @@ app.use(express.static("Front-End"));
 
 
 app.use(bodyParser.urlencoded({
-    extended:true}));
+    extended: true
+}));
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
@@ -66,11 +67,6 @@ db.connect(function (err) {
 });
 
 // POST API: Add Student into User Table
-
-
-
-
-
 app.post('/api/signUpStudent', (req, res) => {
     var fname = req.body.FirstName; var mname = req.body.MiddleName; var lname = req.body.LastName;
     var email = req.body.EmailID;
@@ -150,7 +146,7 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
                 }
                 else {
                     console.log(result)
-                    return res.status(200).json({ message: "Success",response: result });
+                    return res.status(200).json({ message: "Success", response: result });
                 }
             })
         }
@@ -158,7 +154,7 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
 });
 
 //GET API: Get Company List
-app.get('/api/getCompanyList', (req,res) => {
+app.get('/api/getCompanyList', (req, res) => {
     let sql = 'SELECT * FROM Company';
     db.query(sql, (err, result) => {
         console.log(result);
@@ -177,63 +173,69 @@ app.post('/api/signUpRecruiter', (req, res) => {
     var fname = req.body.FirstName;
     var mname = req.body.MiddleName;
     var lname = req.body.LastName;
-    var bdate = req.body.BirthDate;
+    var bdate = '00/00/0000';
     var email = req.body.EmailID;
     var pass = req.body.Password;
-    var photo = req.body.Photo;
     var idComp = req.body.idCompany;
     var companyname = req.body.CompanyName;
     var description = req.body.Description;
     var emailDomain = req.body.EmailID.split("@", 2);
     var published = req.body.Published;
+    if (email === undefined || pass === undefined || email === "" || pass === "") {
+        return res.status(400).json({ error: "Email ID or Password cannot be empty" });
+    }
     bcrypt.hash(pass, Number(process.env.ROUNDS), function (err, hash) {
-        let post = { FirstName: fname, MiddleName: null, LastName: lname, BirthDate: bdate, EmailID: email, Password: hash, idCompany: idComp };
-        let sql1 = 'INSERT INTO User SET ?';
-        if (idComp = -1) {
-            db.query(sql1, post, (db_err1, result1) => {
-                if (db_err1) {
-                    res.sendStatus(400).json({ message: db_err1 });
-                } else {
-                    console.log(result1);
-                    console.log(result1.insertId);
-                    if (companyname == null) {
-                        post = { CompanyName: null, Description: null, Logo: null, HashTags: null, idUser: result1.insertId, Published: 0, EmailDomain: emailDomain[1] }
-                    } else if (published == 1) {
-                        post = { CompanyName: companyname, Description: description, Logo: null, HashTags: null, idUser: result1.insertId, Published: published, EmailDomain: emailDomain[1] }
+        if (err) {
+            return res.status(401).json({error: err});
+        }
+        else {
+            let post = { FirstName: fname, MiddleName: null, LastName: lname, BirthDate: bdate, EmailID: email, Password: hash, idCompany: idComp };
+            let sql1 = 'INSERT INTO User SET ?';
+            if (idComp == '-1') {
+                db.query(sql1, post, (db_err1, result1) => {
+                    if (db_err1) {
+                        return res.sendStatus(400).json({ error: db_err1 });
                     } else {
-                        post = { CompanyName: companyname, Description: description, Logo: null, HashTags: null, idUser: result1.insertId, Published: published, EmailDomain: emailDomain[1] }
+                        console.log(result1);
+                        console.log(result1.insertId);
+                        if (companyname == null) {
+                            post = { CompanyName: null, Description: null, Logo: null, HashTags: null, idUser: result1.insertId, Published: 0, EmailDomain: emailDomain[1] }
+                        } else if (published == '1') {
+                            post = { CompanyName: companyname, Description: description, Logo: null, HashTags: null, idUser: result1.insertId, Published: published, EmailDomain: emailDomain[1] }
+                        } else {
+                            post = { CompanyName: companyname, Description: description, Logo: null, HashTags: null, idUser: result1.insertId, Published: published, EmailDomain: emailDomain[1] }
+                        }
+                        var sql2 = 'INSERT INTO Company SET ?'
+                        db.query(sql2, post, (db_err2, result2) => {
+                            console.log(result2);
+                            if (db_err2) {
+                                return res.status(400).json({ error: db_err2 });
+                            }
+                            else {
+                                let sql3 = 'UPDATE User SET idCompany = \'' + result2.insertId + '\' WHERE idUser = \'' + result1.insertId + '\'';
+                                db.query(sql3, (db_err3, result3) => {
+                                    if (db_err3) {
+                                        return res.status(400).json({ error: db_err3 });
+                                    }
+                                    else {
+                                        return res.status(200).json({ message: "Account Created", response: result3 });
+                                    }
+                                });
+                            }
+                        });
                     }
-                    var sql2 = 'INSERT INTO Company SET ?'
-                    db.query(sql2, post, (db_err2, result2) => {
-                        console.log(result2);
-                        if (db_err2) {
-                            return res.status(400).json({ error: db_err2 });
-                        }
-                        else {
-                            let sql3 = 'UPDATE User SET idCompany = \'' + result2.insertId + '\' WHERE idUser = \'' + result1.insertId + '\'';
-                            db.query(sql3, (db_err3, result3) => {
-                                if (db_err3) {
-                                    return res.status(400).json({ error: db_err3 });
-                                }
-                                else {
-                                    res.send(JSON.stringify({ "status": 200, "error": null, "response": result3 }));
-                                    return res.status(200).json({ message: "Account Created" });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        } else {
-            db.query(sql1, post, (db_err4, result1) => {
-                console.log(result1);
-                if (db_err4) {
-                    return res.status(400).json({ error: db_err4 });
-                }
-                else {
-                    return res.status(200).json({ message: "Account created", });
-                }
-            });
+                });
+            } else {
+                db.query(sql1, post, (db_err4, result1) => {
+                    console.log(result1);
+                    if (db_err4) {
+                        return res.status(400).json({ error: db_err4 });
+                    }
+                    else {
+                        return res.status(200).json({ message: "Account created", });
+                    }
+                });
+            }
         }
     });
 });
@@ -501,7 +503,7 @@ app.post('/api/uploadResume', verifyToken, (req, res) => {
                             res.status(400).json({ error: err });
                         } else {
                             if (req.file == undefined) {
-                                res.status(400).json({ error: err , message: "No File Selected"});
+                                res.status(400).json({ error: err, message: "No File Selected" });
                             } else {
                                 res.status(200).json({ message: "Success", response: req.file });
                             }
@@ -531,7 +533,7 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
                             res.status(400).json({ error: err });
                         } else {
                             if (req.file == undefined) {
-                                res.status(400).json({ error: err , message: "No File Selected"});
+                                res.status(400).json({ error: err, message: "No File Selected" });
                             } else {
                                 res.status(200).json({ message: "Success", response: req.file });
                             }
