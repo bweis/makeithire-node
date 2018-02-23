@@ -60,6 +60,8 @@ var user = {
     phoneNumber: '',
     professional_accounts: {'github': 'github.com/', 'linkedin': 'linkedin.com/', 'facebook': 'facebook.com/'},
     skills: [],
+    git: '',
+
     applications: []
 };
 
@@ -189,6 +191,8 @@ function  mount(yo) {
                             temp.gradYear = Number(ref.GraduationYear);
 
                             temp.phoneNumber = ref.PhoneNumber;
+                            temp.professional_accounts = ref.Links;
+                            temp.git = ref.Links;
                            // temp.email = mail;
                            // temp.name = name;
                            // temp.lastName = surName;
@@ -516,7 +520,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_github">github</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_github" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange10(e.target.value)} value={user.professional_accounts["github"]} readOnly={this.state.readOnly}/>
+                                <Input id="profile_github" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange10(e.target.value)} value={this.state.user.git} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
