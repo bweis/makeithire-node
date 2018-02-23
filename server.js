@@ -11,7 +11,6 @@ const cookie = require('cookie');
 const cors = require('cors');
 const mime = require('mime-types');
 const multer = require('multer');
-const path = require('path');
 const fs = require('fs');
 const app = express();
 
