@@ -156,6 +156,21 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
     });
 });
 
+//GET API: Get Company List
+app.get('/api/getCompanyList', (req,res) => {
+    let sql = 'SELECT * FROM Company';
+    db.query(sql, (err, result) => {
+        console.log(result);
+        if (err) {
+            return res.status(400).json({ error: err });
+        }
+        else {
+            return res.status(200).json({ message: "Success", response: result });
+        }
+    });
+});
+
+
 // POST API: Sign Up Recruiter along with Company and Assigning Head Recruiter
 app.post('/api/signUpRecruiter', (req, res) => {
     var fname = req.body.FirstName;
