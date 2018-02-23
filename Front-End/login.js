@@ -1,6 +1,6 @@
 var url = "http://localhost:3001";
 var signUpLink = url + "/api/signUpStudent";
-var signUpRecruiter = url + "api/signUpRecruiter";
+var signUpRecruiter = url + "/api/signUpRecruiter";
 var logInLink = url + "/api/login";
 var companiesLink =  url + "/api/getCompanyList";
 
@@ -92,20 +92,22 @@ $("document").ready(function() {
 
 
     $(".Reg").click(function () {
+        console.log('register');
         var recruiter = $('#recruiter').is(':checked');
+        console.log(recruiter);
         if ($('#recruiter').is(':checked')) {
+            console.log('recruiter signup ' + $("#company_list option:selected").val());
             $.post(signUpRecruiter, {
                     FirstName: $("#fName").val(),
                     LastName: $("#lName").val(),
-                    MiddleName: "", 
-                    EmailID: $("#email").val(), 
+                    MiddleName: "",
+                    EmailID: $("#email").val(),
                     Password: $("#pass").val(),
                     idCompany: $("#company_list option:selected").val(),
                     CompanyName: $('#company').val(),
                     Description: $('#description').val(),
                     Published: 0
                 },
-
                 function (res, status) {
                 })
                 .done(function (data, status, xhr) {
@@ -115,8 +117,10 @@ $("document").ready(function() {
                 })
 
                 .fail(function (jqxhr, settings, ex) {
+                    console.log('failed to create company')
                 })
         } else {
+            console.log('student signup');
             $.post(signUpLink, {
                     FirstName: $("#fName").val(), LastName: $("#lName").val(),
                     MiddleName: "", EmailID: $("#email").val(), Password: $("#pass").val()
