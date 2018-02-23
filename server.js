@@ -156,6 +156,8 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
 
 // GET API: Get Student Details
 app.get('/api/getUserDetails', verifyToken, (req, res) => {
+    var compid = '';
+    var userid = '';
     let sql = 'SELECT * FROM User WHERE TokenID = ?';
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
@@ -167,8 +169,30 @@ app.get('/api/getUserDetails', verifyToken, (req, res) => {
                     return res.status(400).json({ error: err1 });
                 }
                 else {
-                    console.log(result)
-                    return res.status(200).json({ message: "Success", response: result });
+                    compid = result[0].idCompany;
+                    userid = result[0].idUser;
+                    if (compid == 0) {
+                        result[0].type = 0;
+                        return res.status(200).json({message: "Success", response: result[0]});
+                    }
+                    else {
+                        var sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
+                        db.query(sql2, compid, (db_err2, result2) => {
+                            if (db_err2) {
+                                return res.status(400).json({ error: db_err2 });
+                            }
+                            else {
+                                if (userid == result2[0].idUser) {
+                                    result[0].type = 2;
+                                    return res.status(200).json({message: "Success", response: result[0]});
+                                }
+                                else{
+                                    result[0].type = 1;
+                                    return res.status(200).json({message: "Success", response: result[0]});
+                                }
+                            }
+                        });
+                    }
                 }
             })
         }
