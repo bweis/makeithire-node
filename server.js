@@ -15,9 +15,8 @@ const fs = require('fs');
 const app = express();
 
 //Use bodyParser to read request body data
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors())
-app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 // Set app port
 app.set('port', process.env.PORT || 3001);
 app.listen(app.get('port'), () => {
@@ -99,7 +98,6 @@ app.post('/api/signUpStudent', (req, res) => {
 
 // POST API: Add Student Details into Student Table
 app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
-    var token = req.token;
     var university = req.body.University;
     var major = req.body.Major;
     var gradyear = req.body.GraduationYear;
@@ -117,6 +115,7 @@ app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
             res.sendStatus(401).json({ error: auth_err });
         } else {
             let sql = 'UPDATE Student SET University = (SELECT idUniversity From University WHERE UnivName =  \'' + university + '\'), Major = (SELECT idMajor From Major WHERE MajorName =  \'' + major + '\'), GraduationYear = ' + gradyear + ', CurrentPursuingDegree = (SELECT idDegree From Degree WHERE Level = \'' + curr_degree + '\'), HighestDegreeLevel = (SELECT idDegree From Degree WHERE Level = \'' + last_degree + '\'), Skills = \'' + skills + '\', Projects = \'' + projects + '\', Bio = \'' + bio + '\', PhoneNumber = \'' + phone + '\', Links = \'' + links + '\' WHERE idUser = (SELECT idUser FROM User WHERE TokenID = \'' + token + '\')';
+            console.log(sql);
             db.query(sql, (db_err1, result) => {
                 if (db_err1) {
                     return res.status(400).json({ error: db_err1 });
@@ -526,15 +525,14 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 function verifyToken(req, res, next) {
 
     console.log("TOKENNING");
-
     // Get auth header value
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
         req.token = bearerHeader;
-        next();
+        console.log("in token check");
     } else {
         // 403 Forbidden
-        return res.sendFile(__dirname + '/public/src/loginPage.html')
+        return res.sendFile(__dirname + '/Front-End/loginPage.html')
     }
 }

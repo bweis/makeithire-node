@@ -62,13 +62,18 @@ var universities = [
 
 ];
 
-
+function getCookie(name) {
+    var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    if (match) return match[1];
+    else return "";
+}
 
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {readOnly: true, updating: true};
         this._click = this._click.bind(this);
+        this._updateInfo = this._updateInfo.bind(this);
         //Run all initial post and get requests here
         $.get(allDegress, {},function (data,status,xhr) {
         })
@@ -102,30 +107,53 @@ class Profile extends Component {
         this.setState(prevState => ({readOnly: !prevState.readOnly}))
     }
 
+
+
     _updateInfo() {
         var u = {
-            university: $('#profile_university').val(),
-            major: $('#profile_major').val(),
-            gradyear: $('#profile_gradYear').val(),
-            curr_degree: $('#profile_degreePursuing').val(),
-            bio: $('#profile_bio').val(),
-            phone: $('#profile_phoneNumber').val(),
-            resume: $('#profile_resume').val(),
-            coverLetter: $('#profile_cv').val()
+            University: $('#profile_university').val(),
+            Major: $('#profile_major').val(),
+            GraduationYear: $('#profile_gradYear').val(),
+            CurrentPursuingDegree: $('#profile_currentDegree').val(),
+            Bio: $('#profile_bio').val(),
+            PhoneNumber: $('#profile_phoneNumber').val(),
+
         };
-        $.post(url, u,function (data) {
 
 
-        })
-            .done(function (data) {
-                alert(data.message);
 
-            })
-            .fail(function(data, settings, ex) {
+        console.log(u);
+        var cookie = getCookie("token");
+        this.setState(prevState => ({readOnly: !prevState.readOnly}));
+        $.ajax({
+            type: 'POST',
+            headers: { 'authorization': cookie},
+            url: 'http://localhost:3001/api/updateStudentDetails',
+            data: u,
+            success: function(msg) {
+                console.log("successful update");
+            },
+            failure: function(msg) {
+                console.log("shit failed");
+            }
+         });
 
-          //      alert(data.response);
-            });
+
+        // $.post(url, u,function (data) {
+        //
+        //
+        // })
+        //     .done(function (data) {
+        //         alert(data.message);
+        //
+        //     })
+        //     .fail(function(data, settings, ex) {
+        //
+        //   //      alert(data.response);
+        //     });
     }
+
+
 
     render() {
         return (
@@ -237,14 +265,14 @@ class Profile extends Component {
                         </FormGroup>
                         <FormGroup row hidden={!this.state.readOnly}>
                             <Col>
-                                <Button onClick={this._click} className="col-form-label">
+                                <Button onClick={() => { this._click()}}  className="col-form-label">
                                     Edit Profile
                                 </Button>
                             </Col>
                         </FormGroup>
                         <FormGroup row hidden={this.state.readOnly}>
                             <Col>
-                                <Button onClick={this._updateInfo()} className="col-form-label">
+                                <Button onClick={() => { this._updateInfo()}} className="col-form-label">
                                     Save Changes
                                 </Button>
                             </Col>
