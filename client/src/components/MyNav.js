@@ -15,17 +15,57 @@ import {Link} from 'react-router-dom';
 
 import { NavLink as RRNavLink } from 'react-router-dom';
 
+import $ from 'jquery';
 
-var user = {
-    firstName: "Zack",
-    lastName: "Fernandez"
+var url = "http://localhost:3001";
+
+function getCookie(name) {
+    var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    if (match) return match[1];
+    else return "";
 }
+
 
 class MyNav extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {user: {}, isRecruiter: false};
+        console.log(this.props.isLoggedIn);
+        this.state = {user: {}, isRecruiter: -1};
+        var cookie = getCookie("token");
+
+        var lol = this;
+
+        $.ajax({
+            type: 'GET',
+            headers: {'authorization': cookie},
+            url: url + "/api/isRecruiter"
+        })
+            .done(function (data, status, xhr) {
+                if (data.message === "Success") {
+                    console.log('success on isRecruiter');
+                    console.log(data.response);
+                    lol.setState({isRecruiter: data.response})
+                }
+            })
+            .fail(function (jqxhr, settings, ex) {
+                console.log('failed on isRecruiter');
+            })
+        $.ajax({
+            type: 'GET',
+            headers: {'authorization': cookie},
+            url: url + "/api/isRecruiter"
+        })
+            .done(function (data, status, xhr) {
+                if (data.message === "Success") {
+                    console.log('success on isRecruiter');
+                    console.log(data.response);
+                    lol.setState({isRecruiter: data.response})
+                }
+            })
+            .fail(function (jqxhr, settings, ex) {
+                console.log('failed on isRecruiter');
+            })
     }
 
     render() {
@@ -39,7 +79,7 @@ class MyNav extends Component {
                 <Nav>
                     <UncontrolledDropdown>
                         <DropdownToggle nav caret>
-                            {user.firstName} {user.lastName}
+                            {this.state.user.firstName} {<this className="state"></this>.user.lastName}
                         </DropdownToggle>
                         <DropdownMenu >
                             <DropdownItem>
