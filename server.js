@@ -189,7 +189,7 @@ app.post('/api/signUpRecruiter', (req, res) => {
             return res.status(401).json({error: err});
         }
         else {
-            let post = { FirstName: fname, MiddleName: null, LastName: lname, BirthDate: bdate, EmailID: email, Password: hash, idCompany: idComp };
+            let post = { FirstName: fname, MiddleName: mname, LastName: lname, BirthDate: bdate, EmailID: email, Password: hash, idCompany: idComp };
             let sql1 = 'INSERT INTO User SET ?';
             if (idComp == '-1') {
                 db.query(sql1, post, (db_err1, result1) => {
