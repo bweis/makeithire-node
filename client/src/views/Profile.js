@@ -6,7 +6,7 @@ var allUnis = "http://localhost:3001/api/getUniversityList";
 
 var getStudentInfo = "http://localhost:3001/api/getStudentDetails";
 
-
+var userDetailsUrl = "http://localhost:3001/api/getUserDetails";
 
 var majors = [];
 var degrees = [];
@@ -14,6 +14,11 @@ var universities = [];
 
 import $ from 'jquery';
 import React, { Component } from 'react';
+
+var name;
+var surName;
+var mail;
+
 
 import {
     Container,
@@ -65,6 +70,48 @@ function callME() {
 
 function  mount(yo) {
     var lol = yo;
+    var cookie = getCookie("token");
+
+    $.ajax({
+        type: 'GET',
+        headers: {'authorization': cookie},
+        url: userDetailsUrl,
+        data: [],
+
+    })
+
+        .done(function (data, status, xhr) {
+
+
+            if (data.message === "Success") {
+
+                let ref = data.response[0];
+                name = ref.FirstName;
+                surName = ref.LastName;
+                mail = ref.EmailID;
+
+
+
+
+
+            }
+        })
+
+        .fail(function (jqxhr, settings, ex) {
+            var dan = JSON.parse(jqxhr.responseText);
+            if (dan.message === "unauthorized access") {
+
+            }
+        })
+
+
+
+
+
+
+
+
+
 
     $.get(allDegress, {}, function (data, status, xhr) {
     })
@@ -78,6 +125,10 @@ function  mount(yo) {
             if (dan.message === "unauthorized access") {
             }
         });
+
+
+
+
     $.get(allMajors, {}, function (data, status, xhr) {
     })
         .done(function (data, status, xhr) {
@@ -94,6 +145,7 @@ function  mount(yo) {
 
 
     $.get(allUnis, {}, function (data, status, xhr) {
+
     })
         .done(function (data, status, xhr) {
             if (data.message === "Success") {
@@ -102,6 +154,8 @@ function  mount(yo) {
 
                 //last call
                 var cookie = getCookie("token");
+
+
 
                 $.ajax({
                     type: 'GET',
@@ -124,6 +178,10 @@ function  mount(yo) {
                             temp.bio = ref.Bio;
                             temp.gradYear = ref.GraduationYear;
                             temp.phoneNumber = ref.PhoneNumber;
+                            temp.email = mail;
+                            temp.name = name;
+                            temp.lastName = surName;
+                            temp.firstName = name;
 
                             lol.setState({user:temp});
 
@@ -334,7 +392,7 @@ mount(haha)
                                 </h4>
                                 <h4>
                                 </h4>
-                                <Input className="profile-input align-middle"  onChange={e => this.onTodoChange(e.target.value)} id="profile_email" type="email" value={this.state.user.email} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle"  onChange={e => this.onTodoChange(e.target.value)} id="profile_email" type="email" value={this.state.user.email} readOnly/>
                                 <Input className="profile-input align-middle" onChange={e => this.onTodoChange2(e.target.value)}  id="profile_phoneNumber" type="text" value={this.state.user.phoneNumber} readOnly={this.state.readOnly}/>
                                 <Input className="profile-input align-middle" onChange={e => this.onTodoChange3(e.target.value)}  id="profile_university" type="select" value={this.state.user.university} readOnly={this.state.readOnly}>
                                     {universities.map(function(university, index){
