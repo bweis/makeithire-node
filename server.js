@@ -327,6 +327,35 @@ app.get('/api/isRecruiter', verifyToken, (req, res) => {
     });
 });
 
+// POST API: Request to Delete a Recruiter
+app.post('/api/requestDelete', verifyToken, (req, res) => {
+    var email = req.body.EmailToDelete;
+    let sql = 'SELECT idUser FROM User WHERE TokenID = ?';
+    jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
+        if (auth_err) {
+            return res.status(401).json({ error: auth_err });
+        } else {
+            db.query(sql, req.token, (db_err1, result) => {
+                if (db_err1) {
+                    return res.status(400).json({ error: db_err1 });
+                }
+                else {
+                    var sql2 = 'INSERT INTO RecruiterDeleteRequests SET ?';
+                    var post2 = {idHeadRecruiter: result[0].idUser, EmailToDelete: email};
+                    db.query(sql2, post2, (db_err2, result2) => {
+                        if (db_err2) {
+                            return res.status(400).json({ error: db_err2 });
+                        }
+                        else {
+                            return res.status(200).json({ message: "Success" });
+                        }
+                    });
+                }
+            })
+        }
+    });
+});
+
 // POST API: Delete Recruiter
 app.post('/api/deleteRecruiter', verifyToken, (req, res) => {
     var fname = req.body.FirstName;
@@ -636,13 +665,10 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 function verifyToken(req, res, next) {
 
     // Get auth header value
-    console.log("Token check");
-
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
         req.token = bearerHeader;
-        console.log("in token check");
         next()
     } else {
         console.log("exit");
