@@ -287,7 +287,7 @@ app.post('/api/signUpRecruiter', (req, res) => {
     });
 });
 
-app.post('/api/isRecruiter', verifyToken, (req, res) => {
+app.get('/api/isRecruiter', verifyToken, (req, res) => {
     var compid = '';
     var userid = '';
     let sql = 'SELECT idCompany, idUser FROM User WHERE TokenID = ?'; 
