@@ -248,7 +248,7 @@ class Profile extends Component {
             Projects: 'No Projects',
             Bio: $('#profile_bio').val(),
             PhoneNumber: $('#profile_phoneNumber').val(),
-            Links: 'www.link.com'
+            Links: $('#profile_github').val()
         };
 
 
