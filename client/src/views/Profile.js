@@ -13,6 +13,7 @@ var degrees = [];
 var universities = [];
 
 import $ from 'jquery';
+import axios, { post } from 'axios';
 import React, { Component } from 'react';
 
 var name;
@@ -64,9 +65,13 @@ var user = {
 
 
 
-function callME() {
+
+function onResumeSubmit(e) {
+alert("HEY, I DO WORK");
 
 }
+
+
 
 function  mount(yo) {
     var lol = yo;
@@ -102,8 +107,7 @@ function  mount(yo) {
             if (dan.message === "unauthorized access") {
 
             }
-        })
-
+        });
 
 
 
@@ -225,7 +229,6 @@ class Profile extends Component {
     }
 
 
-
     _click() {
 
         this.setState(prevState => ({readOnly: !prevState.readOnly}))
@@ -249,7 +252,6 @@ class Profile extends Component {
         };
 
 
-
         console.log(u);
         var cookie = getCookie("token");
 
@@ -257,31 +259,76 @@ class Profile extends Component {
         this.setState(prevState => ({readOnly: !prevState.readOnly}));
         $.ajax({
             type: 'POST',
-            headers: { 'authorization': cookie},
+            headers: {'authorization': cookie},
             url: 'http://localhost:3001/api/updateStudentDetails',
             data: u,
-            success: function(msg) {
+            success: function (msg) {
                 console.log("successful update");
-mount(haha)
+               mount(haha)
+
             },
-            failure: function(msg) {
+            failure: function (msg) {
                 console.log("shit failed");
             }
-         });
+        });
 
 
-        // $.post(url, u,function (data) {
-        //
-        //
-        // })
-        //     .done(function (data) {
-        //         alert(data.message);
-        //
-        //     })
-        //     .fail(function(data, settings, ex) {
-        //
-        //   //      alert(data.response);
-        //     });
+
+
+        const config = {
+            headers: {'authorization': cookie, 'content-type': 'multipart/form-data'}
+        };
+
+
+
+
+
+        var file =  $('#profile_resume')[0].files[0];
+        var formData = new FormData();
+        formData.append('resume', file);
+        $.ajax({
+            url: "http://localhost:3001/api/uploadResume",
+            type: 'POST',
+            data: formData,
+            headers: {'Authorization': cookie},
+            encType: 'multipart/form-data',
+            cache: false,
+            contentType: false,
+
+            processData: false,
+
+            success: function (data, textStatus, jqXHR) {
+                alert("yes");
+
+            }
+        });
+
+        var file2 =  $('#profile_cv')[0].files[0];
+        var form = new FormData();
+        form.append('coverletter', file2);
+
+
+
+        $.ajax({
+            url: "http://localhost:3001/api/uploadCoverLetter",
+            type: 'POST',
+            data: form,
+            headers: {'Authorization': cookie},
+            encType: 'multipart/form-data',
+            cache: false,
+            contentType: false,
+
+            processData: false,
+
+            success: function (data, textStatus, jqXHR) {
+                alert("yes");
+
+            }
+        });
+
+
+
+
     }
 
 
@@ -375,6 +422,7 @@ mount(haha)
 
 
 
+
     render() {
         return (
             <div>
@@ -449,7 +497,9 @@ mount(haha)
                                 <Label className="col-form-label" for="profile_resume">Resume</Label>
                             </Col>
                             <Col>
+
                                 <Input id="profile_resume" type="file" accept="application/pdf" className="profile-input align-middle" onChange={e => this.onTodoChange9(e.target.value)} value={user.resume} readOnly={this.state.readOnly}/>
+
                             </Col>
                         </FormGroup>
 

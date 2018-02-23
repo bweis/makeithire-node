@@ -11,6 +11,7 @@ const cookie = require('cookie');
 const cors = require('cors');
 const mime = require('mime-types');
 const multer = require('multer');
+const path = require('path');
 const fs = require('fs');
 const app = express();
 
@@ -112,14 +113,12 @@ app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
     var links = req.body.Links;
     var resume = null;
     var coverLetter = null;
-    console.log(university);
 
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             res.sendStatus(401).json({ error: auth_err });
         } else {
             let sql = 'UPDATE Student SET University = (SELECT idUniversity From University WHERE UnivName =  \'' + university + '\'), Major = (SELECT idMajor From Major WHERE MajorName =  \'' + major + '\'), GraduationYear = ' + gradyear + ', CurrentPursuingDegree = (SELECT idDegree From Degree WHERE Level = \'' + curr_degree + '\'), HighestDegreeLevel = (SELECT idDegree From Degree WHERE Level = \'' + last_degree + '\'), Skills = \'' + skills + '\', Projects = \'' + projects + '\', Bio = \'' + bio + '\', PhoneNumber = \'' + phone + '\', Links = \'' + links + '\' WHERE idUser = (SELECT idUser FROM User WHERE TokenID = \'' + token + '\')';
-            console.log(sql);
             db.query(sql, (db_err1, result) => {
                 if (db_err1) {
                     return res.status(400).json({ error: db_err1 });
@@ -140,12 +139,10 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
             return res.status(401).json({ error: auth_err });
         } else {
             db.query(sql, req.token, (err1, result) => {
-                console.log(result);
                 if (err1) {
                     return res.status(400).json({ message: err1 });
                 }
                 else {
-                    console.log(result)
                     return res.status(200).json({ message: "Success", response: result });
                 }
             })
@@ -162,12 +159,10 @@ app.get('/api/getUserDetails', verifyToken, (req, res) => {
             return res.status(401).json({ error: auth_err });
         } else {
             db.query(sql, req.token, (err1, result) => {
-                console.log(result);
                 if (err1) {
                     return res.status(400).json({ error: err1 });
                 }
                 else {
-                    console.log(result)
                     return res.status(200).json({ message: "Success", response: result });
                 }
             })
@@ -180,7 +175,6 @@ app.get('/api/getUserDetails', verifyToken, (req, res) => {
 app.get('/api/getCompanyList', (req, res) => {
     let sql = 'SELECT * FROM Company';
     db.query(sql, (err, result) => {
-        console.log(result);
         if (err) {
             return res.status(400).json({ error: err });
         }
@@ -219,8 +213,6 @@ app.post('/api/signUpRecruiter', (req, res) => {
                     if (db_err1) {
                         return res.sendStatus(400).json({ error: db_err1 });
                     } else {
-                        console.log(result1);
-                        console.log(result1.insertId);
                         if (companyname == null) {
                             post = { CompanyName: null, Description: null, Logo: null, HashTags: null, idUser: result1.insertId, Published: 0, EmailDomain: emailDomain[1] }
                         } else if (published == '1') {
@@ -230,7 +222,6 @@ app.post('/api/signUpRecruiter', (req, res) => {
                         }
                         var sql2 = 'INSERT INTO Company SET ?'
                         db.query(sql2, post, (db_err2, result2) => {
-                            console.log(result2);
                             if (db_err2) {
                                 return res.status(400).json({ error: db_err2 });
                             }
@@ -250,7 +241,6 @@ app.post('/api/signUpRecruiter', (req, res) => {
                 });
             } else {
                 db.query(sql1, post, (db_err4, result1) => {
-                    console.log(result1);
                     if (db_err4) {
                         return res.status(400).json({ error: db_err4 });
                     }
@@ -315,7 +305,6 @@ app.post('/api/deleteRecruiter', verifyToken, (req, res) => {
             return res.status(401).json({ error: auth_err });
         } else {
             db.query(sql, (db_err1, result) => {
-                console.log(result);
                 if (db_err1) {
                     return res.status(400).json({ error: db_err1 });
                 }
@@ -341,7 +330,6 @@ app.post('/api/updateCompanyDetails', verifyToken, (req, res) => {
             return res.status(401).json({ error: auth_err });
         } else {
             db.query(sql, (db_err1, result) => {
-                console.log(result);
                 if (db_err1) {
                     return res.status(400).json({ error: db_err1 });
                 }
@@ -493,7 +481,6 @@ app.get('/api/getUniversityList', (req, res) => {
 app.get('/api/getCompanyList', (req, res) => {
     let sql = 'SELECT * FROM Company';
     db.query(sql, (err, result) => {
-        console.log(result);
         if (err) {
             return res.status(400).json({ error: err });
         }
@@ -509,13 +496,13 @@ var email_string = '';
 const storageR = multer.diskStorage({
     destination: './public/uploads/',
     filename: function (req, file, cb) {
-        cb(null, email_string + "_Resume");
+        cb(null, email_string + "_Resume"+  path.extname(file.originalname));
     }
 });
 const storageCV = multer.diskStorage({
     destination: './public/uploads/',
     filename: function (req, file, cb) {
-        cb(null, email_string + '_CoverLetter');
+        cb(null, email_string + '_CoverLetter'+ path.extname(file.originalname));
     }
 });
 const uploadR = multer({
@@ -525,7 +512,7 @@ const uploadR = multer({
         checkFileType(file, cb);
     }
 }).single('resume');
-const uploadCL = multer({
+const uploadCV = multer({
     storage: storageCV,
     limits: { fileSize: 1000000 },
     fileFilter: function (req, file, cb) {
@@ -540,7 +527,6 @@ function checkFileType(file, cb) {
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
     const mimetype = filetypes.test(file.mimetype);
-
     if (mimetype && extname) {
         return cb(null, true);
     } else {
@@ -550,22 +536,31 @@ function checkFileType(file, cb) {
 
 // POST API: Uploads Resume in Server (public/uploads)
 app.post('/api/uploadResume', verifyToken, (req, res) => {
+    console.log("heyBro");
+
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             res.sendStatus(401).json({ error: auth_err });
         } else {
+
             let sql = 'SELECT EmailID FROM User WHERE TokenID = ?';
             db.query(sql, req.token, (err2, result) => {
                 if (err2) {
                     return res.status(401).json({ error: err });
                 }
                 else {
+                    console.log("heyBro");
+
                     email_string = result[0].EmailID;
+
                     uploadR(req, res, (err) => {
                         if (err) {
+                            console.log(err);
                             res.status(400).json({ error: err });
                         } else {
-                            if (req.file == undefined) {
+
+                            if (req.file === undefined) {
+                                console.log("NO FILE SELECTED");
                                 res.status(400).json({ error: err, message: "No File Selected" });
                             } else {
                                 res.status(200).json({ message: "Success", response: req.file });
@@ -580,6 +575,7 @@ app.post('/api/uploadResume', verifyToken, (req, res) => {
 
 // POST API: Uploads CoverLetter in Server (public/uploads)
 app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
+    console.log('Hey1');
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             res.sendStatus(401).json({ error: auth_err });
@@ -590,7 +586,8 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
                     return res.status(401).json({ error: err });
                 }
                 else {
-                    email_string = 'public/uploads/' + result[0].EmailID;
+                    console.log('Hey2');
+                    email_string = result[0].EmailID;
                     uploadCV(req, res, (err) => {
                         if (err) {
                             res.status(400).json({ error: err });
@@ -612,13 +609,11 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 function verifyToken(req, res, next) {
 
     // Get auth header value
-    console.log("Token check");
 
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
         req.token = bearerHeader;
-        console.log("in token check");
         next()
     } else {
         console.log("exit");
