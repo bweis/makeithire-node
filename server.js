@@ -153,6 +153,29 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
     });
 });
 
+
+// GET API: Get Student Details
+app.get('/api/getUserDetails', verifyToken, (req, res) => {
+    let sql = 'SELECT * FROM User WHERE TokenID = ?';
+    jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
+        if (auth_err) {
+            return res.status(401).json({ error: auth_err });
+        } else {
+            db.query(sql, req.token, (err1, result) => {
+                console.log(result);
+                if (err1) {
+                    return res.status(400).json({ error: err1 });
+                }
+                else {
+                    console.log(result)
+                    return res.status(200).json({ message: "Success", response: result });
+                }
+            })
+        }
+    });
+});
+
+
 //GET API: Get Company List
 app.get('/api/getCompanyList', (req, res) => {
     let sql = 'SELECT * FROM Company';
