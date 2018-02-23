@@ -16,58 +16,39 @@ import {
     ModalFooter,
 } from 'reactstrap';
 
-var companies = [
-    {
-    company_id: 1,
-    companyName: 'Google',
-    logo: './img/google.png',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    headquarters: 'Mountain View, CA',
-    tags: [],
-    openings: []
-    },
-    {
-        company_id: 2,
-        companyName: 'LinkedIn',
-        logo: './img/google.png',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-        headquarters: 'Mountain View, CA',
-        tags: [],
-        openings: []
-    },
-    {
-        company_id: 3,
-        companyName: 'Robinhood',
-        logo: './img/google.png',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-        headquarters: 'Mountain View, CA',
-        tags: [],
-        openings: []
-    },
-    {
-        company_id: 4,
-        companyName: 'Salesforce',
-        logo: './img/google.png',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-        headquarters: 'Mountain View, CA',
-        tags: [],
-        openings: []
-    },
-];
+import $ from 'jquery';
 
-var company = {
-    company_id: 1,
-    companyName: 'Google',
-    logo: './img/google.png',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    headquarters: 'Mountain View, CA',
-    tags: [],
-    openings: []
-};
+var url = "http://localhost:3001";
 
-var user = {
-    isRecruiter: true
-};
+function getCookie(name) {
+    var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+    if (match) return match[1];
+    else return "";
+}
+
+function getCompanyDetails(context, cookie, companyID) {
+    $.ajax({
+        type: 'GET',
+        headers: {'authorization': cookie},
+        url: url + "/api/getCompanyList"
+    })
+        .done(function (data, status, xhr) {
+            if (data.message === "Success") {
+                console.log(companyID);
+                for (var i = 0; i < data.response.length; i++) {
+                    console.log('loop companyID: ' + companyID + ' checked against: ' + data.response[i].idCompany);
+                    if (data.response[i].idCompany == companyID) {
+                        console.log('match');
+                        context.setState({company: data.response[i]});
+                    }
+                    console.log(context.state.company);
+                }
+            }
+        })
+        .fail(function (jqxhr, settings, ex) {
+            console.log('failed on isRecruiter');
+        });
+}
 
 class Company extends Component {
     /*
@@ -84,13 +65,33 @@ class Company extends Component {
     constructor(props) {
         super(props);
         this.state = {readOnly: true, modal: false};
+        console.log(this.props.isLoggedIn);
+        this.state = {isRecruiter: -1, company: {}};
+        var cookie = getCookie("token");
+        var lol = this;
         this._click = this._click.bind(this);
         this._toggle = this._toggle.bind(this);
+        this._updateInfo = this._toggle.bind(this);
+        $.ajax({
+            type: 'GET',
+            headers: {'authorization': cookie},
+            url: url + "/api/getUserDetails"
+        })
+            .done(function (data, status, xhr) {
+                if (data.message === "Success") {
+                    console.log(data.response);
+                    lol.setState({isRecruiter: data.response.type});
+                    getCompanyDetails(lol, cookie, data.response.idCompany);
+                }
+            })
+            .fail(function (jqxhr, settings, ex) {
+                console.log('failed on isRecruiter');
+            });
+
     }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.location == this.props.location) {
-            console.log('here')
-        }
+
+    _updateInfo() {
+        alert('TODO: update details');
     }
 
     _click() {
@@ -103,13 +104,40 @@ class Company extends Component {
         });
     }
 
+    _remove() {
+        var d = {
+            
+        };
+        $.ajax({
+            type: 'POST',
+            url: url + '/api/deleteRecruiter',
+            data: u,
+            success: function(msg) {
+                console.log("successful update");
+                mount(haha)
+            },
+            failure: function(msg) {
+                console.log("shit failed");
+            }
+        });
+        this._toggle();
+    }
+
+    onTodoChange(value){
+        let temp = this.company;
+        temp.Description = value;
+        this.setState({
+            company:value
+        });
+    }
+
     render() {
         var button;
-        if (user.isRecruiter) {
+        if (this.state.isRecruiter == 2) {
             button = (
-                <FormGroup>
-                    <Button onClick={this._toggle}>Remove recruiter</Button>
-                    <Button onClick={this._click}>Edit Information</Button>
+                <FormGroup row hidden={this.state.readOnly}>
+                    <Button onClick={() => { this._toggle()}}>Remove recruiter</Button>
+                    <Button onClick={() => { this._click()}}>Edit Information</Button>
                 </FormGroup>
             )
         }
@@ -120,19 +148,18 @@ class Company extends Component {
                         <FormGroup row>
                             <Col>
                                 <Media className="col-form-label">
-                                    <Media object className="profile-image" src={company.logo} />
+                                    <Media object className="profile-image" src={this.state.company.logo} />
                                 </Media>
                             </Col>
                             <Col>
                                 <h4>
-                                    {company.companyName}
+                                    {this.state.company.CompanyName}
                                 </h4>
-                                <Input className="profile-input align-middle" id="company_hq" type="text" defaultValue={company.headquarters} readOnly={this.state.readOnly} />
 
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Input className="profile-input align-middle" id="company_description" type="textarea" name="description" defaultValue={company.description} readOnly={this.state.readOnly}/>
+                            <Input className="profile-input align-middle" id="company_description" onChange={e => this.onTodoChange(e.target.value)} type="textarea" name="description" value={this.state.company.Description} readOnly={this.state.readOnly} />
                         </FormGroup>
                         <br />
                         <FormGroup row>
@@ -143,16 +170,28 @@ class Company extends Component {
                             Tags
                         </FormGroup>
                         <Modal isOpen={this.state.modal} toggle={this._toggle}>
-                            <ModalHeader toggle={this._toggle}>Modal title</ModalHeader>
+                            <ModalHeader toggle={() => {this._toggle()}}>Modal title</ModalHeader>
                             <ModalBody>
                                 <Input id="recruiters"></Input>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="primary" onClick={this._toggle}>Remove Recruiters</Button>
-                                <Button color="secondary" onClick={this._toggle}>Cancel</Button>
+                                <Button color="primary" onClick={() => { this._remove()}}>Remove Recruiters</Button>
+                                <Button color="secondary" onClick={() => { this._toggle()}}>Cancel</Button>
                             </ModalFooter>
                         </Modal>
                         {button}
+                        <FormGroup row hidden={!this.state.readOnly}>
+                            <Col>
+                                <Button onClick={() => { this._updateInfo()}} className="col-form-label">
+                                    Save Changes
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button onClick={this._click}>
+                                    Deactivate Account
+                                </Button>
+                            </Col>
+                        </FormGroup>
                     </Form>
                 </Container>
             </div>

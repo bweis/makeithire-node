@@ -23,13 +23,13 @@ class Home extends Component {
         $.ajax({
             type: 'GET',
             headers: {'authorization': cookie},
-            url: url + "/api/isRecruiter"
+            url: url + "/api/getUserDetails"
         })
             .done(function (data, status, xhr) {
                 if (data.message === "Success") {
                     console.log('success on isRecruiter');
-                    console.log(data.response);
-                    lol.setState({isRecruiter: data.response})
+                    console.log(data.response.type);
+                    lol.setState({isRecruiter: data.response.type})
                 }
             })
             .fail(function (jqxhr, settings, ex) {
@@ -45,7 +45,7 @@ class Home extends Component {
             home = <h1>Student Home Page</h1>;
         } else if (this.state.isRecruiter == 1) {
             home = <h1>Recruiter Home Page</h1>;
-        } else {
+        } else if (this.state.isRecruiter == 2) {
             home = <h1>Head Recruiter Home Page</h1>;
         }
         /*

@@ -31,7 +31,10 @@ class MyNav extends Component {
     constructor(props) {
         super(props);
         console.log(this.props.isLoggedIn);
-        this.state = {user: {}, isRecruiter: -1};
+        this.state = {user: {
+            firstName: '',
+            lastName: ''
+        }, isRecruiter: -1};
         var cookie = getCookie("token");
 
         var lol = this;
@@ -43,9 +46,13 @@ class MyNav extends Component {
         })
             .done(function (data, status, xhr) {
                 if (data.message === "Success") {
-                    console.log('success on getDetails');
-                    console.log(data.response);
-                    lol.setState({isRecruiter: data.response})
+                    console.log('success on isRecruiter');
+                    console.log(data.response.type);
+                    var u = {
+                        firstName: data.response.FirstName,
+                        lastName: data.response.LastName
+                    };
+                    lol.setState({isRecruiter: data.response.type, user: u})
                 }
             })
             .fail(function (jqxhr, settings, ex) {
@@ -54,6 +61,16 @@ class MyNav extends Component {
     }
 
     render() {
+        let profLink = '';
+        if (this.state.isRecruiter == -1) {
+            //
+        } else if (this.state.isRecruiter == 0) {
+            profLink = <Link to="/profile">My Profile</Link>;
+        } else if (this.state.isRecruiter == 1) {
+            profLink = <Link to="/company">My Company</Link>;
+        } else if (this.state.isRecruiter == 2) {
+            profLink = <Link to="/company">My Company</Link>;
+        }
         return (
           <div className="top-nav">
               <Navbar color="faded" light>
@@ -64,11 +81,11 @@ class MyNav extends Component {
                 <Nav>
                     <UncontrolledDropdown>
                         <DropdownToggle nav caret>
-
+                            {this.state.user.firstName} {this.state.user.lastName}
                         </DropdownToggle>
                         <DropdownMenu >
                             <DropdownItem>
-                                <Link to="/profile">My Profile</Link>
+                                {profLink}
                             </DropdownItem>
                             <DropdownItem divider />
                             <DropdownItem>
