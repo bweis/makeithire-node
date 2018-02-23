@@ -27,6 +27,10 @@ app.listen(app.get('port'), () => {
 app.use(express.static("Front-End"));
 
 
+app.use(bodyParser.urlencoded({
+    extended:true}));
+app.use(bodyParser.json());
+
 app.get('/', function (req, res) {
     return res.sendFile(__dirname + '/Front-End/loginPage.html')
 });
@@ -98,6 +102,8 @@ app.post('/api/signUpStudent', (req, res) => {
 
 // POST API: Add Student Details into Student Table
 app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
+
+    var token = req.token
     var university = req.body.University;
     var major = req.body.Major;
     var gradyear = req.body.GraduationYear;
@@ -110,6 +116,8 @@ app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
     var links = req.body.Links;
     var resume = null;
     var coverLetter = null;
+    console.log(university);
+
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             res.sendStatus(401).json({ error: auth_err });
@@ -524,13 +532,14 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 // Verify Token [ Format -> Authorization: <access_token>]
 function verifyToken(req, res, next) {
 
-    console.log("TOKENNING");
     // Get auth header value
+
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
         req.token = bearerHeader;
         console.log("in token check");
+        next()
     } else {
         // 403 Forbidden
         return res.sendFile(__dirname + '/Front-End/loginPage.html')
