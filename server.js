@@ -138,7 +138,7 @@ app.post('/api/updateStudentDetails', verifyToken, (req, res) => {
 
 // GET API: Get Student Details
 app.get('/api/getStudentDetails', verifyToken, (req, res) => {
-    let sql = 'Select U.UnivName As University, M.MajorName As Major, D1.Level As CurrentDegreePursuing, D2.Level As HighestDegreeLevel, S.GraduationYear, S.Skills, S.Projects, S.Bio, S.PhoneNumber, S.Links From Degree D1, Degree D2, Major M, University U, (Select * From Student Where idUser = (Select idUser From User Where TokenID = \'' + req.token + '\')) S WHERE U.idUniversity = S.University AND M.idMajor = S.Major AND D1.idDegree = S.CurrentPursuingDegree AND D2.idDegree = S.HighestDegreeLevel';
+    let sql = 'Select * U.UnivName As University, M.MajorName As Major, D1.Level As CurrentDegreePursuing, D2.Level As HighestDegreeLevel, S.GraduationYear, S.Skills, S.Projects, S.Bio, S.PhoneNumber, S.Links From Degree D1, Degree D2, Major M, University U, (Select * From Student Where idUser = (Select idUser From User Where TokenID = \'' + req.token + '\')) S WHERE U.idUniversity = S.University AND M.idMajor = S.Major AND D1.idDegree = S.CurrentPursuingDegree AND D2.idDegree = S.HighestDegreeLevel';
     jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
         if (auth_err) {
             return res.status(401).json({ error: auth_err });
@@ -146,10 +146,11 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
             db.query(sql, (err1, result) => {
                 console.log(result);
                 if (err1) {
-                    return res.status(401).json({ message: err1 });
+                    return res.status(400).json({ message: err1 });
                 }
                 else {
-                    return res.status(200).json({ response: result });
+                    console.log(result)
+                    return res.status(200).json({ message: "Success",response: result });
                 }
             })
         }
@@ -386,7 +387,6 @@ app.get('/api/getMajors', (req, res) => {
 app.get('/api/getDegrees', (req, res) => {
     let sql = 'SELECT * FROM Degree';
     db.query(sql, (err, result) => {
-        console.log(result);
         if (err) {
             return res.status(400).json({ error: err });
         }
@@ -400,7 +400,6 @@ app.get('/api/getDegrees', (req, res) => {
 app.get('/api/getUniversityList', (req, res) => {
     let sql = 'SELECT * FROM University';
     db.query(sql, (err, result) => {
-        console.log(result);
         if (err) {
             return res.status(400).json({ message: err });
         }
@@ -533,6 +532,7 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 function verifyToken(req, res, next) {
 
     // Get auth header value
+    console.log("Token check");
 
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
@@ -541,6 +541,7 @@ function verifyToken(req, res, next) {
         console.log("in token check");
         next()
     } else {
+        console.log("exit");
         // 403 Forbidden
         return res.sendFile(__dirname + '/Front-End/loginPage.html')
     }

@@ -2,10 +2,15 @@
 var allMajors = "http://localhost:3001/api/getMajors";
 var allDegress = "http://localhost:3001/api/getDegrees";
 var url = "http://localhost:3001/api/updateStudentDetails";
+var allUnis = "http://localhost:3001/api/getUniversityList";
+
+var getStudentInfo = "http://localhost:3001/api/getStudentDetails";
+
 
 
 var majors = [];
 var degrees = [];
+var universities = [];
 
 import $ from 'jquery';
 import React, { Component } from 'react';
@@ -54,13 +59,6 @@ var user = {
 
 
 
-var universities = [
-    'Purdue University WL - Main Campus',
-    'Purdue University Kokomo',
-    'Purdue University Calumet',
-    'Indiana University Purdue University Indiana'
-
-];
 
 function getCookie(name) {
     var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
@@ -75,32 +73,79 @@ class Profile extends Component {
         this._click = this._click.bind(this);
         this._updateInfo = this._updateInfo.bind(this);
         //Run all initial post and get requests here
-        $.get(allDegress, {},function (data,status,xhr) {
+
+
+        $.get(allDegress, {}, function (data, status, xhr) {
         })
             .done(function (data, status, xhr) {
-             //   alert(data.response);
-                if(data.message === "Success") {
+                //   alert(data.response);
+                if (data.message === "Success") {
                     degrees = data.response;
                 }
             })
-            .fail(function(jqxhr, settings, ex) {
+            .fail(function (jqxhr, settings, ex) {
                 var dan = JSON.parse(jqxhr.responseText);
-                if(dan.message === "unauthorized access") {
+                if (dan.message === "unauthorized access") {
                 }
             });
-        $.get(allMajors, {},function (data,status,xhr) {
-            })
+        $.get(allMajors, {}, function (data, status, xhr) {
+        })
             .done(function (data, status, xhr) {
-          //      alert(data.response);
-                if(data.message === "Success") {
+                //      alert(data.response);
+                if (data.message === "Success") {
                     majors = data.response;
                 }
             })
-            .fail(function(jqxhr, settings, ex) {
+            .fail(function (jqxhr, settings, ex) {
                 var dan = JSON.parse(jqxhr.responseText);
-                if(dan.message === "unauthorized access") {
+                if (dan.message === "unauthorized access") {
+                }
+            });
+
+
+        $.get(allUnis, {}, function (data, status, xhr) {
+        })
+            .done(function (data, status, xhr) {
+                if (data.message === "Success") {
+                    universities = data.response;
                 }
             })
+            .fail(function (jqxhr, settings, ex) {
+                var dan = JSON.parse(jqxhr.responseText);
+                if (dan.message === "unauthorized access") {
+
+                }
+            });
+        var cookie = getCookie("token");
+
+        $.ajax({
+            type: 'GET',
+            headers: {'authorization': cookie},
+            url: getStudentInfo,
+            data: [],
+
+        })
+
+            .done(function (data, status, xhr) {
+
+                if (data.message === "Success") {
+                    alert(data.response);
+
+                }
+            })
+            .fail(function (jqxhr, settings, ex) {
+                alert("failed");
+                var dan = JSON.parse(jqxhr.responseText);
+                if (dan.message === "unauthorized access") {
+
+                }
+            })
+
+
+
+
+
+
 
     }
     _click() {
@@ -174,7 +219,7 @@ class Profile extends Component {
                                 <Input className="profile-input align-middle" id="profile_phoneNumber" type="text" defaultValue={user.phoneNumber} readOnly={this.state.readOnly}/>
                                 <Input className="profile-input align-middle" id="profile_university" type="select" defaultValue={user.university} readOnly={this.state.readOnly}>
                                     {universities.map(function(university, index){
-                                        return <option key={ index }>{university}</option>;
+                                        return <option key={ index }>{university.UnivName}</option>;
                                     })}
                                 </Input>
                             </Col>
