@@ -59,6 +59,94 @@ var user = {
 
 
 
+function callME() {
+
+}
+
+function  mount(yo) {
+    var lol = yo;
+
+    $.get(allDegress, {}, function (data, status, xhr) {
+    })
+        .done(function (data, status, xhr) {
+            if (data.message === "Success") {
+                degrees = data.response;
+            }
+        })
+        .fail(function (jqxhr, settings, ex) {
+            var dan = JSON.parse(jqxhr.responseText);
+            if (dan.message === "unauthorized access") {
+            }
+        });
+    $.get(allMajors, {}, function (data, status, xhr) {
+    })
+        .done(function (data, status, xhr) {
+            //      alert(data.response);
+            if (data.message === "Success") {
+                majors = data.response;
+            }
+        })
+        .fail(function (jqxhr, settings, ex) {
+            var dan = JSON.parse(jqxhr.responseText);
+            if (dan.message === "unauthorized access") {
+            }
+        });
+
+
+    $.get(allUnis, {}, function (data, status, xhr) {
+    })
+        .done(function (data, status, xhr) {
+            if (data.message === "Success") {
+                universities = data.response;
+
+
+                //last call
+                var cookie = getCookie("token");
+
+                $.ajax({
+                    type: 'GET',
+                    headers: {'authorization': cookie},
+                    url: getStudentInfo,
+                    data: [],
+
+                })
+
+                    .done(function (data, status, xhr) {
+
+                        if (data.message === "Success") {
+                            let temp = user;
+
+                            let ref = data.response[0];
+                            //  var day = universities[ref.University].UnivName
+                            temp.university = universities[ref.University-1].UnivName;
+                            temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
+                            temp.major = majors[ref.Major-1].MajorName;
+                            temp.bio = ref.Bio;
+                            temp.gradYear = ref.GraduationYear;
+                            temp.phoneNumber = ref.PhoneNumber;
+
+                            lol.setState({user:temp});
+
+
+
+                        }
+                    })
+
+                    .fail(function (jqxhr, settings, ex) {
+                        var dan = JSON.parse(jqxhr.responseText);
+                        if (dan.message === "unauthorized access") {
+
+                        }
+                    })
+            }
+        })
+        .fail(function (jqxhr, settings, ex) {
+            var dan = JSON.parse(jqxhr.responseText);
+            if (dan.message === "unauthorized access") {
+
+            }
+        });
+}
 
 function getCookie(name) {
     var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
@@ -69,106 +157,45 @@ function getCookie(name) {
 class Profile extends Component {
     constructor(props) {
         super(props);
-        this.state = {readOnly: true, updating: true};
+        this.state = {readOnly: true, updating: true, user: {}};
         this._click = this._click.bind(this);
         this._updateInfo = this._updateInfo.bind(this);
         //Run all initial post and get requests here
-
-
-        $.get(allDegress, {}, function (data, status, xhr) {
-        })
-            .done(function (data, status, xhr) {
-                //   alert(data.response);
-                if (data.message === "Success") {
-                    degrees = data.response;
-                }
-            })
-            .fail(function (jqxhr, settings, ex) {
-                var dan = JSON.parse(jqxhr.responseText);
-                if (dan.message === "unauthorized access") {
-                }
-            });
-        $.get(allMajors, {}, function (data, status, xhr) {
-        })
-            .done(function (data, status, xhr) {
-                //      alert(data.response);
-                if (data.message === "Success") {
-                    majors = data.response;
-                }
-            })
-            .fail(function (jqxhr, settings, ex) {
-                var dan = JSON.parse(jqxhr.responseText);
-                if (dan.message === "unauthorized access") {
-                }
-            });
-
-
-        $.get(allUnis, {}, function (data, status, xhr) {
-        })
-            .done(function (data, status, xhr) {
-                if (data.message === "Success") {
-                    universities = data.response;
-                }
-            })
-            .fail(function (jqxhr, settings, ex) {
-                var dan = JSON.parse(jqxhr.responseText);
-                if (dan.message === "unauthorized access") {
-
-                }
-            });
-        var cookie = getCookie("token");
-
-        $.ajax({
-            type: 'GET',
-            headers: {'authorization': cookie},
-            url: getStudentInfo,
-            data: [],
-
-        })
-
-            .done(function (data, status, xhr) {
-
-                if (data.message === "Success") {
-                    alert(data.response);
-
-                }
-            })
-            .fail(function (jqxhr, settings, ex) {
-                alert("failed");
-                var dan = JSON.parse(jqxhr.responseText);
-                if (dan.message === "unauthorized access") {
-
-                }
-            })
-
-
-
-
-
+        mount(this)
 
 
     }
+
+
+
     _click() {
+
         this.setState(prevState => ({readOnly: !prevState.readOnly}))
     }
 
 
-
     _updateInfo() {
+        var haha = this
+
         var u = {
             University: $('#profile_university').val(),
             Major: $('#profile_major').val(),
             GraduationYear: $('#profile_gradYear').val(),
             CurrentPursuingDegree: $('#profile_currentDegree').val(),
+            HighestDegreeLevel: 'Masters',
+            Skills: 'No Skills',
+            Projects: 'No Projects',
             Bio: $('#profile_bio').val(),
             PhoneNumber: $('#profile_phoneNumber').val(),
-
+            Links: 'www.link.com'
         };
 
 
 
         console.log(u);
         var cookie = getCookie("token");
+
+
         this.setState(prevState => ({readOnly: !prevState.readOnly}));
         $.ajax({
             type: 'POST',
@@ -177,6 +204,7 @@ class Profile extends Component {
             data: u,
             success: function(msg) {
                 console.log("successful update");
+mount(haha)
             },
             failure: function(msg) {
                 console.log("shit failed");
@@ -199,6 +227,95 @@ class Profile extends Component {
     }
 
 
+     onTodoChange(value){
+         let temp = this.user;
+        temp.email = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange2(value){
+        let temp = this.user;
+        temp.phoneNumber = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange3(value){
+        let temp = this.user;
+        temp.phoneNumber = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange4(value){
+        let temp = this.user;
+        temp.university = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange5(value){
+        let temp = this.user;
+        temp.bio = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange6(value){
+        let temp = this.user;
+        temp.major
+            = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange7(value){
+        let temp = this.user;
+        temp.gradYear = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange8(value){
+        let temp = this.user;
+        temp.coverLetter = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange9(value){
+        let temp = this.user;
+        temp.resume = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange10(value){
+        let temp = this.user;
+        temp.professional_accounts["github"] = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange11(value){
+        let temp = this.user;
+        temp.professional_accounts["linkedin"] = value
+        this.setState({
+            user:value
+        });
+    }
+    onTodoChange12(value){
+        let temp = this.user;
+        temp.professional_accounts["facebook"] = value
+        this.setState({
+            user:value
+        });
+    }
+
+
+
+
 
     render() {
         return (
@@ -212,12 +329,14 @@ class Profile extends Component {
                                 </Media>
                             </Col>
                             <Col>
-                                <h4>
-                                    {user.firstName} {user.lastName}
+                                <h4 onChange={e => this.onTodoChange(e.target.value)} >
+                                     {this.state.user.firstName } {this.state.user.lastName}
                                 </h4>
-                                <Input className="profile-input align-middle" id="profile_email" type="email" defaultValue={user.email} readOnly={this.state.readOnly}/>
-                                <Input className="profile-input align-middle" id="profile_phoneNumber" type="text" defaultValue={user.phoneNumber} readOnly={this.state.readOnly}/>
-                                <Input className="profile-input align-middle" id="profile_university" type="select" defaultValue={user.university} readOnly={this.state.readOnly}>
+                                <h4>
+                                </h4>
+                                <Input className="profile-input align-middle"  onChange={e => this.onTodoChange(e.target.value)} id="profile_email" type="email" value={this.state.user.email} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle" onChange={e => this.onTodoChange2(e.target.value)}  id="profile_phoneNumber" type="text" value={this.state.user.phoneNumber} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle" onChange={e => this.onTodoChange3(e.target.value)}  id="profile_university" type="select" value={this.state.user.university} readOnly={this.state.readOnly}>
                                     {universities.map(function(university, index){
                                         return <option key={ index }>{university.UnivName}</option>;
                                     })}
@@ -225,14 +344,14 @@ class Profile extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup row>
-                            <Input className="profile-input align-middle" id="profile_bio" type="textarea" name="bio" defaultValue={user.bio} readOnly={this.state.readOnly} />
+                            <Input className="profile-input align-middle" id="profile_bio" onChange={e => this.onTodoChange4(e.target.value)} type="textarea" name="bio" value={this.state.user.bio} readOnly={this.state.readOnly} />
                         </FormGroup>
                         <FormGroup row>
                             <Col>
                                 <Label className="col-form-label" for="profile_major">Major</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_major" type="select" className="profile-input align-middle" defaultValue={user.major} readOnly={this.state.readOnly}>
+                                <Input id="profile_major" type="select" className="profile-input align-middle" onChange={e => this.onTodoChange5(e.target.value)} value={this.state.user.major} readOnly={this.state.readOnly}>
                                     {majors.map(function(major, index){
                                         return <option key={ index }>{major.MajorName}</option>;
                                     })}
@@ -244,7 +363,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_currentDegree">Current Degree Pursuing</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_currentDegree" type="select" className="profile-input align-middle" defaultValue={user.degreePursuing} readOnly={this.state.readOnly}>
+                                <Input id="profile_currentDegree" type="select" className="profile-input align-middle"onChange={e => this.onTodoChange6(e.target.value)}  value={this.state.user.degreePursuing} readOnly={this.state.readOnly}>
                                     {degrees.map(function(degree, index){
                                         return <option key={ index }>{degree.Level}</option>;
                                     })}
@@ -256,7 +375,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_gradYear">Grad Year</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" defaultValue={user.gradYear} readOnly={this.state.readOnly}/>
+                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange7(e.target.value)}  value={user.gradYear} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -264,7 +383,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_cv">Cover Letter</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_cv" type="file" accept="application/pdf" className="profile-input align-middle" defaultValue={user.coverLetter} readOnly={this.state.readOnly}/>
+                                <Input id="profile_cv" type="file" accept="application/pdf" className="profile-input align-middle" onChange={e => this.onTodoChange8(e.target.value)} value={user.coverLetter} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -272,7 +391,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_resume">Resume</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_resume" type="file" accept="application/pdf" className="profile-input align-middle" defaultValue={user.resume} readOnly={this.state.readOnly}/>
+                                <Input id="profile_resume" type="file" accept="application/pdf" className="profile-input align-middle" onChange={e => this.onTodoChange9(e.target.value)} value={user.resume} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
 
@@ -281,7 +400,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_github">github</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_github" type="text" className="profile-input align-middle" defaultValue={user.professional_accounts["github"]} readOnly={this.state.readOnly}/>
+                                <Input id="profile_github" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange10(e.target.value)} value={user.professional_accounts["github"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -289,7 +408,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_linkedin">LinkedIn</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_linkedin" type="text" className="profile-input align-middle" value={user.professional_accounts["linkedin"]} readOnly={this.state.readOnly}/>
+                                <Input id="profile_linkedin" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange11(e.target.value)} value={user.professional_accounts["linkedin"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -297,7 +416,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_facebook">Facebook</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_facebook" type="text" className="profile-input align-middle" defaultValue={user.professional_accounts["facebook"]} readOnly={this.state.readOnly}/>
+                                <Input id="profile_facebook" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange12(e.target.value)} value={user.professional_accounts["facebook"]} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <br />
