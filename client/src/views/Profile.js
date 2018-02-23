@@ -1,6 +1,7 @@
 
 var allMajors = "http://localhost:3001/api/getMajors";
 var allDegress = "http://localhost:3001/api/getDegrees";
+var url = "http://localhost:3001/api/updateStudentDetails";
 
 
 var majors = [];
@@ -66,82 +67,66 @@ var universities = [
 class Profile extends Component {
     constructor(props) {
         super(props);
-        this.state = {readOnly: true};
+        this.state = {readOnly: true, updating: true};
         this._click = this._click.bind(this);
-
-
         //Run all initial post and get requests here
-
-
-
-
         $.get(allDegress, {},function (data,status,xhr) {
-
         })
-
             .done(function (data, status, xhr) {
-
-                alert(data.response);
-<<<<<<< HEAD
+             //   alert(data.response);
                 if(data.message === "Success") {
-
                     degrees = data.response;
                 }
-
             })
-
-
-
             .fail(function(jqxhr, settings, ex) {
-
                 var dan = JSON.parse(jqxhr.responseText);
                 if(dan.message === "unauthorized access") {
-
-
                 }
-
-
             });
-
-
-
         $.get(allMajors, {},function (data,status,xhr) {
-
             })
-
             .done(function (data, status, xhr) {
-                alert(data.response);
-
+          //      alert(data.response);
                 if(data.message === "Success") {
-
                     majors = data.response;
                 }
             })
-
-
-
             .fail(function(jqxhr, settings, ex) {
-
                 var dan = JSON.parse(jqxhr.responseText);
                 if(dan.message === "unauthorized access") {
-
-
                 }
-
-
             })
-
-
-
-
-
-
-
 
     }
     _click() {
         this.setState(prevState => ({readOnly: !prevState.readOnly}))
     }
+
+    _updateInfo() {
+        var u = {
+            university: $('#profile_university').val(),
+            major: $('#profile_major').val(),
+            gradyear: $('#profile_gradYear').val(),
+            curr_degree: $('#profile_degreePursuing').val(),
+            bio: $('#profile_bio').val(),
+            phone: $('#profile_phoneNumber').val(),
+            resume: $('#profile_resume').val(),
+            coverLetter: $('#profile_cv').val()
+        };
+        $.post(url, u,function (data) {
+
+
+        })
+            .done(function (data) {
+                alert(data.message);
+
+            })
+            .fail(function(data, settings, ex) {
+
+          //      alert(data.response);
+            });
+    }
+
     render() {
         return (
             <div>
@@ -158,14 +143,12 @@ class Profile extends Component {
                                     {user.firstName} {user.lastName}
                                 </h4>
                                 <Input className="profile-input align-middle" id="profile_email" type="email" defaultValue={user.email} readOnly={this.state.readOnly}/>
-                                <Input className="profile-input align-middle" id="profile_phoneNumber" type="email" defaultValue={user.phoneNumber} readOnly={this.state.readOnly}/>
+                                <Input className="profile-input align-middle" id="profile_phoneNumber" type="text" defaultValue={user.phoneNumber} readOnly={this.state.readOnly}/>
                                 <Input className="profile-input align-middle" id="profile_university" type="select" defaultValue={user.university} readOnly={this.state.readOnly}>
                                     {universities.map(function(university, index){
                                         return <option key={ index }>{university}</option>;
                                     })}
                                 </Input>
-
-
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -261,7 +244,7 @@ class Profile extends Component {
                         </FormGroup>
                         <FormGroup row hidden={this.state.readOnly}>
                             <Col>
-                                <Button onClick={this._click} className="col-form-label">
+                                <Button onClick={this._updateInfo()} className="col-form-label">
                                     Save Changes
                                 </Button>
                             </Col>

@@ -524,6 +524,9 @@ app.post('/api/uploadCoverLetter', verifyToken, (req, res) => {
 
 // Verify Token [ Format -> Authorization: <access_token>]
 function verifyToken(req, res, next) {
+
+    console.log("TOKENNING");
+
     // Get auth header value
     const bearerHeader = req.headers['authorization'];
     // Check if bearer is undefined
