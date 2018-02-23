@@ -47,18 +47,18 @@ import {
  */
 
 var user = {
-    firstName: 'Nik',
-    lastName: 'Suprunov',
+    firstName: '',
+    lastName: '',
     university: 'Purdue University',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
+    bio: '',
     major: 'Computer Science',
     degreePursuing: 'Bachelor of Science',
-    gradYear: 2018,
+    gradYear: "",
     coverLetter: '',
     resume: '',
-    email: 'zfernand@purdue.edu',
-    phoneNumber: '7609089377',
-    professional_accounts: {'github': 'github.com/zfernand', 'linkedin': 'linkedin.com', 'facebook': 'facebook.com'},
+    email: '',
+    phoneNumber: '',
+    professional_accounts: {'github': 'github.com/', 'linkedin': 'linkedin.com/', 'facebook': 'facebook.com/'},
     skills: [],
     applications: []
 };
@@ -96,7 +96,7 @@ function  mount(yo) {
 
                 var terra = yo.state.user;
                 terra.firstName = name;
-                terra.fastName = surName;
+                terra.lastName = surName;
                 terra.email = mail;
                 yo.setState({user:terra});
 
@@ -186,12 +186,12 @@ function  mount(yo) {
                             temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
                             temp.major = majors[ref.Major-1].MajorName;
                             temp.bio = ref.Bio;
-                            temp.gradYear = ref.GraduationYear;
+                            temp.gradYear = Number(ref.GraduationYear);
+
                             temp.phoneNumber = ref.PhoneNumber;
                            // temp.email = mail;
                            // temp.name = name;
                            // temp.lastName = surName;
-                            temp.firstName = name;
 
                             lol.setState({user:temp});
 
@@ -258,7 +258,8 @@ class Profile extends Component {
         };
 
 
-        console.log(u);
+        alert($('#profile_gradYear').val());
+
         var cookie = getCookie("token");
 
 
@@ -383,7 +384,7 @@ class Profile extends Component {
     }
     onTodoChange7(value){
         let temp = this.user;
-        temp.gradYear = value
+        temp.gradYear = value;
         this.setState({
             user:value
         });
@@ -487,7 +488,7 @@ class Profile extends Component {
                                 <Label className="col-form-label" for="profile_gradYear">Grad Year</Label>
                             </Col>
                             <Col>
-                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange7(e.target.value)}  value={user.gradYear} readOnly={this.state.readOnly}/>
+                                <Input id="profile_gradYear" type="text" className="profile-input align-middle" onChange={e => this.onTodoChange7(e.target.value)}  value={this.state.user.gradYear} readOnly={this.state.readOnly}/>
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -497,6 +498,7 @@ class Profile extends Component {
                             <Col>
                                 <Input id="profile_cv" type="file" accept="application/pdf" className="profile-input align-middle" onChange={e => this.onTodoChange8(e.target.value)} value={user.coverLetter} readOnly={this.state.readOnly}/>
                             </Col>
+
                         </FormGroup>
                         <FormGroup row>
                             <Col>

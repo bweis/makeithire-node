@@ -142,6 +142,7 @@ app.get('/api/getStudentDetails', verifyToken, (req, res) => {
                     return res.status(400).json({ message: err1 });
                 }
                 else {
+                    console.log(result);
                     return res.status(200).json({ message: "Success", response: result });
                 }
             })
