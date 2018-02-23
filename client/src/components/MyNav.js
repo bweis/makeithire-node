@@ -23,7 +23,10 @@ var user = {
 
 class MyNav extends Component {
 
-
+    constructor(props) {
+        super(props);
+        this.state = {user: {}, isRecruiter: false};
+    }
 
     render() {
         return (

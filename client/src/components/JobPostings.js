@@ -97,12 +97,13 @@ var jobs = [
 
 class JobPostings extends Component {
 
+//<Link to={{ pathname: '/company', state: { companyId: job.companyId} }}>
+
     render() {
         const jobListItems =  jobs.map((job) =>
             <ListGroupItem key={job.id}>
-                <Link to={{ pathname: '/company', state: { companyId: job.companyId} }}>
+
                     {job.company} {job.job_title} {job.type} {job.location} {job.deadline}
-                </Link>
             </ListGroupItem>);
 
         return (
