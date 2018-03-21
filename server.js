@@ -60,6 +60,7 @@ db.connect((err) => {
 
 // POST API: Add Student into User Table
 app.post('/api/signUpStudent', (req, res) => {
+  console.log(req.body);
   const fname = req.body.FirstName; const mname = req.body.MiddleName; const lname = req.body.LastName;
   const email = req.body.EmailID;
   const pass = req.body.Password;

@@ -1,70 +1,50 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isStudent: true,
-      isRegistered: true,
-    };
+    this.validateUser = this.validateUser.bind(this);
+  }
+
+  componentWillMount() {
+    if (document.cookie.length !== 0) {
+      this.props.history.push('/home');
+    }
   }
 
   render() {
-    const { isStudent, isRegistered } = this.state;
-    if(!isRegistered) {
-      return (
-        <div className='login-page'>
-          <div className='login-container'>
-            <div className='form'>
-              <form className='register-form'>
-                {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-                {/*<input type='text' id='fName' placeholder='First Name' />*/}
-                {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-                {/*<input type='text' id='email' placeholder='Email Address' />*/}
-                {/*<input type='password' id='pass' placeholder='password' />*/}
-                {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-                {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-                {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-                {/*/!*</select>*!/*/}
-                {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-                {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-                {/*<button className='Reg'>create</button>*/}
-                {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-              </form>
-            </div>
-          </div>
-        </div>
-      )
-    }
     return (
       <div className='login-page'>
         <div className='login-container'>
           <div className='form'>
-            <form className='register-form'>
-              {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-              {/*<input type='text' id='fName' placeholder='First Name' />*/}
-              {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-              {/*<input type='text' id='email' placeholder='Email Address' />*/}
-              {/*<input type='password' id='pass' placeholder='password' />*/}
-              {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-              {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-                {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-              {/*/!*</select>*!/*/}
-              {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-              {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-              {/*<button className='Reg'>create</button>*/}
-              {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-            </form>
-            {/*<form className='login-form'>*/}
-              {/*<input type='text' id='mail' placeholder='email' />*/}
-              {/*<input type='password' id='password' placeholder='password' />*/}
-              {/*<button className='loginMe'>login</button>*/}
-              {/*<p className='message'>Not registered? <a href='#' id='goReg'>Create an account</a></p>*/}
-            {/*</form>*/}
+            <input type='text' id='mail' placeholder='email'
+                   ref={(input) => {this.emailInput = input; }}
+            />
+            <input type='password' id='password' placeholder='password'
+                   ref={(input) => {this.passwordInput = input; }}
+            />
+            <button className='loginMe' onClick={this.validateUser}>login</button>
+            <Link to='/register'>Create an account</Link>
           </div>
         </div>
       </div>
     );
+  }
+
+  validateUser() {
+    const email = this.emailInput.value;
+    const password = this.passwordInput.value;
+    axios.post('http://localhost:3001/api/login', { EmailID: email, Password: password })
+      .then((res) => {
+        document.cookie = res.data.token;
+        this.props.history.push('/home')
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 
