@@ -33,13 +33,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => res.sendFile(`${__dirname}/Front-End/loginPage.html`));
-
-
-app.get('/main', (req, res) => res.sendFile(`${__dirname}/client/public/index.html`));
-/* app.get('/', function (req, res) {
-    res.send('MakeItHire Test Server');
-}); */
+app.get('/', (req, res) => res.sendFile(`${__dirname}/client/public/index.html`));
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {

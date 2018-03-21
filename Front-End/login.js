@@ -77,7 +77,7 @@ $('document').ready(() => {
         // var dan = JSON.parse(jqxhr.responseText);
 
         const dan = JSON.parse(jqxhr.responseText);
-        alert(dan);
+        console.log(dan);
         //              $("#toPutText").html("<p>"+dan.message+"</p>");
       });
   });
