@@ -4,6 +4,10 @@ body {
     font-family: sans-serif;
 }
 
+#app {
+    height: 100%;
+}
+
 .App {
     margin-top: 7em;
 }
