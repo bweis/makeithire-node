@@ -1,3 +1,16 @@
+import $ from 'jquery';
+import axios, { post } from 'axios';
+import React, { Component } from 'react';
+import {
+    Container,
+    Col,
+    Media,
+    Form,
+    FormGroup,
+    Input,
+    Label,
+    Button
+} from 'reactstrap';
 
 var allMajors = "http://localhost:3001/api/getMajors";
 var allDegress = "http://localhost:3001/api/getDegrees";
@@ -12,25 +25,13 @@ var majors = [];
 var degrees = [];
 var universities = [];
 
-import $ from 'jquery';
-import axios, { post } from 'axios';
-import React, { Component } from 'react';
 
 var name;
 var surName;
 var mail;
 
 
-import {
-    Container,
-    Col,
-    Media,
-    Form,
-    FormGroup,
-    Input,
-    Label,
-    Button
-} from 'reactstrap';
+
 
 /*
  {Object.keys(user.professional_accounts).map(function(keyName, keyIndex) {
