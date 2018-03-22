@@ -36,7 +36,7 @@ class Login extends Component {
   validateUser() {
     const email = this.emailInput.value;
     const password = this.passwordInput.value;
-    axios.post('http://localhost:3001/api/login', { EmailID: email, Password: password })
+    axios.post('/api/login', { EmailID: email, Password: password })
       .then((res) => {
         document.cookie = `token=${res.data.token}`;
         this.props.history.push('/home');
