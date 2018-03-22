@@ -38,8 +38,8 @@ class Login extends Component {
     const password = this.passwordInput.value;
     axios.post('http://localhost:3001/api/login', { EmailID: email, Password: password })
       .then((res) => {
-        document.cookie = res.data.token;
-        this.props.history.push('/home')
+        document.cookie = `token=${res.data.token}`;
+        this.props.history.push('/home');
         console.log(res);
       })
       .catch((err) => {
