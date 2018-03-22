@@ -25,9 +25,7 @@
     "sql.js": "0.3.2"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node server.js",
-    "client": "node start-client.js",
+    "start": "node server.js",
     "lint": "eslint ."
   },
   "devDependencies": {
