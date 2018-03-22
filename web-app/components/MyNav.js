@@ -16,7 +16,7 @@ import { NavLink as RRNavLink } from 'react-router-dom';
 
 import $ from 'jquery';
 
-const url = 'http://localhost:3001';
+const url = '';
 
 function getCookie(name) {
   const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));

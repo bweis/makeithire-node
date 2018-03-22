@@ -11,14 +11,14 @@ import {
   Button,
 } from 'reactstrap';
 
-const allMajors = 'http://localhost:3001/api/getMajors';
-const allDegress = 'http://localhost:3001/api/getDegrees';
+const allMajors = '/api/getMajors';
+const allDegress = '/api/getDegrees';
 // const url = 'http://localhost:3001/api/updateStudentDetails';
-const allUnis = 'http://localhost:3001/api/getUniversityList';
+const allUnis = '/api/getUniversityList';
 
-const getStudentInfo = 'http://localhost:3001/api/getStudentDetails';
+const getStudentInfo = '/api/getStudentDetails';
 
-const userDetailsUrl = 'http://localhost:3001/api/getUserDetails';
+const userDetailsUrl = '/api/getUserDetails';
 
 let majors = [];
 let degrees = [];
@@ -241,7 +241,7 @@ class Profile extends Component {
     $.ajax({
       type: 'POST',
       headers: { authorization: cookie },
-      url: 'http://localhost:3001/api/updateStudentDetails',
+      url: '/api/updateStudentDetails',
       data: u,
       success(msg) {
         console.log('successful update');
@@ -262,7 +262,7 @@ class Profile extends Component {
     const formData = new FormData();
     formData.append('resume', file);
     $.ajax({
-      url: 'http://localhost:3001/api/uploadResume',
+      url: '/api/uploadResume',
       type: 'POST',
       data: formData,
       headers: { Authorization: cookie },
@@ -283,7 +283,7 @@ class Profile extends Component {
 
 
     $.ajax({
-      url: 'http://localhost:3001/api/uploadCoverLetter',
+      url: '/api/uploadCoverLetter',
       type: 'POST',
       data: form,
       headers: { Authorization: cookie },
