@@ -29,13 +29,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => res.sendFile(`${__dirname}/client/public/index.html`));
-
-// Express only serves static assets in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-}
-
 // Database Connection
 const mysql = require('mysql');
 
@@ -620,4 +613,15 @@ function verifyToken(req, res, next) {
     // 403 Forbidden
     return res.sendFile(`${__dirname}/Front-End/loginPage.html`);
   }
+}
+
+// Express only serves static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('/*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
+  app.use(express.static('client/build'));
+  console.log('Serving production');
+} else {
+  app.get('/*', (req, res) => res.sendFile(`${__dirname}/client/public/index.html`));
+  app.use(express.static('public'));
+  console.log('Serving development');
 }
