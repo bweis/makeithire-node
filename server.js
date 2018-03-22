@@ -24,10 +24,6 @@ app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
 });
 
-// Server Launch (without any api)
-app.use(express.static('Front-End'));
-
-
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
