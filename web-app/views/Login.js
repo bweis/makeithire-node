@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Button } from 'semantic-ui-react'
+
 
 class Login extends Component {
   constructor(props) {
@@ -25,7 +27,9 @@ class Login extends Component {
             <input type='password' id='password' placeholder='password'
                    ref={(input) => {this.passwordInput = input; }}
             />
-            <button className='loginMe' onClick={this.validateUser}>login</button>
+            {/*<button className='loginMe' onClick={this.validateUser}>login</button>*/}
+            <Button onClick={this.validateUser}>Click Here</Button>
+
             <Link to='/register'>Create an account</Link>
           </div>
         </div>
