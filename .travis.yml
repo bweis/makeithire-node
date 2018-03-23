@@ -5,9 +5,8 @@ node_js:
 cache:
   directories:
   - node_modules
-  - client/node_modules
 script:
-- cd client && npm i && npm test
+- npm i && npm test
 notifications:
   slack:
     secure: qIBs8anbhEvRgVlKQ5LrtxCYy/sXT/paaWPlgqhJVXkFp5XAQYbKnvPP2t2EcKQ0aYbYJJXpf+9c9T0ZMWwBOxqB9d6DAm75PWleLQv+7U3WEAX2jj1+UACdQBUqUt5g3RlgzvPB0da+e9/RP5AwR6xToSWO/NPE6Huc31N+mpYpZlnW9ZU+pl4JrHXLpq57sBUcn01NtCh5vnWVP2t+s7c8zexvhEFg1wDo2iAeKlaD/1YDBKVcnzkMkPnOs2ZPNWjn4oJP4wudUZtWR8SnCeyHzzEq27wP6NFXc4d3lV158GNyA2v2pImaTMH5ojgB3sps6reN5AHg70hIhEGfnKnNl6Sxm1yzV+aXwgdysC7NUcrUo7IQcMaYZPBbGm32jB7bJGwYL5r0t30WbzlrOIF9wpeNY473fMiIQJvWnPRDXfo4QfAHMjzGJhmuF0+7W5cZPD75z8IxMOxO3Js59BAHwTXHMx48bdRlMTE+jszUmMWUb9S06sjgEikgce20RvUUu7IHrWJ1NQbmDlxEiwGxT8UTMKxhkvaiSaVH5VcGY/sbSXDfg19ThSvgLgAvdtZgVR+Q19fPcLN9D6x3gHJt/2i5Z7tkBGrV2x2H+R9MxofPq7pE6ePEiC4KkruWF0qypBIGnwZ6j2ruiHC8K3EAv4dAqJAvXUDC9hKMg9s=
