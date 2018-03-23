@@ -1,5 +1,3 @@
-const apiRouter = require('express').Router();
-
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -9,29 +7,21 @@ const multer = require('multer');
 const fs = require('fs');
 const cookie = require('cookie');
 
+// Utils
+const db = require('../utils/db');
+const { verifyToken } = require('../utils/auth');
+
+// API Endpoints
 const session = require('./session');
 
-// Database Connection
-const mysql = require('mysql');
-const db = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
-  database: process.env.RDS_NAME,
-});
-db.connect((err) => {
-  if (err) {
-    console.error(`Database connection failed: ${err.stack}`);
-    return;
-  }
-  console.log('Connected to MIH database.');
-});
+// Routers
+const apiRouter = require('express').Router();
 
+// Non-Authenticated Routes
 apiRouter.post('/login', session.login);
-apiRouter.post('/logout', session.logout);
 
-
+// Authenticated Routes
+apiRouter.post('/logout', verifyToken, session.logout);
 
 
 // POST API: Add Student into User Table
@@ -512,21 +502,6 @@ apiRouter.post('/uploadCoverLetter', verifyToken, (req, res) => {
     }
   });
 });
-
-// Verify Token [ Format -> Authorization: <access_token>]
-function verifyToken(req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.headers.authorization;
-  // Check if bearer is undefined
-  if (typeof bearerHeader !== 'undefined') {
-    req.token = bearerHeader;
-    next();
-  } else {
-    console.log('exit');
-    // 403 Forbidden
-    return res.sendFile(`${__dirname}/Front-End/loginPage.html`);
-  }
-}
 
 
 module.exports = apiRouter;
