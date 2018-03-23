@@ -6,6 +6,7 @@ import AuthenticatedRoute from './AuthenticatedRoute';
 import MyNav from './components/MyNav';
 import Home from './views/Home';
 import Profile from './views/Profile';
+import NewProfile from './views/NewProfile';
 import Company from './views/Company';
 import Login from './views/Login';
 import Register from './views/Register';
@@ -22,8 +23,9 @@ class App extends Component {
               <Route path='/register' name='Register' component={Register} />
               <AuthenticatedRoute path='/home' name='Home' component={Home} />
               <AuthenticatedRoute path='/profile' name='Profile' component={Profile} />
+              <AuthenticatedRoute path='/newprofile' name='NewProfile' component={NewProfile} />
               <AuthenticatedRoute path='/company' name='Company' component={Company} />
-              {/*<Redirect from='/' to='/home' />*/}
+            {/*<Redirect from='/' to='/home' />*/}
             </div>
           </Router>
         </Container>
