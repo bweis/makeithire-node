@@ -8,12 +8,13 @@ const fs = require('fs');
 const cookie = require('cookie');
 
 // Utils
-const db = require('../utils/db');
-const { verifyToken } = require('../utils/auth');
+const db = require('./utils/db');
+const { verifyToken } = require('./utils/auth');
 
 // API Endpoints
 const session = require('./session');
 const registration = require('./registration');
+const student = require('./student');
 
 // Routers
 const apiRouter = require('express').Router();
@@ -25,6 +26,8 @@ apiRouter.post('/signUpRecruiter', registration.signUpRecruiter);
 
 // Authenticated Routes
 apiRouter.post('/logout', verifyToken, session.logout);
+apiRouter.get('/uploadResume', verifyToken, student.uploadResume);
+apiRouter.get('/uploadCoverLetter', verifyToken, student.uploadCoverLetter);
 
 
 // POST API: Add Student Details into Student Table
@@ -301,110 +304,7 @@ apiRouter.get('/getCompanyList', (req, res) => {
   });
 });
 
-// Multer Settings
-let email_string = '';
-const storageR = multer.diskStorage({
-  destination: './public/uploads/',
-  filename(req, file, cb) {
-    cb(null, `${email_string}_Resume${path.extname(file.originalname)}`);
-  },
-});
-const storageCV = multer.diskStorage({
-  destination: './public/uploads/',
-  filename(req, file, cb) {
-    cb(null, `${email_string}_CoverLetter${path.extname(file.originalname)}`);
-  },
-});
-const uploadR = multer({
-  storage: storageR,
-  limits: { fileSize: 1000000 },
-  fileFilter(req, file, cb) {
-    checkFileType(file, cb);
-  },
-}).single('resume');
-const uploadCV = multer({
-  storage: storageCV,
-  limits: { fileSize: 1000000 },
-  fileFilter(req, file, cb) {
-    checkFileType(file, cb);
-  },
-}).single('coverletter');
-// Check File Type
-function checkFileType(file, cb) {
-  // Allowed ext
-  const filetypes = /pdf|jpeg|jpg|png|gif/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) {
-    return cb(null, true);
-  }
-  cb('Error: FilteType Not Supported!');
-}
 
-// POST API: Uploads Resume in Server (public/uploads)
-apiRouter.post('/uploadResume', verifyToken, (req, res) => {
-  console.log('heyBro');
-
-  jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
-    if (auth_err) {
-      res.sendStatus(401).json({ error: auth_err });
-    } else {
-      const sql = 'SELECT EmailID FROM User WHERE TokenID = ?';
-      db.query(sql, req.token, (err2, result) => {
-        if (err2) {
-          return res.status(401).json({ error: err });
-        }
-
-        console.log('heyBro');
-
-        email_string = result[0].EmailID;
-
-        uploadR(req, res, (err) => {
-          if (err) {
-            console.log(err);
-            res.status(400).json({ error: err });
-          } else if (req.file === undefined) {
-            console.log('NO FILE SELECTED');
-            res.status(400).json({ error: err, message: 'No File Selected' });
-          } else {
-            res.status(200).json({ message: 'Success', response: req.file });
-          }
-        });
-      });
-    }
-  });
-});
-
-// POST API: Uploads CoverLetter in Server (public/uploads)
-apiRouter.post('/uploadCoverLetter', verifyToken, (req, res) => {
-  console.log('Hey1');
-  jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
-    if (auth_err) {
-      res.sendStatus(401).json({ error: auth_err });
-    } else {
-      const sql = 'SELECT EmailID FROM User WHERE TokenID = ?';
-      db.query(sql, req.token, (err2, result) => {
-        if (err2) {
-          return res.status(401).json({ error: err });
-        }
-
-        console.log('Hey2');
-        email_string = result[0].EmailID;
-        uploadCV(req, res, (err) => {
-          if (err) {
-            res.status(400).json({ error: err });
-          } else if (req.file == undefined) {
-            res.status(400).json({ error: err, message: 'No File Selected' });
-          } else {
-            res.status(200).json({ message: 'Success', response: req.file });
-          }
-        });
-      });
-    }
-  });
-});
 
 
 module.exports = apiRouter;

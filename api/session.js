@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 // Utils
-const db = require('../utils/db');
+const db = require('./utils/db');
 
 // POST API: Login Function - Using Token Based Authentication
 function login(req, res) {

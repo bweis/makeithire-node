@@ -1,47 +1,56 @@
 import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
+import axios from 'axios';
 
-export default class NewProfile extends Component{
+import MenuContainer from '../containers/MenuContainer';
+import { getCookie } from '../utils';
 
+export default class NewProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+    this.uploadFile = this.uploadFile.bind(this);
+  }
+
+  uploadFile() {
+    const file = this.resumeInput.inputRef.files[ 0 ]
+
+    axios.get('/api/uploadResume',
+      {
+        headers: {
+          'Authorization': getCookie('token'),
+        },
+        params: {
+          'contentType': file.type,
+        },
+      })
+      .then((response) => {
+        const signedUrl = response.data.signedUrl;
+        const fileName = response.data.fileName;
+
+        axios.put(signedUrl, file, {
+          headers: {
+            'Content-Type': file.type,
+          },
+        })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render() {
-    const { activeItem } = this.state
-
     return (
-      <Menu stackable >
-        <Menu.Item>
-          <img src='/img/logo.png' />
-        </Menu.Item>
-
-        <Menu.Item
-          name='Applications'
-          active={activeItem === 'Applications'}
-          onClick={this.handleItemClick}
-        >
-          Applications
-        </Menu.Item>
-
-        <Menu.Item
-          name='Jobs'
-          active={activeItem === 'Jobs'}
-          onClick={this.handleItemClick}
-        >
-          Jobs
-        </Menu.Item>
-
-        <Menu.Item
-          name='Chat'
-          active={activeItem === 'Chat'}
-          onClick={this.handleItemClick}
-        >
-          Chat
-        </Menu.Item>
-      </Menu>
+      <MenuContainer loggedIn >
+        <Input ref={(input) => { this.resumeInput = input; }} size='large' icon='folder open outline' placeholder='Your Resume Here' type='file' />
+        <Button onClick={this.uploadFile} />
+      </MenuContainer>
     );
   }
 }
