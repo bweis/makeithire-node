@@ -84764,7 +84764,7 @@ var App = function (_Component) {
             _react2.default.createElement(
               'div',
               null,
-              _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', name: 'LandingPage', component: _LandingPage2.default }),
+              _react2.default.createElement(_reactRouterDom.Route, { path: '/', name: 'LandingPage', component: _LandingPage2.default }),
               _react2.default.createElement(_reactRouterDom.Route, { path: '/login', name: 'Login', component: _Login2.default }),
               _react2.default.createElement(_reactRouterDom.Route, { path: '/register', name: 'Register', component: _Register2.default }),
               _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/home', name: 'Home', component: _Home2.default }),
@@ -84783,7 +84783,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./views/Company":832,"./views/Home":833,"./views/LandingPage":834,"./views/Login":835,"./views/NewProfile":836,"./views/Profile":837,"./views/Register":838,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
+},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./views/Company":831,"./views/Home":832,"./views/LandingPage":833,"./views/Login":834,"./views/NewProfile":835,"./views/Profile":836,"./views/Register":837,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85000,31 +85000,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var logoutMenuItem = _react2.default.createElement(
-  _semanticUiReact.Menu.Item,
-  { position: 'right' },
-  _react2.default.createElement(
-    _semanticUiReact.Button,
-    { as: 'a', href: '/logout' },
-    'Log out'
-  )
-);
-
-var loginMenuItem = _react2.default.createElement(
-  _semanticUiReact.Menu.Item,
-  { position: 'right' },
-  _react2.default.createElement(
-    _semanticUiReact.Button,
-    { as: 'a', href: '/login' },
-    'Log in'
-  ),
-  _react2.default.createElement(
-    _semanticUiReact.Button,
-    { as: 'a', href: '/register', style: { marginLeft: '0.5em' } },
-    'Sign Up'
-  )
-);
-
 var MenuContainer = function (_Component) {
   _inherits(MenuContainer, _Component);
 
@@ -85034,15 +85009,18 @@ var MenuContainer = function (_Component) {
     var _this = _possibleConstructorReturn(this, (MenuContainer.__proto__ || Object.getPrototypeOf(MenuContainer)).call(this, props));
 
     _this.state = {};
+    _this.handleItemClick = function (e, _ref) {
+      var name = _ref.name;
+      return _this.setState({ activeItem: name });
+    };
     return _this;
   }
 
   _createClass(MenuContainer, [{
     key: 'render',
     value: function render() {
-      var _props = this.props,
-          children = _props.children,
-          loggedIn = _props.loggedIn;
+      var children = this.props.children;
+      var activeItem = this.state.activeItem;
 
 
       return _react2.default.createElement(
@@ -85053,7 +85031,7 @@ var MenuContainer = function (_Component) {
           { textAlign: 'center', style: { padding: '0em 0em' }, vertical: true },
           _react2.default.createElement(
             _semanticUiReact.Menu,
-            { activeIndex: 2, size: 'large' },
+            { size: 'large' },
             _react2.default.createElement(
               _semanticUiReact.Container,
               null,
@@ -85062,26 +85040,49 @@ var MenuContainer = function (_Component) {
                 null,
                 _react2.default.createElement('img', { alt: 'Logo', src: '/img/logo.png' })
               ),
-              loggedIn ? this.createNavItem('Home', '/home') : null,
-              loggedIn ? this.createNavItem('Profile', '/profile') : null,
-              loggedIn ? this.createNavItem('Job', '/job') : null,
-              loggedIn ? this.createNavItem('Chat', '/chat') : null,
-              loggedIn ? logoutMenuItem : loginMenuItem
+              _react2.default.createElement(_semanticUiReact.Menu.Item, {
+                as: 'a',
+                name: 'Home',
+                active: activeItem === 'Home',
+                onClick: this.handleItemClick
+              }),
+              _react2.default.createElement(_semanticUiReact.Menu.Item, {
+                as: 'a',
+                name: 'Profile',
+                active: activeItem === 'Profile',
+                onClick: this.handleItemClick
+              }),
+              _react2.default.createElement(_semanticUiReact.Menu.Item, {
+                as: 'a',
+                name: 'Jobs',
+                active: activeItem === 'Jobs',
+                onClick: this.handleItemClick
+              }),
+              _react2.default.createElement(_semanticUiReact.Menu.Item, {
+                as: 'a',
+                name: 'Chat',
+                active: activeItem === 'Chat',
+                onClick: this.handleItemClick
+              }),
+              _react2.default.createElement(
+                _semanticUiReact.Menu.Item,
+                { position: 'right' },
+                _react2.default.createElement(
+                  _semanticUiReact.Button,
+                  { as: 'a' },
+                  'Log in'
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.Button,
+                  { as: 'a', style: { marginLeft: '0.5em' } },
+                  'Sign Up'
+                )
+              )
             )
           )
         ),
         children
       );
-    }
-  }, {
-    key: 'createNavItem',
-    value: function createNavItem(name, href) {
-      return _react2.default.createElement(_semanticUiReact.Menu.Item, {
-        as: 'a',
-        name: name,
-        href: href,
-        active: window.location.pathname.indexOf(href) === 0
-      });
     }
   }]);
 
@@ -85110,19 +85111,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
 },{"./App":826,"react":578,"react-dom":543}],831:[function(require,module,exports){
-'use strict';
-
-function getCookie(name) {
-  var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
-  if (match) return match[1];
-  return '';
-}
-
-module.exports = {
-  getCookie: getCookie
-};
-
-},{}],832:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85411,7 +85399,7 @@ var Company = function (_Component) {
 
 exports.default = Company;
 
-},{"jquery":167,"react":578,"reactstrap":579}],833:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],832:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85519,7 +85507,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"jquery":167,"react":578}],834:[function(require,module,exports){
+},{"jquery":167,"react":578}],833:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85562,7 +85550,13 @@ var LandingPageHeading = function LandingPageHeading() {
           fontSize: '1.7em',
           fontWeight: 'normal'
         }
-      })
+      }),
+      _react2.default.createElement(
+        _semanticUiReact.Button,
+        { primary: true, size: 'huge', color: 'blue' },
+        'Sign Up Today!',
+        _react2.default.createElement(_semanticUiReact.Icon, { name: 'right arrow' })
+      )
     )
   );
 };
@@ -85653,9 +85647,51 @@ var LandingPage = function LandingPage() {
               'p',
               { style: { fontSize: '1.33em' } },
               _react2.default.createElement(_semanticUiReact.Image, { avatar: true, src: '/img/grr.jpg' }),
-              'Prof. Gustavo'
+              _react2.default.createElement(
+                'b',
+                null,
+                '-'
+              ),
+              ' Prof. Gustavo'
             )
           )
+        )
+      )
+    ),
+    _react2.default.createElement(
+      _semanticUiReact.Segment,
+      { style: { padding: '8em 0em' }, vertical: true },
+      _react2.default.createElement(
+        _semanticUiReact.Container,
+        { text: true },
+        _react2.default.createElement(
+          _semanticUiReact.Divider,
+          {
+            as: 'h4',
+            className: 'header',
+            horizontal: true,
+            style: { margin: '3em 0em', textTransform: 'uppercase' }
+          },
+          _react2.default.createElement(
+            'a',
+            { href: '#' },
+            'Are you a Recruiter?'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Header,
+          { as: 'h3', style: { fontSize: '2em' } },
+          'We can '
+        ),
+        _react2.default.createElement(
+          'p',
+          { style: { fontSize: '1.33em' } },
+          'Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but it\'s really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.'
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Button,
+          { as: 'a', size: 'large' },
+          'I\'m Still Quite Interested'
         )
       )
     ),
@@ -85691,7 +85727,12 @@ var LandingPage = function LandingPage() {
                 _react2.default.createElement(
                   _semanticUiReact.List.Item,
                   { as: 'a' },
-                  'Privacy Policy'
+                  'Religious Ceremonies'
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.List.Item,
+                  { as: 'a' },
+                  'Gazebo Plans'
                 )
               )
             ),
@@ -85705,12 +85746,22 @@ var LandingPage = function LandingPage() {
                 _react2.default.createElement(
                   _semanticUiReact.List.Item,
                   { as: 'a' },
-                  'Register Your Company'
+                  'Banana Pre-Order'
                 ),
                 _react2.default.createElement(
                   _semanticUiReact.List.Item,
                   { as: 'a' },
-                  'Apply to Jobs'
+                  'DNA FAQ'
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.List.Item,
+                  { as: 'a' },
+                  'How To Access'
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.List.Item,
+                  { as: 'a' },
+                  'Favorite X-Men'
                 )
               )
             ),
@@ -85720,17 +85771,12 @@ var LandingPage = function LandingPage() {
               _react2.default.createElement(
                 _semanticUiReact.Header,
                 { as: 'h4', inverted: true },
-                'Footer'
+                'Footer Header'
               ),
               _react2.default.createElement(
                 'p',
                 null,
-                'MakeItHire was built for Purdue\'s CS 407 class'
-              ),
-              _react2.default.createElement(
-                'p',
-                null,
-                'Copyright 2018 All rights reserved. Built with \u2665 by Team 23'
+                'Extra space for a call to action inside the footer that could help re-engage users.'
               )
             )
           )
@@ -85742,7 +85788,7 @@ var LandingPage = function LandingPage() {
 
 exports.default = LandingPage;
 
-},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],835:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],834:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85762,10 +85808,6 @@ var _axios = require('axios');
 var _axios2 = _interopRequireDefault(_axios);
 
 var _semanticUiReact = require('semantic-ui-react');
-
-var _MenuContainer = require('../containers/MenuContainer');
-
-var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85801,36 +85843,41 @@ var Login = function (_Component) {
 
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'login-page' },
         _react2.default.createElement(
-          _MenuContainer2.default,
-          null,
+          Menu,
+          { stackable: true },
+          _react2.default.createElement(
+            Menu.Item,
+            null,
+            _react2.default.createElement('img', { src: '/img/logo.png' })
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'login-container' },
           _react2.default.createElement(
             'div',
-            { className: 'login-container' },
+            { className: 'form' },
+            _react2.default.createElement('input', { type: 'text', id: 'mail', placeholder: 'email',
+              ref: function ref(input) {
+                _this2.emailInput = input;
+              }
+            }),
+            _react2.default.createElement('input', { type: 'password', id: 'password', placeholder: 'password',
+              ref: function ref(input) {
+                _this2.passwordInput = input;
+              }
+            }),
             _react2.default.createElement(
-              'div',
-              { className: 'form' },
-              _react2.default.createElement('input', { type: 'text', id: 'mail', placeholder: 'email',
-                ref: function ref(input) {
-                  _this2.emailInput = input;
-                }
-              }),
-              _react2.default.createElement('input', { type: 'password', id: 'password', placeholder: 'password',
-                ref: function ref(input) {
-                  _this2.passwordInput = input;
-                }
-              }),
-              _react2.default.createElement(
-                _semanticUiReact.Button,
-                { onClick: this.validateUser },
-                'Click Here'
-              ),
-              _react2.default.createElement(
-                _reactRouterDom.Link,
-                { to: '/register' },
-                'Create an account'
-              )
+              _semanticUiReact.Button,
+              { onClick: this.validateUser },
+              'Click Here'
+            ),
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/register' },
+              'Create an account'
             )
           )
         )
@@ -85858,7 +85905,7 @@ var Login = function (_Component) {
 
 exports.default = Login;
 
-},{"../containers/MenuContainer":829,"axios":1,"react":578,"react-router-dom":562,"semantic-ui-react":698}],836:[function(require,module,exports){
+},{"axios":1,"react":578,"react-router-dom":562,"semantic-ui-react":698}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85872,16 +85919,6 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var _semanticUiReact = require('semantic-ui-react');
-
-var _axios = require('axios');
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _MenuContainer = require('../containers/MenuContainer');
-
-var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
-
-var _utils = require('../utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85900,51 +85937,54 @@ var NewProfile = function (_Component) {
     var _this = _possibleConstructorReturn(this, (NewProfile.__proto__ || Object.getPrototypeOf(NewProfile)).call(this, props));
 
     _this.state = {};
-    _this.uploadFile = _this.uploadFile.bind(_this);
+    _this.handleItemClick = function (e, _ref) {
+      var name = _ref.name;
+      return _this.setState({ activeItem: name });
+    };
     return _this;
   }
 
   _createClass(NewProfile, [{
-    key: 'uploadFile',
-    value: function uploadFile() {
-      var file = this.resumeInput.inputRef.files[0];
-
-      _axios2.default.get('/api/uploadResume', {
-        headers: {
-          'Authorization': (0, _utils.getCookie)('token')
-        },
-        params: {
-          'contentType': file.type
-        }
-      }).then(function (response) {
-        var signedUrl = response.data.signedUrl;
-        var fileName = response.data.fileName;
-
-        _axios2.default.put(signedUrl, file, {
-          headers: {
-            'Content-Type': file.type
-          }
-        }).then(function (response) {
-          console.log(response);
-        }).catch(function (error) {
-          console.log(error);
-        });
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var activeItem = this.state.activeItem;
+
 
       return _react2.default.createElement(
-        _MenuContainer2.default,
-        { loggedIn: true },
-        _react2.default.createElement(_semanticUiReact.Input, { ref: function ref(input) {
-            _this2.resumeInput = input;
-          }, size: 'large', icon: 'folder open outline', placeholder: 'Your Resume Here', type: 'file' }),
-        _react2.default.createElement(_semanticUiReact.Button, { onClick: this.uploadFile })
+        _semanticUiReact.Menu,
+        { stackable: true },
+        _react2.default.createElement(
+          _semanticUiReact.Menu.Item,
+          null,
+          _react2.default.createElement('img', { src: '/img/logo.png' })
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Menu.Item,
+          {
+            name: 'Applications',
+            active: activeItem === 'Applications',
+            onClick: this.handleItemClick
+          },
+          'Applications'
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Menu.Item,
+          {
+            name: 'Jobs',
+            active: activeItem === 'Jobs',
+            onClick: this.handleItemClick
+          },
+          'Jobs'
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Menu.Item,
+          {
+            name: 'Chat',
+            active: activeItem === 'Chat',
+            onClick: this.handleItemClick
+          },
+          'Chat'
+        )
       );
     }
   }]);
@@ -85954,7 +85994,7 @@ var NewProfile = function (_Component) {
 
 exports.default = NewProfile;
 
-},{"../containers/MenuContainer":829,"../utils":831,"axios":1,"react":578,"semantic-ui-react":698}],837:[function(require,module,exports){
+},{"react":578,"semantic-ui-react":698}],836:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86655,7 +86695,7 @@ var Profile = function (_Component) {
 
 exports.default = Profile;
 
-},{"jquery":167,"react":578,"reactstrap":579}],838:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

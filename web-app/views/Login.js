@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Button } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react';
+import MenuContainer from '../containers/MenuContainer';
 
 
 class Login extends Component {
@@ -18,21 +19,28 @@ class Login extends Component {
 
   render() {
     return (
-      <div className='login-page'>
-        <div className='login-container'>
-          <div className='form'>
-            <input type='text' id='mail' placeholder='email'
-                   ref={(input) => {this.emailInput = input; }}
-            />
-            <input type='password' id='password' placeholder='password'
-                   ref={(input) => {this.passwordInput = input; }}
-            />
-            {/*<button className='loginMe' onClick={this.validateUser}>login</button>*/}
-            <Button onClick={this.validateUser}>Click Here</Button>
+      <div>
+        <MenuContainer>
+          {/*<Menu stackable >*/}
+            {/*<Menu.Item>*/}
+              {/*<img src='/img/logo.png' />*/}
+            {/*</Menu.Item>*/}
+          {/*</Menu>*/}
+          <div className='login-container'>
+            <div className='form'>
+              <input type='text' id='mail' placeholder='email'
+                     ref={(input) => {this.emailInput = input; }}
+              />
+              <input type='password' id='password' placeholder='password'
+                     ref={(input) => {this.passwordInput = input; }}
+              />
+              {/*<button className='loginMe' onClick={this.validateUser}>login</button>*/}
+              <Button onClick={this.validateUser}>Click Here</Button>
 
-            <Link to='/register'>Create an account</Link>
+              <Link to='/register'>Create an account</Link>
+            </div>
           </div>
-        </div>
+        </MenuContainer>
       </div>
     );
   }

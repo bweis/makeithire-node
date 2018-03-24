@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const db = require('../utils/db');
+const db = require('./utils/db');
 
 // POST API: Add Student into User Table
 function signUpStudent(req, res) {
