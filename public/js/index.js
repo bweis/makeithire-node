@@ -86894,8 +86894,13 @@ var Register = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this, props));
 
     _this.state = {
+      firstName: '',
+      middleName: '',
+      lastName: '',
       email: '',
       password: '',
+      company: '',
+      description: '',
       didError: false
     };
     _this.handleChange = _this.handleChange.bind(_this);
@@ -86920,14 +86925,18 @@ var Register = function (_Component) {
     }
   }, {
     key: 'handleSubmit',
-    value: function handleSubmit() {
+    value: function handleSubmit(route) {
       var _this2 = this;
 
       var _state = this.state,
+          firstName = _state.firstName,
+          lastName = _state.lastName,
           email = _state.email,
-          password = _state.password;
+          password = _state.password,
+          company = _state.company,
+          description = _state.description;
 
-      _index2.default.post('/api/login', { EmailID: email, Password: password }).then(function (res) {
+      _index2.default.post(route, { EmailID: email, Password: password }).then(function (res) {
         document.cookie = 'token=' + res.data.token;
         _this2.props.history.push('/home');
         console.log(res);
@@ -86943,6 +86952,7 @@ var Register = function (_Component) {
 
       var _state2 = this.state,
           firstName = _state2.firstName,
+          middleName = _state2.middleName,
           lastName = _state2.lastName,
           email = _state2.email,
           password = _state2.password,
@@ -87004,6 +87014,15 @@ var Register = function (_Component) {
                               onChange: _this3.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'middleName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'Middle Name',
+                              value: middleName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'lastName',
                               fluid: true,
                               icon: 'angle right',
@@ -87034,7 +87053,7 @@ var Register = function (_Component) {
                             _react2.default.createElement(
                               _semanticUiReact.Form.Button,
                               { color: 'teal', fluid: true, size: 'large' },
-                              'Register as Student'
+                              'Register as a Student'
                             ),
                             _react2.default.createElement(_semanticUiReact.Message, {
                               error: true,
@@ -87077,6 +87096,15 @@ var Register = function (_Component) {
                               onChange: _this3.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'middleName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'Middle Name',
+                              value: middleName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'lastName',
                               fluid: true,
                               icon: 'angle right',
@@ -87104,6 +87132,11 @@ var Register = function (_Component) {
                               value: password,
                               onChange: _this3.handleChange
                             }),
+                            _react2.default.createElement(
+                              _semanticUiReact.Divider,
+                              { horizontal: true, section: true },
+                              'Company Details'
+                            ),
                             _react2.default.createElement(_semanticUiReact.Form.Select, {
                               name: 'company',
                               fluid: true,
@@ -87114,7 +87147,6 @@ var Register = function (_Component) {
                             _react2.default.createElement(_semanticUiReact.Form.TextArea, {
                               fluid: true,
                               name: 'description',
-                              label: 'Company Description',
                               placeholder: 'Tell us more about the company...',
                               value: description,
                               onChange: _this3.handleChange
@@ -87122,7 +87154,7 @@ var Register = function (_Component) {
                             _react2.default.createElement(
                               _semanticUiReact.Form.Button,
                               { color: 'teal', fluid: true, size: 'large' },
-                              'Register as Recruiter'
+                              'Register as a Recruiter'
                             ),
                             _react2.default.createElement(_semanticUiReact.Message, {
                               error: true,
@@ -87157,61 +87189,5 @@ var Register = function (_Component) {
 }(_react.Component);
 
 exports.default = Register;
-
-//   if(!isRegistered) {
-//     return (
-//       <div className='login-page'>
-//         <div className='login-container'>
-//           <div className='form'>
-//             <form className='register-form'>
-//               {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-//               {/*<input type='text' id='fName' placeholder='First Name' />*/}
-//               {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-//               {/*<input type='text' id='email' placeholder='Email Address' />*/}
-//               {/*<input type='password' id='pass' placeholder='password' />*/}
-//               {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-//               {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-//               {/*/!*</select>*!/*/}
-//               {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-//               {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-//               {/*<button className='Reg'>create</button>*/}
-//               {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-//             </form>
-//           </div>
-//         </div>
-//       </div>
-//     )
-//   }
-//   return (
-//     <div className='login-page'>
-//       <div className='login-container'>
-//         <div className='form'>
-//           <form className='register-form'>
-//             {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-//             {/*<input type='text' id='fName' placeholder='First Name' />*/}
-//             {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-//             {/*<input type='text' id='email' placeholder='Email Address' />*/}
-//             {/*<input type='password' id='pass' placeholder='password' />*/}
-//             {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-//             {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-//             {/*/!*</select>*!/*/}
-//             {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-//             {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-//             {/*<button className='Reg'>create</button>*/}
-//             {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-//           </form>
-//           {/*<form className='login-form'>*/}
-//             {/*<input type='text' id='mail' placeholder='email' />*/}
-//             {/*<input type='password' id='password' placeholder='password' />*/}
-//             {/*<button className='loginMe'>login</button>*/}
-//             {/*<p className='message'>Not registered? <a href='#' id='goReg'>Create an account</a></p>*/}
-//           {/*</form>*/}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 },{"../containers/MenuContainer":829,"axios/index":1,"react":578,"semantic-ui-react":698}]},{},[833]);

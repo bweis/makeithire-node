@@ -2,15 +2,20 @@
 import React, { Component } from 'react';
 import axios from 'axios/index';
 
-import { Form, Grid, Header, Message, Segment, Tab } from 'semantic-ui-react';
+import { Form, Grid, Header, Message, Segment, Tab, Divider } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstName: '',
+      middleName: '',
+      lastName: '',
       email: '',
       password: '',
+      company: '',
+      description: '',
       didError: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -27,9 +32,9 @@ class Register extends Component {
     this.setState({ [name]: value });
   }
 
-  handleSubmit() {
-    const { email, password } = this.state;
-    axios.post('/api/login', { EmailID: email, Password: password })
+  handleSubmit(route) {
+    const { firstName, lastName, email, password, company, description, } = this.state;
+    axios.post(route, { EmailID: email, Password: password })
       .then((res) => {
         document.cookie = `token=${res.data.token}`;
         this.props.history.push('/home');
@@ -44,6 +49,7 @@ class Register extends Component {
   render() {
     const {
       firstName,
+      middleName,
       lastName,
       email,
       password,
@@ -91,6 +97,15 @@ class Register extends Component {
                                 onChange={this.handleChange}
                               />
                               <Form.Input
+                                name='middleName'
+                                fluid
+                                icon='angle right'
+                                iconPosition='left'
+                                placeholder='Middle Name'
+                                value={middleName}
+                                onChange={this.handleChange}
+                              />
+                              <Form.Input
                                 name='lastName'
                                 fluid
                                 icon='angle right'
@@ -118,7 +133,7 @@ class Register extends Component {
                                 value={password}
                                 onChange={this.handleChange}
                               />
-                              <Form.Button color='teal' fluid size='large'>Register as Student</Form.Button>
+                              <Form.Button color='teal' fluid size='large'>Register as a Student</Form.Button>
                               <Message
                                 error
                                 header='Error with registration'
@@ -148,6 +163,15 @@ class Register extends Component {
                                 onChange={this.handleChange}
                               />
                               <Form.Input
+                                name='middleName'
+                                fluid
+                                icon='angle right'
+                                iconPosition='left'
+                                placeholder='Middle Name'
+                                value={middleName}
+                                onChange={this.handleChange}
+                              />
+                              <Form.Input
                                 name='lastName'
                                 fluid
                                 icon='angle right'
@@ -175,6 +199,7 @@ class Register extends Component {
                                 value={password}
                                 onChange={this.handleChange}
                               />
+                              <Divider horizontal section>Company Details</Divider>
                               <Form.Select
                                 name='company'
                                 fluid
@@ -185,12 +210,11 @@ class Register extends Component {
                               <Form.TextArea
                                 fluid
                                 name='description'
-                                label='Company Description'
                                 placeholder='Tell us more about the company...'
                                 value={description}
                                 onChange={this.handleChange}
                               />
-                              <Form.Button color='teal' fluid size='large'>Register as Recruiter</Form.Button>
+                              <Form.Button color='teal' fluid size='large'>Register as a Recruiter</Form.Button>
                               <Message
                                 error
                                 header='Error with registration'
@@ -216,64 +240,3 @@ class Register extends Component {
 }
 
 export default Register;
-
-
-
-
-
-
-//   if(!isRegistered) {
-//     return (
-//       <div className='login-page'>
-//         <div className='login-container'>
-//           <div className='form'>
-//             <form className='register-form'>
-//               {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-//               {/*<input type='text' id='fName' placeholder='First Name' />*/}
-//               {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-//               {/*<input type='text' id='email' placeholder='Email Address' />*/}
-//               {/*<input type='password' id='pass' placeholder='password' />*/}
-//               {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-//               {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-//               {/*/!*</select>*!/*/}
-//               {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-//               {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-//               {/*<button className='Reg'>create</button>*/}
-//               {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-//             </form>
-//           </div>
-//         </div>
-//       </div>
-//     )
-//   }
-//   return (
-//     <div className='login-page'>
-//       <div className='login-container'>
-//         <div className='form'>
-//           <form className='register-form'>
-//             {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
-//             {/*<input type='text' id='fName' placeholder='First Name' />*/}
-//             {/*<input type='text' id='lName' placeholder='Last Name' />*/}
-//             {/*<input type='text' id='email' placeholder='Email Address' />*/}
-//             {/*<input type='password' id='pass' placeholder='password' />*/}
-//             {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
-//             {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
-//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
-//             {/*/!*</select>*!/*/}
-//             {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
-//             {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
-//             {/*<button className='Reg'>create</button>*/}
-//             {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
-//           </form>
-//           {/*<form className='login-form'>*/}
-//             {/*<input type='text' id='mail' placeholder='email' />*/}
-//             {/*<input type='password' id='password' placeholder='password' />*/}
-//             {/*<button className='loginMe'>login</button>*/}
-//             {/*<p className='message'>Not registered? <a href='#' id='goReg'>Create an account</a></p>*/}
-//           {/*</form>*/}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
