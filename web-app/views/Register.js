@@ -245,7 +245,7 @@ class Register extends Component {
                                 onChange={this.handleChange}
                                 options={companyOptions}
                               />
-                              <div style={display = 'none'} >
+                              <div>
                                 <Form.Input
                                   name='newCompany'
                                   icon='angle right'
