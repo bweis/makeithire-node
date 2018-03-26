@@ -18,7 +18,7 @@ function login(req, res) {
         const profile = { // THIS IS WHERE WE DEFINE JWT CONTENTS
           EmailID: email,
         };
-        const token = jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: '30s' });
+        const token = jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: '3h' });
         return res.status(200).json({ message: 'Success', token });
       }
       return res.status(400).json({ response: 'EmailID or Password Incorrect' });
