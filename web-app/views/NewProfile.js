@@ -34,7 +34,7 @@ export default class NewProfile extends Component {
   }
 
   uploadCoverLetter() {
-    const file = this.coverLetterInput.inputRef.files[ 0 ];
+    const file = this.coverLetterInput.inputRef.files[0];
 
     axios.get('/api/uploadCoverLetter', {
       headers: {
