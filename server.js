@@ -11,8 +11,15 @@ const api = require('./api/api');
 
 const app = express();
 
+const publicRoutes = [
+  '/api/login',
+  '/api/signUpStudent',
+  '/api/signUpRecruiter',
+  '/api/getCompanyList',
+];
+
 // Protect the /api routes with JWT
-app.use('/api', expressJwt({ secret: process.env.JWT_SECRET }).unless( { path: [ '/api/login' ] }));
+app.use('/api', expressJwt({ secret: process.env.JWT_SECRET }).unless({ path: publicRoutes }));
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));

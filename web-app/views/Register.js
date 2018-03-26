@@ -4,10 +4,12 @@ import axios from 'axios/index';
 
 import { Form, Grid, Header, Message, Segment, Tab, Divider } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
+import { getCompanyList } from '../helpers/api';
 
 class Register extends Component {
   constructor(props) {
     super(props);
+    this.activeTab = 0;
     this.state = {
       firstName: '',
       middleName: '',
@@ -15,29 +17,75 @@ class Register extends Component {
       email: '',
       password: '',
       company: '',
+      newCompany: '',
       description: '',
       didError: false,
+      companyOptions: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   componentWillMount() {
     if (document.cookie.length !== 0) {
       this.props.history.push('/home');
     }
+    getCompanyList((res) => {
+      if (!res) {
+        console.log('Could not get company list');
+      } else {
+        const companyOptions = res.data.response.map((company) => {
+          return {
+            key: company.idCompany,
+            value: company.idCompany,
+            text: company.CompanyName,
+          };
+        });
+        this.setState({ companyOptions });
+      }
+    });
+  }
+
+  handleTabChange(e, data) {
+    this.activeTab = data.activeIndex;
   }
 
   handleChange(e, { name, value }) {
     this.setState({ [name]: value });
   }
 
-  handleSubmit(route) {
-    const { firstName, lastName, email, password, company, description, } = this.state;
-    axios.post(route, { EmailID: email, Password: password })
+  handleSubmit() {
+    const {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      company,
+      description,
+      newCompany,
+    } = this.state;
+    let route = '/api/signUpStudent';
+    if (this.activeTab === 1) {
+      route = '/api/signUpRecruiter';
+    }
+    axios.post(
+      route,
+      {
+        FirstName: firstName,
+        MiddleName: middleName,
+        LastName: lastName,
+        EmailID: email,
+        Password: password,
+        idCompany: company, // 0 = student, -1 = head Recruiter, id = company ID
+        CompanyName: company,
+        Description: description,
+        Published: 0, // Flag for if we publish the page
+      },
+    )
       .then((res) => {
-        document.cookie = `token=${res.data.token}`;
-        this.props.history.push('/home');
+        this.props.history.push('/login');
         console.log(res);
       })
       .catch((err) => {
@@ -55,6 +103,7 @@ class Register extends Component {
       password,
       company,
       description,
+      companyOptions,
     } = this.state;
 
     return (
@@ -79,6 +128,7 @@ class Register extends Component {
                   {' '}Register for MakeItHire
                 </Header>
                 <Tab
+                  onTabChange={this.handleTabChange}
                   menu={{ pointing: true, widths: 2 }}
                   panes={[
                     {
@@ -89,7 +139,6 @@ class Register extends Component {
                             <Segment stacked>
                               <Form.Input
                                 name='firstName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='First Name'
@@ -98,7 +147,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='middleName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Middle Name'
@@ -107,7 +155,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='lastName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Last Name'
@@ -116,7 +163,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='email'
-                                fluid
                                 icon='user'
                                 iconPosition='left'
                                 placeholder='E-mail address'
@@ -125,7 +171,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='password'
-                                fluid
                                 icon='lock'
                                 iconPosition='left'
                                 placeholder='Password'
@@ -155,7 +200,6 @@ class Register extends Component {
                             <Segment stacked>
                               <Form.Input
                                 name='firstName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='First Name'
@@ -164,7 +208,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='middleName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Middle Name'
@@ -173,7 +216,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='lastName'
-                                fluid
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Last Name'
@@ -182,7 +224,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='email'
-                                fluid
                                 icon='user'
                                 iconPosition='left'
                                 placeholder='E-mail address'
@@ -191,7 +232,6 @@ class Register extends Component {
                               />
                               <Form.Input
                                 name='password'
-                                fluid
                                 icon='lock'
                                 iconPosition='left'
                                 placeholder='Password'
@@ -202,18 +242,27 @@ class Register extends Component {
                               <Divider horizontal section>Company Details</Divider>
                               <Form.Select
                                 name='company'
-                                fluid
                                 placeholder='Select Your Company'
                                 value={company}
                                 onChange={this.handleChange}
+                                options={companyOptions}
                               />
-                              <Form.TextArea
-                                fluid
-                                name='description'
-                                placeholder='Tell us more about the company...'
-                                value={description}
-                                onChange={this.handleChange}
-                              />
+                              <div style={ display='none'} >
+                                <Form.Input
+                                  name='newCompany'
+                                  icon='angle right'
+                                  iconPosition='left'
+                                  placeholder='Company name'
+                                  value={company}
+                                  onChange={this.handleChange}
+                                />
+                                <Form.TextArea
+                                  name='description'
+                                  placeholder='Tell us more about the company...'
+                                  value={description}
+                                  onChange={this.handleChange}
+                                />
+                              </div>
                               <Form.Button color='teal' fluid size='large'>Register as a Recruiter</Form.Button>
                               <Message
                                 error

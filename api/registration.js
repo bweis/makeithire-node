@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('./utils/db');
 
-// POST API: Add Student into User Table
 function signUpStudent(req, res) {
   console.log(req.body);
   const fname = req.body.FirstName; const mname = req.body.MiddleName; const lname = req.body.LastName;
@@ -32,8 +31,6 @@ function signUpStudent(req, res) {
   });
 }
 
-
-// POST API: Sign Up Recruiter along with Company and Assigning Head Recruiter
 function signUpRecruiter(req, res) {
   const fname = req.body.FirstName;
   const mname = req.body.MiddleName;

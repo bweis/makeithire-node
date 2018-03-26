@@ -10,20 +10,25 @@ const { verifyToken } = require('./utils/auth');
 const session = require('./session');
 const registration = require('./registration');
 const student = require('./student');
+const data = require('./data');
 
 // Routers
 const apiRouter = require('express').Router();
 
-// Non-Authenticated Routes
+// Authenticated Routes
+apiRouter.get('/ping', session.pingSession);
 apiRouter.post('/login', session.login);
+
 apiRouter.post('/signUpStudent', registration.signUpStudent);
 apiRouter.post('/signUpRecruiter', registration.signUpRecruiter);
 
-// Authenticated Routes
-apiRouter.get('/ping', verifyToken, session.pingSession);
-apiRouter.get('/uploadResume', verifyToken, student.uploadResume);
-apiRouter.get('/uploadCoverLetter', verifyToken, student.uploadCoverLetter);
+apiRouter.get('/uploadResume', student.uploadResume);
+apiRouter.get('/uploadCoverLetter', student.uploadCoverLetter);
 
+apiRouter.get('/getMajors', data.getMajors);
+apiRouter.get('/getDegrees', data.getDegrees);
+apiRouter.get('/getUniversityList', data.getUniversityList);
+apiRouter.get('/getCompanyList', data.getCompanyList);
 
 // POST API: Add Student Details into Student Table
 apiRouter.post('/updateStudentDetails', verifyToken, (req, res) => {
@@ -79,18 +84,6 @@ apiRouter.get('/getUserDetails', verifyToken, (req, res) => {
       return res.status(400).json({ error: err });
     }
     return res.status(200).json({ message: 'Success', response: result[0] });
-  });
-});
-
-
-// GET API: Get Company List
-apiRouter.get('/getCompanyList', (req, res) => {
-  const sql = 'SELECT * FROM Company';
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err });
-    }
-    return res.status(200).json({ message: 'Success', response: result });
   });
 });
 
@@ -207,53 +200,5 @@ apiRouter.post('/updateCompanyDetails', verifyToken, (req, res) => {
   });
 });
 
-
-// GET API: Retreive List of Majors
-apiRouter.get('/getMajors', (req, res) => {
-  const sql = 'SELECT * FROM Major';
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(400).json({ message: err });
-    }
-
-    return res.status(200).json({ message: 'Success', response: result });
-  });
-});
-
-// GET API: Retreive List of Degree Levels
-apiRouter.get('/getDegrees', (req, res) => {
-  const sql = 'SELECT * FROM Degree';
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err });
-    }
-
-    return res.status(200).json({ message: 'Success', response: result });
-  });
-});
-
-// GET API: Retreive List of Universities
-apiRouter.get('/getUniversityList', (req, res) => {
-  const sql = 'SELECT * FROM University';
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(400).json({ message: err });
-    }
-
-    return res.status(200).json({ message: 'Success', response: result });
-  });
-});
-
-// GET API: Retrive List of Company
-apiRouter.get('/getCompanyList', (req, res) => {
-  const sql = 'SELECT * FROM Company';
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err });
-    }
-
-    return res.status(200).json({ message: 'Success', response: result });
-  });
-});
 
 module.exports = apiRouter;
