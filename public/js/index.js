@@ -84732,6 +84732,8 @@ var _LandingPage = require('./views/LandingPage');
 
 var _LandingPage2 = _interopRequireDefault(_LandingPage);
 
+var _session = require('./helpers/session');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -84750,6 +84752,15 @@ var App = function (_Component) {
   }
 
   _createClass(App, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      (0, _session.checkSession)(function (valid) {
+        if (!valid) {
+          document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
@@ -84783,7 +84794,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./views/Company":832,"./views/Home":833,"./views/LandingPage":834,"./views/Login":835,"./views/NewProfile":836,"./views/Profile":837,"./views/Register":838,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
+},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./helpers/session":831,"./views/Company":834,"./views/Home":835,"./views/LandingPage":836,"./views/Login":837,"./views/NewProfile":838,"./views/Profile":839,"./views/Register":840,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85053,7 +85064,7 @@ var MenuContainer = function (_Component) {
           { textAlign: 'center', style: { padding: '0em 0em' }, vertical: true },
           _react2.default.createElement(
             _semanticUiReact.Menu,
-            { activeIndex: 2, size: 'large' },
+            { size: 'large', color: 'teal', inverted: true },
             _react2.default.createElement(
               _semanticUiReact.Container,
               null,
@@ -85093,23 +85104,61 @@ exports.default = MenuContainer;
 },{"react":578,"semantic-ui-react":698}],830:[function(require,module,exports){
 'use strict';
 
-var _react = require('react');
+var _index = require('axios/index');
 
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _App = require('./App');
-
-var _App2 = _interopRequireDefault(_App);
+var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
+function uploadFileToS3Bucket(file, signedURL) {
+  _index2.default.put(signedURL, file, {
+    headers: {
+      'Content-Type': file.type
+    }
+  }).then(function (response) {
+    console.log(response);
+  }).catch(function (error) {
+    console.log(error);
+  });
+}
 
-},{"./App":826,"react":578,"react-dom":543}],831:[function(require,module,exports){
+module.exports = {
+  uploadFileToS3Bucket: uploadFileToS3Bucket
+};
+
+},{"axios/index":1}],831:[function(require,module,exports){
+'use strict';
+
+var _index = require('axios/index');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _utils = require('./utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function checkSession(cb) {
+  _index2.default.get('/api/ping', {
+    headers: {
+      Authorization: 'Bearer ' + (0, _utils.getCookie)('token')
+    }
+  }).then(function () {
+    cb(true);
+  }).catch(function () {
+    cb(false);
+  });
+}
+
+function logOut() {
+  document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+module.exports = {
+  checkSession: checkSession,
+  logOut: logOut
+};
+
+},{"./utils":832,"axios/index":1}],832:[function(require,module,exports){
 'use strict';
 
 function getCookie(name) {
@@ -85122,7 +85171,28 @@ module.exports = {
   getCookie: getCookie
 };
 
-},{}],832:[function(require,module,exports){
+},{}],833:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _session = require('./helpers/session');
+
+var _App = require('./App');
+
+var _App2 = _interopRequireDefault(_App);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
+
+},{"./App":826,"./helpers/session":831,"react":578,"react-dom":543}],834:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85411,7 +85481,7 @@ var Company = function (_Component) {
 
 exports.default = Company;
 
-},{"jquery":167,"react":578,"reactstrap":579}],833:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85519,7 +85589,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"jquery":167,"react":578}],834:[function(require,module,exports){
+},{"jquery":167,"react":578}],836:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85742,7 +85812,7 @@ var LandingPage = function LandingPage() {
 
 exports.default = LandingPage;
 
-},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],835:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85754,8 +85824,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = require('react-router-dom');
 
 var _axios = require('axios');
 
@@ -85769,11 +85837,14 @@ var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-env browser */
+
 
 var Login = function (_Component) {
   _inherits(Login, _Component);
@@ -85783,7 +85854,13 @@ var Login = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
 
-    _this.validateUser = _this.validateUser.bind(_this);
+    _this.state = {
+      email: '',
+      password: '',
+      didError: false
+    };
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
     return _this;
   }
 
@@ -85795,9 +85872,38 @@ var Login = function (_Component) {
       }
     }
   }, {
+    key: 'handleChange',
+    value: function handleChange(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var _this2 = this;
+
+      var _state = this.state,
+          email = _state.email,
+          password = _state.password;
+
+      _axios2.default.post('/api/login', { EmailID: email, Password: password }).then(function (res) {
+        document.cookie = 'token=' + res.data.token;
+        _this2.props.history.push('/home');
+        console.log(res);
+      }).catch(function (err) {
+        _this2.setState({ didError: true });
+        console.log(err);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _state2 = this.state,
+          email = _state2.email,
+          password = _state2.password;
+
 
       return _react2.default.createElement(
         'div',
@@ -85807,49 +85913,80 @@ var Login = function (_Component) {
           null,
           _react2.default.createElement(
             'div',
-            { className: 'login-container' },
+            { className: 'login-form' },
             _react2.default.createElement(
-              'div',
-              { className: 'form' },
-              _react2.default.createElement('input', { type: 'text', id: 'mail', placeholder: 'email',
-                ref: function ref(input) {
-                  _this2.emailInput = input;
-                }
-              }),
-              _react2.default.createElement('input', { type: 'password', id: 'password', placeholder: 'password',
-                ref: function ref(input) {
-                  _this2.passwordInput = input;
-                }
-              }),
+              'style',
+              null,
+              '\n      body > div,\n      body > div > div,\n      body > div > div > div.login-form {\n        height: 100%;\n      }\n    '
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Grid,
+              {
+                textAlign: 'center',
+                style: { height: '100%' },
+                verticalAlign: 'middle'
+              },
               _react2.default.createElement(
-                _semanticUiReact.Button,
-                { onClick: this.validateUser },
-                'Click Here'
-              ),
-              _react2.default.createElement(
-                _reactRouterDom.Link,
-                { to: '/register' },
-                'Create an account'
+                _semanticUiReact.Grid.Column,
+                { style: { maxWidth: 450, marginTop: '5%' } },
+                _react2.default.createElement(
+                  _semanticUiReact.Header,
+                  { as: 'h2', color: 'teal', textAlign: 'center' },
+                  ' ',
+                  'Log-in to your account'
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.Form,
+                  { size: 'large', onSubmit: this.handleSubmit, error: this.state.didError },
+                  _react2.default.createElement(
+                    _semanticUiReact.Segment,
+                    { stacked: true },
+                    _react2.default.createElement(_semanticUiReact.Form.Input, {
+                      name: 'email',
+                      fluid: true,
+                      icon: 'user',
+                      iconPosition: 'left',
+                      placeholder: 'E-mail address',
+                      value: email,
+                      onChange: this.handleChange
+                    }),
+                    _react2.default.createElement(_semanticUiReact.Form.Input, {
+                      name: 'password',
+                      fluid: true,
+                      icon: 'lock',
+                      iconPosition: 'left',
+                      placeholder: 'Password',
+                      type: 'password',
+                      value: password,
+                      onChange: this.handleChange
+                    }),
+                    _react2.default.createElement(
+                      _semanticUiReact.Form.Button,
+                      { color: 'teal', fluid: true, size: 'large' },
+                      'Login'
+                    ),
+                    _react2.default.createElement(_semanticUiReact.Message, {
+                      error: true,
+                      header: 'Incorrect email or password',
+                      content: 'Please try again.  If errors persist, please contact the system administrator.'
+                    })
+                  )
+                ),
+                _react2.default.createElement(
+                  _semanticUiReact.Message,
+                  null,
+                  'New to us? ',
+                  _react2.default.createElement(
+                    'a',
+                    { href: '/register' },
+                    'Sign Up'
+                  )
+                )
               )
             )
           )
         )
       );
-    }
-  }, {
-    key: 'validateUser',
-    value: function validateUser() {
-      var _this3 = this;
-
-      var email = this.emailInput.value;
-      var password = this.passwordInput.value;
-      _axios2.default.post('/api/login', { EmailID: email, Password: password }).then(function (res) {
-        document.cookie = 'token=' + res.data.token;
-        _this3.props.history.push('/home');
-        console.log(res);
-      }).catch(function (err) {
-        console.log(err);
-      });
     }
   }]);
 
@@ -85858,7 +85995,7 @@ var Login = function (_Component) {
 
 exports.default = Login;
 
-},{"../containers/MenuContainer":829,"axios":1,"react":578,"react-router-dom":562,"semantic-ui-react":698}],836:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"axios":1,"react":578,"semantic-ui-react":698}],838:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85873,15 +86010,17 @@ var _react2 = _interopRequireDefault(_react);
 
 var _semanticUiReact = require('semantic-ui-react');
 
-var _axios = require('axios');
+var _index = require('axios/index');
 
-var _axios2 = _interopRequireDefault(_axios);
+var _index2 = _interopRequireDefault(_index);
 
 var _MenuContainer = require('../containers/MenuContainer');
 
 var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
 
-var _utils = require('../utils');
+var _utils = require('../helpers/utils');
+
+var _s = require('../helpers/s3');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85900,35 +86039,43 @@ var NewProfile = function (_Component) {
     var _this = _possibleConstructorReturn(this, (NewProfile.__proto__ || Object.getPrototypeOf(NewProfile)).call(this, props));
 
     _this.state = {};
-    _this.uploadFile = _this.uploadFile.bind(_this);
+    _this.uploadResume = _this.uploadResume.bind(_this);
+    _this.uploadCoverLetter = _this.uploadCoverLetter.bind(_this);
     return _this;
   }
 
   _createClass(NewProfile, [{
-    key: 'uploadFile',
-    value: function uploadFile() {
+    key: 'uploadResume',
+    value: function uploadResume() {
       var file = this.resumeInput.inputRef.files[0];
 
-      _axios2.default.get('/api/uploadResume', {
+      _index2.default.get('/api/uploadResume', {
         headers: {
-          'Authorization': (0, _utils.getCookie)('token')
+          Authorization: 'Bearer ' + (0, _utils.getCookie)('token')
         },
         params: {
-          'contentType': file.type
+          contentType: file.type
         }
       }).then(function (response) {
-        var signedUrl = response.data.signedUrl;
-        var fileName = response.data.fileName;
+        (0, _s.uploadFileToS3Bucket)(file, response.data.signedUrl);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: 'uploadCoverLetter',
+    value: function uploadCoverLetter() {
+      var file = this.coverLetterInput.inputRef.files[0];
 
-        _axios2.default.put(signedUrl, file, {
-          headers: {
-            'Content-Type': file.type
-          }
-        }).then(function (response) {
-          console.log(response);
-        }).catch(function (error) {
-          console.log(error);
-        });
+      _index2.default.get('/api/uploadCoverLetter', {
+        headers: {
+          Authorization: 'Bearer ' + (0, _utils.getCookie)('token')
+        },
+        params: {
+          contentType: file.type
+        }
+      }).then(function (response) {
+        (0, _s.uploadFileToS3Bucket)(file, response.data.signedUrl);
       }).catch(function (error) {
         console.log(error);
       });
@@ -85941,10 +86088,34 @@ var NewProfile = function (_Component) {
       return _react2.default.createElement(
         _MenuContainer2.default,
         { loggedIn: true },
-        _react2.default.createElement(_semanticUiReact.Input, { ref: function ref(input) {
+        _react2.default.createElement(_semanticUiReact.Input, {
+          ref: function ref(input) {
             _this2.resumeInput = input;
-          }, size: 'large', icon: 'folder open outline', placeholder: 'Your Resume Here', type: 'file' }),
-        _react2.default.createElement(_semanticUiReact.Button, { onClick: this.uploadFile })
+          },
+          size: 'large',
+          icon: 'folder open outline',
+          placeholder: 'Your Resume Here',
+          type: 'file'
+        }),
+        _react2.default.createElement(
+          _semanticUiReact.Button,
+          { onClick: this.uploadResume },
+          'Upload Resume'
+        ),
+        _react2.default.createElement(_semanticUiReact.Input, {
+          ref: function ref(input) {
+            _this2.coverLetterInput = input;
+          },
+          size: 'large',
+          icon: 'folder open outline',
+          placeholder: 'Your Cover Letter Here',
+          type: 'file'
+        }),
+        _react2.default.createElement(
+          _semanticUiReact.Button,
+          { onClick: this.uploadCoverLetter },
+          'Upload Cover Letter'
+        )
       );
     }
   }]);
@@ -85954,7 +86125,7 @@ var NewProfile = function (_Component) {
 
 exports.default = NewProfile;
 
-},{"../containers/MenuContainer":829,"../utils":831,"axios":1,"react":578,"semantic-ui-react":698}],837:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"../helpers/s3":830,"../helpers/utils":832,"axios/index":1,"react":578,"semantic-ui-react":698}],839:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86041,7 +86212,7 @@ function mount(yo) {
 
   _jquery2.default.ajax({
     type: 'GET',
-    headers: { authorization: cookie },
+    headers: { authorization: 'Bearer ' + cookie },
     url: userDetailsUrl,
     data: []
 
@@ -86063,68 +86234,93 @@ function mount(yo) {
     if (dan.message === 'unauthorized access') {}
   });
 
-  _jquery2.default.get(allDegress, {}, function (data, status, xhr) {}).done(function (data, status, xhr) {
-    if (data.message === 'Success') {
-      degrees = data.response;
-    }
-  }).fail(function (jqxhr, settings, ex) {
-    var dan = JSON.parse(jqxhr.responseText);
-    if (dan.message === 'unauthorized access') {}
-  });
+  // $.get(allDegress, {}, (data, status, xhr) => {
+  // })
+  //   .done((data, status, xhr) => {
+  //     if (data.message === 'Success') {
+  //       degrees = data.response;
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //     }
+  //   });
+  //
+  //
+  // $.get(allMajors, {}, (data, status, xhr) => {
+  // })
+  //   .done((data, status, xhr) => {
+  //     //      alert(data.response);
+  //     if (data.message === 'Success') {
+  //       majors = data.response;
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //     }
+  //   });
 
-  _jquery2.default.get(allMajors, {}, function (data, status, xhr) {}).done(function (data, status, xhr) {
-    //      alert(data.response);
-    if (data.message === 'Success') {
-      majors = data.response;
-    }
-  }).fail(function (jqxhr, settings, ex) {
-    var dan = JSON.parse(jqxhr.responseText);
-    if (dan.message === 'unauthorized access') {}
-  });
 
-  _jquery2.default.get(allUnis, {}, function (data, status, xhr) {}).done(function (data, status, xhr) {
-    if (data.message === 'Success') {
-      universities = data.response;
-
-      // last call
-      var _cookie = getCookie('token');
-
-      _jquery2.default.ajax({
-        type: 'GET',
-        headers: { authorization: _cookie },
-        url: getStudentInfo,
-        data: []
-
-      }).done(function (data, status, xhr) {
-        if (data.message === 'Success') {
-          var temp = lol.state.user;
-
-          var ref = data.response[0];
-          //  var day = universities[ref.University].UnivName
-          temp.university = universities[ref.University - 1].UnivName;
-          temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
-          temp.major = majors[ref.Major - 1].MajorName;
-          temp.bio = ref.Bio;
-          temp.gradYear = Number(ref.GraduationYear);
-
-          temp.phoneNumber = ref.PhoneNumber;
-          temp.professional_accounts = ref.Links;
-          temp.git = ref.Links;
-          // temp.email = mail;
-          // temp.name = name;
-          // temp.lastName = surName;
-
-          lol.setState({ user: temp });
-        }
-      }).fail(function (jqxhr, settings, ex) {
-        var dan = JSON.parse(jqxhr.responseText);
-        if (dan.message === 'unauthorized access') {}
-      });
-    }
-  }).fail(function (jqxhr, settings, ex) {
-    var dan = JSON.parse(jqxhr.responseText);
-    if (dan.message === 'unauthorized access') {}
-  });
+  // $.get(allUnis, {}, (data, status, xhr) => {
+  //
+  // })
+  //   .done((data, status, xhr) => {
+  //     if (data.message === 'Success') {
+  //       universities = data.response;
+  //
+  //
+  //       // last call
+  //       const cookie = getCookie('token');
+  //
+  //
+  //       $.ajax({
+  //         type: 'GET',
+  //         headers: { authorization: cookie },
+  //         url: getStudentInfo,
+  //         data: [],
+  //
+  //       })
+  //
+  //         .done((data, status, xhr) => {
+  //           if (data.message === 'Success') {
+  //             const temp = lol.state.user;
+  //
+  //
+  //             const ref = data.response[0];
+  //             //  var day = universities[ref.University].UnivName
+  //             temp.university = universities[ref.University - 1].UnivName;
+  //             temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
+  //             temp.major = majors[ref.Major - 1].MajorName;
+  //             temp.bio = ref.Bio;
+  //             temp.gradYear = Number(ref.GraduationYear);
+  //
+  //             temp.phoneNumber = ref.PhoneNumber;
+  //             temp.professional_accounts = ref.Links;
+  //             temp.git = ref.Links;
+  //             // temp.email = mail;
+  //             // temp.name = name;
+  //             // temp.lastName = surName;
+  //
+  //             lol.setState({ user: temp });
+  //           }
+  //         })
+  //
+  //         .fail((jqxhr, settings, ex) => {
+  //           const dan = JSON.parse(jqxhr.responseText);
+  //           if (dan.message === 'unauthorized access') {
+  //
+  //           }
+  //         });
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //
+  //     }
+  //   });
 }
 
 function getCookie(name) {
@@ -86655,7 +86851,7 @@ var Profile = function (_Component) {
 
 exports.default = Profile;
 
-},{"jquery":167,"react":578,"reactstrap":579}],838:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],840:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86668,13 +86864,26 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _index = require('axios/index');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _semanticUiReact = require('semantic-ui-react');
+
+var _MenuContainer = require('../containers/MenuContainer');
+
+var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-env browser */
+
 
 var Register = function (_Component) {
   _inherits(Register, _Component);
@@ -86685,44 +86894,259 @@ var Register = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this, props));
 
     _this.state = {
-      isStudent: true,
-      isRegistered: true
+      email: '',
+      password: '',
+      didError: false
     };
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
     return _this;
   }
 
   _createClass(Register, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      if (document.cookie.length !== 0) {
+        this.props.history.push('/home');
+      }
+    }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var _this2 = this;
+
+      var _state = this.state,
+          email = _state.email,
+          password = _state.password;
+
+      _index2.default.post('/api/login', { EmailID: email, Password: password }).then(function (res) {
+        document.cookie = 'token=' + res.data.token;
+        _this2.props.history.push('/home');
+        console.log(res);
+      }).catch(function (err) {
+        _this2.setState({ didError: true });
+        console.log(err);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _state = this.state,
-          isStudent = _state.isStudent,
-          isRegistered = _state.isRegistered;
+      var _this3 = this;
 
-      if (!isRegistered) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'login-page' },
-          _react2.default.createElement(
-            'div',
-            { className: 'login-container' },
-            _react2.default.createElement(
-              'div',
-              { className: 'form' },
-              _react2.default.createElement('form', { className: 'register-form' })
-            )
-          )
-        );
-      }
+      var _state2 = this.state,
+          firstName = _state2.firstName,
+          lastName = _state2.lastName,
+          email = _state2.email,
+          password = _state2.password,
+          company = _state2.company,
+          description = _state2.description;
+
+
       return _react2.default.createElement(
         'div',
-        { className: 'login-page' },
+        null,
         _react2.default.createElement(
-          'div',
-          { className: 'login-container' },
+          _MenuContainer2.default,
+          null,
           _react2.default.createElement(
             'div',
-            { className: 'form' },
-            _react2.default.createElement('form', { className: 'register-form' })
+            { className: 'login-form' },
+            _react2.default.createElement(
+              'style',
+              null,
+              '\n      body > div,\n      body > div > div,\n      body > div > div > div.login-form {\n        height: 100%;\n      }\n    '
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Grid,
+              {
+                textAlign: 'center',
+                style: { height: '100%' },
+                verticalAlign: 'middle'
+              },
+              _react2.default.createElement(
+                _semanticUiReact.Grid.Column,
+                { style: { maxWidth: 450, marginTop: '5%' } },
+                _react2.default.createElement(
+                  _semanticUiReact.Header,
+                  { as: 'h2', color: 'teal', textAlign: 'center' },
+                  ' ',
+                  'Register for MakeItHire'
+                ),
+                _react2.default.createElement(_semanticUiReact.Tab, {
+                  menu: { pointing: true, widths: 2 },
+                  panes: [{
+                    menuItem: 'Student',
+                    render: function render() {
+                      return _react2.default.createElement(
+                        _semanticUiReact.Tab.Pane,
+                        { attached: false },
+                        _react2.default.createElement(
+                          _semanticUiReact.Form,
+                          { size: 'large', onSubmit: _this3.handleSubmit, error: _this3.state.didError },
+                          _react2.default.createElement(
+                            _semanticUiReact.Segment,
+                            { stacked: true },
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'firstName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'First Name',
+                              value: firstName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'lastName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'Last Name',
+                              value: lastName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'email',
+                              fluid: true,
+                              icon: 'user',
+                              iconPosition: 'left',
+                              placeholder: 'E-mail address',
+                              value: email,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'password',
+                              fluid: true,
+                              icon: 'lock',
+                              iconPosition: 'left',
+                              placeholder: 'Password',
+                              type: 'password',
+                              value: password,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(
+                              _semanticUiReact.Form.Button,
+                              { color: 'teal', fluid: true, size: 'large' },
+                              'Register as Student'
+                            ),
+                            _react2.default.createElement(_semanticUiReact.Message, {
+                              error: true,
+                              header: 'Error with registration',
+                              content: 'If errors persist, please contact the system administrator.'
+                            })
+                          )
+                        ),
+                        _react2.default.createElement(
+                          _semanticUiReact.Message,
+                          null,
+                          'Already have an account? ',
+                          _react2.default.createElement(
+                            'a',
+                            { href: '/login' },
+                            'Log In'
+                          )
+                        )
+                      );
+                    }
+                  }, {
+                    menuItem: 'Recruiter',
+                    render: function render() {
+                      return _react2.default.createElement(
+                        _semanticUiReact.Tab.Pane,
+                        { attached: false },
+                        _react2.default.createElement(
+                          _semanticUiReact.Form,
+                          { size: 'large', onSubmit: _this3.handleSubmit, error: _this3.state.didError },
+                          _react2.default.createElement(
+                            _semanticUiReact.Segment,
+                            { stacked: true },
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'firstName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'First Name',
+                              value: firstName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'lastName',
+                              fluid: true,
+                              icon: 'angle right',
+                              iconPosition: 'left',
+                              placeholder: 'Last Name',
+                              value: lastName,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'email',
+                              fluid: true,
+                              icon: 'user',
+                              iconPosition: 'left',
+                              placeholder: 'E-mail address',
+                              value: email,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Input, {
+                              name: 'password',
+                              fluid: true,
+                              icon: 'lock',
+                              iconPosition: 'left',
+                              placeholder: 'Password',
+                              type: 'password',
+                              value: password,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.Select, {
+                              name: 'company',
+                              fluid: true,
+                              placeholder: 'Select Your Company',
+                              value: company,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(_semanticUiReact.Form.TextArea, {
+                              fluid: true,
+                              name: 'description',
+                              label: 'Company Description',
+                              placeholder: 'Tell us more about the company...',
+                              value: description,
+                              onChange: _this3.handleChange
+                            }),
+                            _react2.default.createElement(
+                              _semanticUiReact.Form.Button,
+                              { color: 'teal', fluid: true, size: 'large' },
+                              'Register as Recruiter'
+                            ),
+                            _react2.default.createElement(_semanticUiReact.Message, {
+                              error: true,
+                              header: 'Error with registration',
+                              content: 'If errors persist, please contact the system administrator.'
+                            })
+                          )
+                        ),
+                        _react2.default.createElement(
+                          _semanticUiReact.Message,
+                          null,
+                          'Already have an account? ',
+                          _react2.default.createElement(
+                            'a',
+                            { href: '/login' },
+                            'Log In'
+                          )
+                        )
+                      );
+                    }
+                  }]
+                })
+              )
+            )
           )
         )
       );
@@ -86734,4 +87158,60 @@ var Register = function (_Component) {
 
 exports.default = Register;
 
-},{"react":578}]},{},[830]);
+//   if(!isRegistered) {
+//     return (
+//       <div className='login-page'>
+//         <div className='login-container'>
+//           <div className='form'>
+//             <form className='register-form'>
+//               {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
+//               {/*<input type='text' id='fName' placeholder='First Name' />*/}
+//               {/*<input type='text' id='lName' placeholder='Last Name' />*/}
+//               {/*<input type='text' id='email' placeholder='Email Address' />*/}
+//               {/*<input type='password' id='pass' placeholder='password' />*/}
+//               {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
+//               {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
+//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
+//               {/*/!*</select>*!/*/}
+//               {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
+//               {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
+//               {/*<button className='Reg'>create</button>*/}
+//               {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
+//             </form>
+//           </div>
+//         </div>
+//       </div>
+//     )
+//   }
+//   return (
+//     <div className='login-page'>
+//       <div className='login-container'>
+//         <div className='form'>
+//           <form className='register-form'>
+//             {/*/!*<input type='checkbox' name='checkbox' id='recruiter' onChange='toggleCheckbox(this)' />Recruiter?*!/*/}
+//             {/*<input type='text' id='fName' placeholder='First Name' />*/}
+//             {/*<input type='text' id='lName' placeholder='Last Name' />*/}
+//             {/*<input type='text' id='email' placeholder='Email Address' />*/}
+//             {/*<input type='password' id='pass' placeholder='password' />*/}
+//             {/*/!*<label id='company_label' htmlFor='company_list' style='display: none'>Company</label>*!/*/}
+//             {/*/!*<select name='companies' id='company_list' style='display: none;' onChange='companySelect(this)'>*!/*/}
+//               {/*/!*<option value='-1' selected='selected'>Select Company</option>*!/*/}
+//             {/*/!*</select>*!/*/}
+//             {/*/!* <input type="text" id="company" placeholder="Current Company" style="display: none;"/> *!/*/}
+//             {/*/!* <input type="text" id="description" placeholder="Description" style="display: none;"/> *!/*/}
+//             {/*<button className='Reg'>create</button>*/}
+//             {/*<p className='message'>Already registered? <a href='#' id='goBack'>Sign In</a></p>*/}
+//           </form>
+//           {/*<form className='login-form'>*/}
+//             {/*<input type='text' id='mail' placeholder='email' />*/}
+//             {/*<input type='password' id='password' placeholder='password' />*/}
+//             {/*<button className='loginMe'>login</button>*/}
+//             {/*<p className='message'>Not registered? <a href='#' id='goReg'>Create an account</a></p>*/}
+//           {/*</form>*/}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+},{"../containers/MenuContainer":829,"axios/index":1,"react":578,"semantic-ui-react":698}]},{},[833]);

@@ -75,7 +75,7 @@ function mount(yo) {
 
   $.ajax({
     type: 'GET',
-    headers: { authorization: cookie },
+    headers: { authorization: `Bearer ${cookie}` },
     url: userDetailsUrl,
     data: [],
 
@@ -104,93 +104,93 @@ function mount(yo) {
     });
 
 
-  $.get(allDegress, {}, (data, status, xhr) => {
-  })
-    .done((data, status, xhr) => {
-      if (data.message === 'Success') {
-        degrees = data.response;
-      }
-    })
-    .fail((jqxhr, settings, ex) => {
-      const dan = JSON.parse(jqxhr.responseText);
-      if (dan.message === 'unauthorized access') {
-      }
-    });
+  // $.get(allDegress, {}, (data, status, xhr) => {
+  // })
+  //   .done((data, status, xhr) => {
+  //     if (data.message === 'Success') {
+  //       degrees = data.response;
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //     }
+  //   });
+  //
+  //
+  // $.get(allMajors, {}, (data, status, xhr) => {
+  // })
+  //   .done((data, status, xhr) => {
+  //     //      alert(data.response);
+  //     if (data.message === 'Success') {
+  //       majors = data.response;
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //     }
+  //   });
 
 
-  $.get(allMajors, {}, (data, status, xhr) => {
-  })
-    .done((data, status, xhr) => {
-      //      alert(data.response);
-      if (data.message === 'Success') {
-        majors = data.response;
-      }
-    })
-    .fail((jqxhr, settings, ex) => {
-      const dan = JSON.parse(jqxhr.responseText);
-      if (dan.message === 'unauthorized access') {
-      }
-    });
-
-
-  $.get(allUnis, {}, (data, status, xhr) => {
-
-  })
-    .done((data, status, xhr) => {
-      if (data.message === 'Success') {
-        universities = data.response;
-
-
-        // last call
-        const cookie = getCookie('token');
-
-
-        $.ajax({
-          type: 'GET',
-          headers: { authorization: cookie },
-          url: getStudentInfo,
-          data: [],
-
-        })
-
-          .done((data, status, xhr) => {
-            if (data.message === 'Success') {
-              const temp = lol.state.user;
-
-
-              const ref = data.response[0];
-              //  var day = universities[ref.University].UnivName
-              temp.university = universities[ref.University - 1].UnivName;
-              temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
-              temp.major = majors[ref.Major - 1].MajorName;
-              temp.bio = ref.Bio;
-              temp.gradYear = Number(ref.GraduationYear);
-
-              temp.phoneNumber = ref.PhoneNumber;
-              temp.professional_accounts = ref.Links;
-              temp.git = ref.Links;
-              // temp.email = mail;
-              // temp.name = name;
-              // temp.lastName = surName;
-
-              lol.setState({ user: temp });
-            }
-          })
-
-          .fail((jqxhr, settings, ex) => {
-            const dan = JSON.parse(jqxhr.responseText);
-            if (dan.message === 'unauthorized access') {
-
-            }
-          });
-      }
-    })
-    .fail((jqxhr, settings, ex) => {
-      const dan = JSON.parse(jqxhr.responseText);
-      if (dan.message === 'unauthorized access') {
-
-      }
-    });
+  // $.get(allUnis, {}, (data, status, xhr) => {
+  //
+  // })
+  //   .done((data, status, xhr) => {
+  //     if (data.message === 'Success') {
+  //       universities = data.response;
+  //
+  //
+  //       // last call
+  //       const cookie = getCookie('token');
+  //
+  //
+  //       $.ajax({
+  //         type: 'GET',
+  //         headers: { authorization: cookie },
+  //         url: getStudentInfo,
+  //         data: [],
+  //
+  //       })
+  //
+  //         .done((data, status, xhr) => {
+  //           if (data.message === 'Success') {
+  //             const temp = lol.state.user;
+  //
+  //
+  //             const ref = data.response[0];
+  //             //  var day = universities[ref.University].UnivName
+  //             temp.university = universities[ref.University - 1].UnivName;
+  //             temp.degreePursuing = degrees[ref.CurrentPursuingDegree].Level;
+  //             temp.major = majors[ref.Major - 1].MajorName;
+  //             temp.bio = ref.Bio;
+  //             temp.gradYear = Number(ref.GraduationYear);
+  //
+  //             temp.phoneNumber = ref.PhoneNumber;
+  //             temp.professional_accounts = ref.Links;
+  //             temp.git = ref.Links;
+  //             // temp.email = mail;
+  //             // temp.name = name;
+  //             // temp.lastName = surName;
+  //
+  //             lol.setState({ user: temp });
+  //           }
+  //         })
+  //
+  //         .fail((jqxhr, settings, ex) => {
+  //           const dan = JSON.parse(jqxhr.responseText);
+  //           if (dan.message === 'unauthorized access') {
+  //
+  //           }
+  //         });
+  //     }
+  //   })
+  //   .fail((jqxhr, settings, ex) => {
+  //     const dan = JSON.parse(jqxhr.responseText);
+  //     if (dan.message === 'unauthorized access') {
+  //
+  //     }
+  //   });
 }
 
 function getCookie(name) {
