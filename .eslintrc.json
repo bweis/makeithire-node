@@ -9,6 +9,10 @@
       "modules": true
     }
   },
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
     "array-bracket-spacing": [2, "always"],
     "jsx-quotes": [1, "prefer-single"],
