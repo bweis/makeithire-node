@@ -84794,7 +84794,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./helpers/session":831,"./views/Company":834,"./views/Home":835,"./views/LandingPage":836,"./views/Login":837,"./views/NewProfile":838,"./views/Profile":839,"./views/Register":840,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
+},{"./AuthenticatedRoute":827,"./components/MyNav":828,"./helpers/session":832,"./views/Company":835,"./views/Home":836,"./views/LandingPage":837,"./views/Login":838,"./views/NewProfile":839,"./views/Profile":840,"./views/Register":841,"react":578,"react-router-dom":562,"reactstrap":579}],827:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85110,6 +85110,25 @@ var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function getCompanyList(cb) {
+  _index2.default.get('/api/getCompanyList').then(cb).catch(function () {
+    cb(false);
+  });
+}
+
+module.exports = {
+  getCompanyList: getCompanyList
+};
+
+},{"axios/index":1}],831:[function(require,module,exports){
+'use strict';
+
+var _index = require('axios/index');
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function uploadFileToS3Bucket(file, signedURL) {
   _index2.default.put(signedURL, file, {
     headers: {
@@ -85126,7 +85145,7 @@ module.exports = {
   uploadFileToS3Bucket: uploadFileToS3Bucket
 };
 
-},{"axios/index":1}],831:[function(require,module,exports){
+},{"axios/index":1}],832:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85158,7 +85177,7 @@ module.exports = {
   logOut: logOut
 };
 
-},{"./utils":832,"axios/index":1}],832:[function(require,module,exports){
+},{"./utils":833,"axios/index":1}],833:[function(require,module,exports){
 'use strict';
 
 function getCookie(name) {
@@ -85171,7 +85190,7 @@ module.exports = {
   getCookie: getCookie
 };
 
-},{}],833:[function(require,module,exports){
+},{}],834:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85192,7 +85211,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./App":826,"./helpers/session":831,"react":578,"react-dom":543}],834:[function(require,module,exports){
+},{"./App":826,"./helpers/session":832,"react":578,"react-dom":543}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85481,7 +85500,7 @@ var Company = function (_Component) {
 
 exports.default = Company;
 
-},{"jquery":167,"react":578,"reactstrap":579}],835:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],836:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85589,7 +85608,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"jquery":167,"react":578}],836:[function(require,module,exports){
+},{"jquery":167,"react":578}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85812,7 +85831,7 @@ var LandingPage = function LandingPage() {
 
 exports.default = LandingPage;
 
-},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],837:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"react":578,"semantic-ui-react":698}],838:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85995,7 +86014,7 @@ var Login = function (_Component) {
 
 exports.default = Login;
 
-},{"../containers/MenuContainer":829,"axios":1,"react":578,"semantic-ui-react":698}],838:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"axios":1,"react":578,"semantic-ui-react":698}],839:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86125,7 +86144,7 @@ var NewProfile = function (_Component) {
 
 exports.default = NewProfile;
 
-},{"../containers/MenuContainer":829,"../helpers/s3":830,"../helpers/utils":832,"axios/index":1,"react":578,"semantic-ui-react":698}],839:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"../helpers/s3":831,"../helpers/utils":833,"axios/index":1,"react":578,"semantic-ui-react":698}],840:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86851,7 +86870,7 @@ var Profile = function (_Component) {
 
 exports.default = Profile;
 
-},{"jquery":167,"react":578,"reactstrap":579}],840:[function(require,module,exports){
+},{"jquery":167,"react":578,"reactstrap":579}],841:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86874,6 +86893,8 @@ var _MenuContainer = require('../containers/MenuContainer');
 
 var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
 
+var _api = require('../helpers/api');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -86893,6 +86914,7 @@ var Register = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this, props));
 
+    _this.activeTab = 0;
     _this.state = {
       firstName: '',
       middleName: '',
@@ -86900,20 +86922,44 @@ var Register = function (_Component) {
       email: '',
       password: '',
       company: '',
+      newCompany: '',
       description: '',
-      didError: false
+      didError: false,
+      companyOptions: []
     };
     _this.handleChange = _this.handleChange.bind(_this);
     _this.handleSubmit = _this.handleSubmit.bind(_this);
+    _this.handleTabChange = _this.handleTabChange.bind(_this);
     return _this;
   }
 
   _createClass(Register, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
+      var _this2 = this;
+
       if (document.cookie.length !== 0) {
         this.props.history.push('/home');
       }
+      (0, _api.getCompanyList)(function (res) {
+        if (!res) {
+          console.log('Could not get company list');
+        } else {
+          var companyOptions = res.data.response.map(function (company) {
+            return {
+              key: company.idCompany,
+              value: company.idCompany,
+              text: company.CompanyName
+            };
+          });
+          _this2.setState({ companyOptions: companyOptions });
+        }
+      });
+    }
+  }, {
+    key: 'handleTabChange',
+    value: function handleTabChange(e, data) {
+      this.activeTab = data.activeIndex;
     }
   }, {
     key: 'handleChange',
@@ -86925,30 +86971,45 @@ var Register = function (_Component) {
     }
   }, {
     key: 'handleSubmit',
-    value: function handleSubmit(route) {
-      var _this2 = this;
+    value: function handleSubmit() {
+      var _this3 = this;
 
       var _state = this.state,
           firstName = _state.firstName,
+          middleName = _state.middleName,
           lastName = _state.lastName,
           email = _state.email,
           password = _state.password,
           company = _state.company,
-          description = _state.description;
+          description = _state.description,
+          newCompany = _state.newCompany;
 
-      _index2.default.post(route, { EmailID: email, Password: password }).then(function (res) {
-        document.cookie = 'token=' + res.data.token;
-        _this2.props.history.push('/home');
+      var route = '/api/signUpStudent';
+      if (this.activeTab === 1) {
+        route = '/api/signUpRecruiter';
+      }
+      _index2.default.post(route, {
+        FirstName: firstName,
+        MiddleName: middleName,
+        LastName: lastName,
+        EmailID: email,
+        Password: password,
+        idCompany: company, // 0 = student, -1 = head Recruiter, id = company ID
+        CompanyName: company,
+        Description: description,
+        Published: 0 // Flag for if we publish the page
+      }).then(function (res) {
+        _this3.props.history.push('/login');
         console.log(res);
       }).catch(function (err) {
-        _this2.setState({ didError: true });
+        _this3.setState({ didError: true });
         console.log(err);
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       var _state2 = this.state,
           firstName = _state2.firstName,
@@ -86957,7 +87018,8 @@ var Register = function (_Component) {
           email = _state2.email,
           password = _state2.password,
           company = _state2.company,
-          description = _state2.description;
+          description = _state2.description,
+          companyOptions = _state2.companyOptions;
 
 
       return _react2.default.createElement(
@@ -86991,6 +87053,7 @@ var Register = function (_Component) {
                   'Register for MakeItHire'
                 ),
                 _react2.default.createElement(_semanticUiReact.Tab, {
+                  onTabChange: this.handleTabChange,
                   menu: { pointing: true, widths: 2 },
                   panes: [{
                     menuItem: 'Student',
@@ -87000,55 +87063,50 @@ var Register = function (_Component) {
                         { attached: false },
                         _react2.default.createElement(
                           _semanticUiReact.Form,
-                          { size: 'large', onSubmit: _this3.handleSubmit, error: _this3.state.didError },
+                          { size: 'large', onSubmit: _this4.handleSubmit, error: _this4.state.didError },
                           _react2.default.createElement(
                             _semanticUiReact.Segment,
                             { stacked: true },
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'firstName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'First Name',
                               value: firstName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'middleName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'Middle Name',
                               value: middleName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'lastName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'Last Name',
                               value: lastName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'email',
-                              fluid: true,
                               icon: 'user',
                               iconPosition: 'left',
                               placeholder: 'E-mail address',
                               value: email,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'password',
-                              fluid: true,
                               icon: 'lock',
                               iconPosition: 'left',
                               placeholder: 'Password',
                               type: 'password',
                               value: password,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(
                               _semanticUiReact.Form.Button,
@@ -87082,55 +87140,50 @@ var Register = function (_Component) {
                         { attached: false },
                         _react2.default.createElement(
                           _semanticUiReact.Form,
-                          { size: 'large', onSubmit: _this3.handleSubmit, error: _this3.state.didError },
+                          { size: 'large', onSubmit: _this4.handleSubmit, error: _this4.state.didError },
                           _react2.default.createElement(
                             _semanticUiReact.Segment,
                             { stacked: true },
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'firstName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'First Name',
                               value: firstName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'middleName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'Middle Name',
                               value: middleName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'lastName',
-                              fluid: true,
                               icon: 'angle right',
                               iconPosition: 'left',
                               placeholder: 'Last Name',
                               value: lastName,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'email',
-                              fluid: true,
                               icon: 'user',
                               iconPosition: 'left',
                               placeholder: 'E-mail address',
                               value: email,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(_semanticUiReact.Form.Input, {
                               name: 'password',
-                              fluid: true,
                               icon: 'lock',
                               iconPosition: 'left',
                               placeholder: 'Password',
                               type: 'password',
                               value: password,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange
                             }),
                             _react2.default.createElement(
                               _semanticUiReact.Divider,
@@ -87139,18 +87192,29 @@ var Register = function (_Component) {
                             ),
                             _react2.default.createElement(_semanticUiReact.Form.Select, {
                               name: 'company',
-                              fluid: true,
                               placeholder: 'Select Your Company',
                               value: company,
-                              onChange: _this3.handleChange
+                              onChange: _this4.handleChange,
+                              options: companyOptions
                             }),
-                            _react2.default.createElement(_semanticUiReact.Form.TextArea, {
-                              fluid: true,
-                              name: 'description',
-                              placeholder: 'Tell us more about the company...',
-                              value: description,
-                              onChange: _this3.handleChange
-                            }),
+                            _react2.default.createElement(
+                              'div',
+                              { style: display = 'none' },
+                              _react2.default.createElement(_semanticUiReact.Form.Input, {
+                                name: 'newCompany',
+                                icon: 'angle right',
+                                iconPosition: 'left',
+                                placeholder: 'Company name',
+                                value: company,
+                                onChange: _this4.handleChange
+                              }),
+                              _react2.default.createElement(_semanticUiReact.Form.TextArea, {
+                                name: 'description',
+                                placeholder: 'Tell us more about the company...',
+                                value: description,
+                                onChange: _this4.handleChange
+                              })
+                            ),
                             _react2.default.createElement(
                               _semanticUiReact.Form.Button,
                               { color: 'teal', fluid: true, size: 'large' },
@@ -87190,4 +87254,4 @@ var Register = function (_Component) {
 
 exports.default = Register;
 
-},{"../containers/MenuContainer":829,"axios/index":1,"react":578,"semantic-ui-react":698}]},{},[833]);
+},{"../containers/MenuContainer":829,"../helpers/api":830,"axios/index":1,"react":578,"semantic-ui-react":698}]},{},[834]);
