@@ -2,13 +2,17 @@
  *  MakeItHire Server
  ******************************** */
 
-require('dotenv/config')
-
-const api = require('./api/api');
+require('dotenv/config');
 const express = require('express');
 const bodyParser = require('body-parser');
+const expressJwt = require('express-jwt');
+
+const api = require('./api/api');
 
 const app = express();
+
+// Protect the /api routes with JWT
+app.use('/api', expressJwt({ secret: process.env.JWT_SECRET }).unless( { path: [ '/api/login' ] }));
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));

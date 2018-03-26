@@ -1,10 +1,5 @@
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const cors = require('cors');
-const mime = require('mime-types');
-const multer = require('multer');
-const fs = require('fs');
 const cookie = require('cookie');
 
 // Utils
@@ -25,7 +20,7 @@ apiRouter.post('/signUpStudent', registration.signUpStudent);
 apiRouter.post('/signUpRecruiter', registration.signUpRecruiter);
 
 // Authenticated Routes
-apiRouter.post('/logout', verifyToken, session.logout);
+apiRouter.get('/ping', verifyToken, session.pingSession);
 apiRouter.get('/uploadResume', verifyToken, student.uploadResume);
 apiRouter.get('/uploadCoverLetter', verifyToken, student.uploadCoverLetter);
 
@@ -65,58 +60,25 @@ apiRouter.post('/updateStudentDetails', verifyToken, (req, res) => {
 // GET API: Get Student Details
 apiRouter.get('/getStudentDetails', verifyToken, (req, res) => {
   const sql = 'SELECT * FROM Student WHERE idUser = (SELECT idUser FROM User WHERE TokenID = ?)';
-  jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
-    if (auth_err) {
-      return res.status(401).json({ error: auth_err });
+  db.query(sql, req.user.EmailID, (err1, result) => {
+    if (err1) {
+      return res.status(400).json({ message: err1 });
     }
-    db.query(sql, req.token, (err1, result) => {
-      if (err1) {
-        return res.status(400).json({ message: err1 });
-      }
 
-      console.log(result);
-      return res.status(200).json({ message: 'Success', response: result });
-    });
+    console.log(result);
+    return res.status(200).json({ message: 'Success', response: result });
   });
 });
 
 
 // GET API: Get Student Details
 apiRouter.get('/getUserDetails', verifyToken, (req, res) => {
-  let compid = '';
-  let userid = '';
-  const sql = 'SELECT * FROM User WHERE TokenID = ?';
-  jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
-    if (auth_err) {
-      return res.status(401).json({ error: auth_err });
+  const sql = 'SELECT * FROM User a LEFT OUTER JOIN Company b on a.idCompany = b.idCompany WHERE EmailID = ?';
+  db.query(sql, req.user.EmailID, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
     }
-    db.query(sql, req.token, (err1, result) => {
-      if (err1) {
-        return res.status(400).json({ error: err1 });
-      }
-
-      compid = result[0].idCompany;
-      userid = result[0].idUser;
-      if (compid == 0) {
-        result[0].type = 0;
-        return res.status(200).json({ message: 'Success', response: result[0] });
-      }
-
-      const sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
-      db.query(sql2, compid, (db_err2, result2) => {
-        if (db_err2) {
-          return res.status(400).json({ error: db_err2 });
-        }
-
-        if (userid == result2[0].idUser) {
-          result[0].type = 2;
-          return res.status(200).json({ message: 'Success', response: result[0] });
-        }
-
-        result[0].type = 1;
-        return res.status(200).json({ message: 'Success', response: result[0] });
-      });
-    });
+    return res.status(200).json({ message: 'Success', response: result[0] });
   });
 });
 
@@ -128,45 +90,37 @@ apiRouter.get('/getCompanyList', (req, res) => {
     if (err) {
       return res.status(400).json({ error: err });
     }
-
     return res.status(200).json({ message: 'Success', response: result });
   });
 });
-
-
 
 
 apiRouter.get('/isRecruiter', verifyToken, (req, res) => {
   let compid = '';
   let userid = '';
   const sql = 'SELECT idCompany, idUser FROM User WHERE TokenID = ?';
-  jwt.verify(req.token, process.env.KEY, (auth_err, authData) => {
-    if (auth_err) {
-      return res.status(401).json({ error: auth_err });
+  db.query(sql, req.user.EmailID, (db_err1, result) => {
+    if (db_err1) {
+      return res.status(400).json({ error: db_err1 });
     }
-    db.query(sql, req.token, (db_err1, result) => {
-      if (db_err1) {
-        return res.status(400).json({ error: db_err1 });
+
+    compid = result[0].idCompany;
+    userid = result[0].idUser;
+    if (compid == 0) {
+      return res.status(200).json({ message: 'Success', response: '0' });
+    }
+
+    const sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
+    db.query(sql2, compid, (db_err2, result2) => {
+      if (db_err2) {
+        return res.status(400).json({ error: db_err2 });
       }
 
-      compid = result[0].idCompany;
-      userid = result[0].idUser;
-      if (compid == 0) {
-        return res.status(200).json({ message: 'Success', response: '0' });
+      if (userid == result2[0].idUser) {
+        return res.status(200).json({ message: 'Success', response: '2' });
       }
 
-      const sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
-      db.query(sql2, compid, (db_err2, result2) => {
-        if (db_err2) {
-          return res.status(400).json({ error: db_err2 });
-        }
-
-        if (userid == result2[0].idUser) {
-          return res.status(200).json({ message: 'Success', response: '2' });
-        }
-
-        return res.status(200).json({ message: 'Success', response: '1' });
-      });
+      return res.status(200).json({ message: 'Success', response: '1' });
     });
   });
 });
@@ -254,8 +208,6 @@ apiRouter.post('/updateCompanyDetails', verifyToken, (req, res) => {
 });
 
 
-
-
 // GET API: Retreive List of Majors
 apiRouter.get('/getMajors', (req, res) => {
   const sql = 'SELECT * FROM Major';
@@ -303,8 +255,5 @@ apiRouter.get('/getCompanyList', (req, res) => {
     return res.status(200).json({ message: 'Success', response: result });
   });
 });
-
-
-
 
 module.exports = apiRouter;

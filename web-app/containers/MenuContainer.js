@@ -32,7 +32,7 @@ export default class MenuContainer extends Component {
     return (
       <div>
         <Segment textAlign='center' style={{ padding: '0em 0em' }} vertical>
-          <Menu activeIndex={2} size='large'>
+          <Menu size='large' color='teal' inverted>
             <Container>
               <Menu.Item><img alt='Logo' src='/img/logo.png' /></Menu.Item>
               {loggedIn ? this.createNavItem('Home', '/home') : null}

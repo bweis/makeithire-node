@@ -11,8 +11,16 @@ import Company from './views/Company';
 import Login from './views/Login';
 import Register from './views/Register';
 import LandingPage from './views/LandingPage';
+import { checkSession } from './helpers/session';
 
 class App extends Component {
+  componentWillMount() {
+    checkSession((valid) => {
+      if (!valid) {
+        document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
+    });
+  }
   render() {
     return (
       <div>

@@ -7,7 +7,7 @@ function verifyToken(req, res, next) {
     req.token = bearerHeader;
     next();
   } else {
-    res.redirect('/login');
+    res.status(401).send();
   }
 }
 
