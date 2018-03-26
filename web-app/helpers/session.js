@@ -22,4 +22,4 @@ function logOut() {
 module.exports = {
   checkSession,
   logOut,
-}
+};

@@ -57,6 +57,6 @@
   "scripts": {
     "start": "node server.js",
     "build": "gulp transform",
-    "lint": "eslint .",
+    "lint": "eslint ."
   }
 }

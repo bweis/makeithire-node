@@ -20,9 +20,9 @@ const getStudentInfo = '/api/getStudentDetails';
 
 const userDetailsUrl = '/api/getUserDetails';
 
-let majors = [];
-let degrees = [];
-let universities = [];
+const majors = [];
+const degrees = [];
+const universities = [];
 
 
 let name;

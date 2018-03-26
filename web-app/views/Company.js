@@ -178,7 +178,7 @@ class Company extends Component {
             {button}
             <FormGroup row hidden={!this.state.readOnly}>
               <Col>
-                  <Button onClick={this._click} className='col-form-label'>
+                <Button onClick={this._click} className='col-form-label'>
                                     Save Changes
                 </Button>
               </Col>

@@ -33,4 +33,4 @@ function handleS3Request(req, res, fileName) {
         });
     }
   });
-};
+}

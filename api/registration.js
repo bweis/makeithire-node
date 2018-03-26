@@ -104,4 +104,4 @@ function signUpRecruiter(req, res) {
 module.exports = {
   signUpRecruiter,
   signUpStudent,
-}
+};
