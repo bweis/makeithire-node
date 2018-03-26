@@ -18,8 +18,7 @@ gulp.task('lint', () => gulp.src([ '**/*.js', '!node_modules/**', '!web-app/**',
 
 gulp.task('transform', () => {
   browserify(PATH_web_app)
-    .transform(babelify, { presets: ['es2015', 'react']
-    })
+    .transform(babelify, { presets: [ 'es2015', 'react' ] })
     .bundle()
     .on('error', (err) => {
       console.log(err);

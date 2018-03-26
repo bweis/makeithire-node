@@ -35,13 +35,11 @@ class Register extends Component {
       if (!res) {
         console.log('Could not get company list');
       } else {
-        const companyOptions = res.data.response.map((company) => {
-          return {
-            key: company.idCompany,
-            value: company.idCompany,
-            text: company.CompanyName,
-          };
-        });
+        const companyOptions = res.data.response.map(company => ({
+          key: company.idCompany,
+          value: company.idCompany,
+          text: company.CompanyName,
+        }));
         this.setState({ companyOptions });
       }
     });
@@ -247,7 +245,7 @@ class Register extends Component {
                                 onChange={this.handleChange}
                                 options={companyOptions}
                               />
-                              <div style={ display='none'} >
+                              <div style={display = 'none'} >
                                 <Form.Input
                                   name='newCompany'
                                   icon='angle right'

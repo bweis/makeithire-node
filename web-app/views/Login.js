@@ -1,10 +1,8 @@
-/* eslint-env browser */
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import { Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
-
 
 class Login extends Component {
   constructor(props) {
