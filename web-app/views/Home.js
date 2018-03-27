@@ -1,62 +1,41 @@
 import React, { Component } from 'react';
 
-import $ from 'jquery';
-
-const url = '';
-
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
-  if (match) return match[1];
-  return '';
-}
+import MenuContainer from '../containers/MenuContainer';
+import { getUserDetails } from '../helpers/api';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.isLoggedIn);
     this.state = { isRecruiter: -1 };
-    const cookie = getCookie('token');
-
-    const lol = this;
-
-    $.ajax({
-      type: 'GET',
-      headers: { authorization: cookie },
-      url: `${url}/api/getUserDetails`,
-    })
-      .done((data, status, xhr) => {
-        if (data.message === 'Success') {
-          console.log('success on isRecruiter');
-          console.log(data.response.type);
-          lol.setState({ isRecruiter: data.response.type });
-        }
-      })
-      .fail((jqxhr, settings, ex) => {
-        console.log('failed on isRecruiter');
-      });
   }
 
+  componentWillMount() {
+    getUserDetails((res) => {
+      if (!res) {
+        console.log('Could not get user details');
+      } else {
+        console.log(res.data.response);
+        // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
+        this.setState({ isRecruiter: 0 }); // Mock student state
+      }
+    });
+  }
   render() {
-    let home = '';
-    if (this.state.isRecruiter === -1) {
-      //
-    } else if (this.state.isRecruiter === 0) {
+    let home = ''; // TODO fix this, is Recruiter is async and not retrieved before rendered.
+    if (this.state.isRecruiter === 0) {
       home = <h1>Student Home Page</h1>;
     } else if (this.state.isRecruiter === 1) {
       home = <h1>Recruiter Home Page</h1>;
     } else if (this.state.isRecruiter === 2) {
       home = <h1>Head Recruiter Home Page</h1>;
+    } else {
+      home = <h1>COULD NOT GET STATE</h1>;
     }
-    /*
-         if (isLoggedIn) {
-         home =
-         } else {
-         home = <Landing />
-         }
-         */
     return (
       <div>
-        {home}
+        <MenuContainer loggedIn>
+          {home}
+        </MenuContainer>
       </div>
     );
   }

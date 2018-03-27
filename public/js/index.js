@@ -85110,17 +85110,25 @@ var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var utils = require('./utils');
+
 function getCompanyList(cb) {
-  _index2.default.get('/api/getCompanyList').then(cb).catch(function () {
+  _index2.default.get('/api/getcompanylist').then(cb).catch(function () {
     cb(false);
   });
 }
 
+function getUserDetails(cb) {
+  _index2.default.get('/api/getuserdetails', { headers: { authorization: utils.getAuthToken() } }).then(cb).catch(function () {
+    cb(false);
+  });
+}
 module.exports = {
-  getCompanyList: getCompanyList
+  getCompanyList: getCompanyList,
+  getUserDetails: getUserDetails
 };
 
-},{"axios/index":1}],831:[function(require,module,exports){
+},{"./utils":833,"axios/index":1}],831:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85182,12 +85190,16 @@ module.exports = {
 
 function getCookie(name) {
   var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
-  if (match) return match[1];
-  return '';
+  return match ? match[1] : '';
+}
+
+function getAuthToken() {
+  return getCookie('token') ? 'Bearer ' + getCookie('token') : false;
 }
 
 module.exports = {
-  getCookie: getCookie
+  getCookie: getCookie,
+  getAuthToken: getAuthToken
 };
 
 },{}],834:[function(require,module,exports){
@@ -85201,8 +85213,6 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _session = require('./helpers/session');
-
 var _App = require('./App');
 
 var _App2 = _interopRequireDefault(_App);
@@ -85211,7 +85221,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./App":826,"./helpers/session":832,"react":578,"react-dom":543}],835:[function(require,module,exports){
+},{"./App":826,"react":578,"react-dom":543}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85513,9 +85523,11 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _jquery = require('jquery');
+var _MenuContainer = require('../containers/MenuContainer');
 
-var _jquery2 = _interopRequireDefault(_jquery);
+var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
+
+var _api = require('../helpers/api');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85525,14 +85537,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var url = '';
-
-function getCookie(name) {
-  var match = document.cookie.match(new RegExp(name + '=([^;]+)'));
-  if (match) return match[1];
-  return '';
-}
-
 var Home = function (_Component) {
   _inherits(Home, _Component);
 
@@ -85541,35 +85545,30 @@ var Home = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
-    console.log(_this.props.isLoggedIn);
     _this.state = { isRecruiter: -1 };
-    var cookie = getCookie('token');
-
-    var lol = _this;
-
-    _jquery2.default.ajax({
-      type: 'GET',
-      headers: { authorization: cookie },
-      url: url + '/api/getUserDetails'
-    }).done(function (data, status, xhr) {
-      if (data.message === 'Success') {
-        console.log('success on isRecruiter');
-        console.log(data.response.type);
-        lol.setState({ isRecruiter: data.response.type });
-      }
-    }).fail(function (jqxhr, settings, ex) {
-      console.log('failed on isRecruiter');
-    });
     return _this;
   }
 
   _createClass(Home, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var _this2 = this;
+
+      (0, _api.getUserDetails)(function (res) {
+        if (!res) {
+          console.log('Could not get user details');
+        } else {
+          console.log(res.data.response);
+          // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
+          _this2.setState({ isRecruiter: 0 }); // Mock student state
+        }
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var home = '';
-      if (this.state.isRecruiter === -1) {
-        //
-      } else if (this.state.isRecruiter === 0) {
+      var home = ''; // TODO fix this, is Recruiter is async and not retrieved before rendered.
+      if (this.state.isRecruiter === 0) {
         home = _react2.default.createElement(
           'h1',
           null,
@@ -85587,18 +85586,21 @@ var Home = function (_Component) {
           null,
           'Head Recruiter Home Page'
         );
+      } else {
+        home = _react2.default.createElement(
+          'h1',
+          null,
+          'COULD NOT GET STATE'
+        );
       }
-      /*
-           if (isLoggedIn) {
-           home =
-           } else {
-           home = <Landing />
-           }
-           */
       return _react2.default.createElement(
         'div',
         null,
-        home
+        _react2.default.createElement(
+          _MenuContainer2.default,
+          { loggedIn: true },
+          home
+        )
       );
     }
   }]);
@@ -85608,7 +85610,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"jquery":167,"react":578}],837:[function(require,module,exports){
+},{"../containers/MenuContainer":829,"../helpers/api":830,"react":578}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85862,8 +85864,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-env browser */
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Login = function (_Component) {
   _inherits(Login, _Component);
@@ -86939,6 +86940,7 @@ var Register = function (_Component) {
       var _this2 = this;
 
       if (document.cookie.length !== 0) {
+        // TODO FIX THIS, SCROLL COOKIE SPOOFS LOGIN
         this.props.history.push('/home');
       }
       (0, _api.getCompanyList)(function (res) {
@@ -86984,9 +86986,9 @@ var Register = function (_Component) {
           description = _state.description,
           newCompany = _state.newCompany;
 
-      var route = '/api/signUpStudent';
+      var route = '/api/signupstudent';
       if (this.activeTab === 1) {
-        route = '/api/signUpRecruiter';
+        route = '/api/signuprecruiter';
       }
       _index2.default.post(route, {
         FirstName: firstName,
@@ -87199,7 +87201,7 @@ var Register = function (_Component) {
                             }),
                             _react2.default.createElement(
                               'div',
-                              { style: display = 'none' },
+                              null,
                               _react2.default.createElement(_semanticUiReact.Form.Input, {
                                 name: 'newCompany',
                                 icon: 'angle right',

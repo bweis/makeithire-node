@@ -1,4 +1,3 @@
-const db = require('./utils/db');
 const { getSignedUrl } = require('./utils/s3');
 
 // POST API: Uploads Resume
@@ -33,4 +32,4 @@ function handleS3Request(req, res, fileName) {
         });
     }
   });
-};
+}

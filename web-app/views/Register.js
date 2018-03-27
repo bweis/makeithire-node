@@ -28,20 +28,18 @@ class Register extends Component {
   }
 
   componentWillMount() {
-    if (document.cookie.length !== 0) {
+    if (document.cookie.length !== 0) { // TODO FIX THIS, SCROLL COOKIE SPOOFS LOGIN
       this.props.history.push('/home');
     }
     getCompanyList((res) => {
       if (!res) {
         console.log('Could not get company list');
       } else {
-        const companyOptions = res.data.response.map((company) => {
-          return {
-            key: company.idCompany,
-            value: company.idCompany,
-            text: company.CompanyName,
-          };
-        });
+        const companyOptions = res.data.response.map(company => ({
+          key: company.idCompany,
+          value: company.idCompany,
+          text: company.CompanyName,
+        }));
         this.setState({ companyOptions });
       }
     });
@@ -66,9 +64,9 @@ class Register extends Component {
       description,
       newCompany,
     } = this.state;
-    let route = '/api/signUpStudent';
+    let route = '/api/signupstudent';
     if (this.activeTab === 1) {
-      route = '/api/signUpRecruiter';
+      route = '/api/signuprecruiter';
     }
     axios.post(
       route,
@@ -247,7 +245,7 @@ class Register extends Component {
                                 onChange={this.handleChange}
                                 options={companyOptions}
                               />
-                              <div style={ display='none'} >
+                              <div>
                                 <Form.Input
                                   name='newCompany'
                                   icon='angle right'

@@ -16,4 +16,4 @@ function uploadFileToS3Bucket(file, signedURL) {
 
 module.exports = {
   uploadFileToS3Bucket,
-}
+};

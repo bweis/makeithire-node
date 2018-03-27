@@ -9,6 +9,10 @@
       "modules": true
     }
   },
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
     "array-bracket-spacing": [2, "always"],
     "jsx-quotes": [1, "prefer-single"],
@@ -23,6 +27,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/no-array-index-key": 0,
     "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
-    "consistent-return": 0
+    "consistent-return": 0,
+    "no-console": "off"
   }
 }
