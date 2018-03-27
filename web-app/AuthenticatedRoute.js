@@ -5,6 +5,7 @@ const AuthenticatedRoute = ({ component: Component, path, name }) => {
   const isLoggedIn = document.cookie.length !== 0;
   return (
     <Route
+        exact
       path={path}
       name={name}
       render={props =>
