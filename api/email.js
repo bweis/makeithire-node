@@ -1,11 +1,9 @@
-require('dotenv')
-  .config();
+const { validateEmail } = require('./utils/emailValidation');
 const db = require('./utils/db');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const generator = require('generate-password');
 
-import { validateEmail } from './utils/emailValidation';
 
 function requestRecruiter(req, res) {
   if (!validateEmail(req.body.Email)) {
