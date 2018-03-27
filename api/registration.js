@@ -97,9 +97,9 @@ function signUpRecruiter(req, res) {
         });
       });
     } else {
-      db.query(sql1, post, (db_err4, result1) => {
-        if (db_err4) {
-          return res.status(400).json({ error: db_err4 });
+      db.query(sql1, post, (err4, res4) => {
+        if (err4) {
+          return res.status(400).json({ error: err4 });
         }
 
         return res.status(200).json({ message: 'Account created' });
