@@ -1,9 +1,13 @@
 function getCookie(name) {
   const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
-  if (match) return match[1];
-  return '';
+  return match ? match[1] : '';
+}
+
+function getAuthToken() {
+  return getCookie('token') ? `Bearer ${getCookie('token')}` : false;
 }
 
 module.exports = {
   getCookie,
+  getAuthToken,
 };
