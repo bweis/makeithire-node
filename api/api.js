@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const cookie = require('cookie');
 
 // Utils
 const db = require('./utils/db');
@@ -12,11 +10,12 @@ const registration = require('./registration');
 const student = require('./student');
 const user = require('./user');
 const data = require('./data');
+const email = require('./email');
 
 // Routers
 const apiRouter = require('express').Router();
 
-// Authenticated Routes
+// Routes **To add public route, you must add it to the list in session.js**
 apiRouter.get('/ping', session.pingSession);
 apiRouter.post('/login', session.login);
 
@@ -32,6 +31,9 @@ apiRouter.get('/getUniversityList', data.getUniversityList);
 apiRouter.get('/getCompanyList', data.getCompanyList);
 
 apiRouter.get('/getUserDetails', user.getUserDetails);
+
+apiRouter.post('/requestRecruiter', email.requestRecruiter);
+apiRouter.post('/adminAddRecruiter', email.adminAddRecruiter);
 
 // POST API: Add Student Details into Student Table
 apiRouter.post('/updateStudentDetails', verifyToken, (req, res) => {
