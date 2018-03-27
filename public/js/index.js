@@ -85593,7 +85593,6 @@ var Home = function (_Component) {
           'COULD NOT GET STATE'
         );
       }
-      console.log(this.state.isRecruiter);
       return _react2.default.createElement(
         'div',
         null,
