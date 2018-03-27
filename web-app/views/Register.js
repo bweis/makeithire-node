@@ -64,9 +64,9 @@ class Register extends Component {
       description,
       newCompany,
     } = this.state;
-    let route = '/api/signUpStudent';
+    let route = '/api/signupstudent';
     if (this.activeTab === 1) {
-      route = '/api/signUpRecruiter';
+      route = '/api/signuprecruiter';
     }
     axios.post(
       route,

@@ -78,35 +78,36 @@ apiRouter.get('/getStudentDetails', verifyToken, (req, res) => {
   });
 });
 
-apiRouter.get('/isRecruiter', verifyToken, (req, res) => {
-  let compid = '';
-  let userid = '';
-  const sql = 'SELECT idCompany, idUser FROM User WHERE TokenID = ?';
-  db.query(sql, req.user.EmailID, (db_err1, result) => {
-    if (db_err1) {
-      return res.status(400).json({ error: db_err1 });
-    }
-
-    compid = result[0].idCompany;
-    userid = result[0].idUser;
-    if (compid == 0) {
-      return res.status(200).json({ message: 'Success', response: '0' });
-    }
-
-    const sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
-    db.query(sql2, compid, (db_err2, result2) => {
-      if (db_err2) {
-        return res.status(400).json({ error: db_err2 });
-      }
-
-      if (userid == result2[0].idUser) {
-        return res.status(200).json({ message: 'Success', response: '2' });
-      }
-
-      return res.status(200).json({ message: 'Success', response: '1' });
-    });
-  });
-});
+// DEPRECATED
+// apiRouter.get('/isRecruiter', verifyToken, (req, res) => {
+//   let compid = '';
+//   let userid = '';
+//   const sql = 'SELECT idCompany, idUser FROM User WHERE TokenID = ?';
+//   db.query(sql, req.user.EmailID, (db_err1, result) => {
+//     if (db_err1) {
+//       return res.status(400).json({ error: db_err1 });
+//     }
+//
+//     compid = result[0].idCompany;
+//     userid = result[0].idUser;
+//     if (compid == 0) {
+//       return res.status(200).json({ message: 'Success', response: '0' });
+//     }
+//
+//     const sql2 = 'SELECT idUser FROM Company WHERE idCompany = ?';
+//     db.query(sql2, compid, (db_err2, result2) => {
+//       if (db_err2) {
+//         return res.status(400).json({ error: db_err2 });
+//       }
+//
+//       if (userid == result2[0].idUser) {
+//         return res.status(200).json({ message: 'Success', response: '2' });
+//       }
+//
+//       return res.status(200).json({ message: 'Success', response: '1' });
+//     });
+//   });
+// });
 
 // POST API: Request to Delete a Recruiter
 apiRouter.post('/requestDelete', verifyToken, (req, res) => {

@@ -15,7 +15,8 @@ class Home extends Component {
         console.log('Could not get user details');
       } else {
         console.log(res.data.response);
-        this.setState({ isRecruiter: res.data.response.type });
+        // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
+        this.setState({ isRecruiter: 0 }); // Mock student state
       }
     });
   }
@@ -30,7 +31,6 @@ class Home extends Component {
     } else {
       home = <h1>COULD NOT GET STATE</h1>;
     }
-    console.log(home);
     return (
       <div>
         <MenuContainer loggedIn>
