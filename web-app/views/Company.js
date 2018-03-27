@@ -1,52 +1,13 @@
 import React, { Component } from 'react';
+import { getUserDetails } from '../helpers/api';
+import { getCompanyList } from '../helpers/api';
+import { getCookie } from '../helpers/utils';
+import MenuContainer from '../containers/MenuContainer';
 
-import {
-  Container,
-  Col,
-  Media,
-  Form,
-  FormGroup,
-  Input,
-  Button,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-} from 'reactstrap';
 
-import $ from 'jquery';
+import { Form } from 'semantic-ui-react'
 
-const url = 'http://localhost:3001';
 
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
-  if (match) return match[1];
-  return '';
-}
-
-function getCompanyDetails(context, cookie, companyID) {
-  $.ajax({
-    type: 'GET',
-    headers: { authorization: cookie },
-    url: `${url}/api/getCompanyList`,
-  })
-    .done((data, status, xhr) => {
-      if (data.message === 'Success') {
-        console.log(companyID);
-        for (let i = 0; i < data.response.length; i++) {
-          console.log(`loop companyID: ${companyID} checked against: ${data.response[i].idCompany}`);
-          if (data.response[i].idCompany === companyID) {
-            console.log('match');
-            context.setState({ company: data.response[i] });
-          }
-          console.log(context.state.company);
-        }
-      }
-    })
-    .fail((jqxhr, settings, ex) => {
-      console.log('failed on isRecruiter');
-    });
-}
 
 class Company extends Component {
   /*
@@ -62,29 +23,59 @@ class Company extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { readOnly: true, modal: false };
+    console.log(this.props.match.params.companyId);
+    this.state = { company: '', readOnly: true, modal: false };
     console.log(this.props.isLoggedIn);
     this.state = { isRecruiter: -1, company: {} };
-    const cookie = getCookie('token');
-    const lol = this;
     this._click = this._click.bind(this);
     this._toggle = this._toggle.bind(this);
     this._updateInfo = this._toggle.bind(this);
-    $.ajax({
-      type: 'GET',
-      headers: { authorization: cookie },
-      url: `${url}/api/getUserDetails`,
-    })
-      .done((data, status, xhr) => {
-        if (data.message === 'Success') {
-          console.log(data.response);
-          lol.setState({ isRecruiter: data.response.type });
-          getCompanyDetails(lol, cookie, data.response.idCompany);
+    this.handleChange = this.handleChange.bind(this);
+    // getUserDetails((res) => {
+    //   if (!res) {
+    //     console.log('Could not get user details');
+    //   } else {
+    //     console.log(res.data.response);
+    //     // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
+    //     lol.setState({ isRecruiter: 0 }); // Mock student state
+    //     getCompanyDetails(lol, cookie, this.props.match.params.companyId);
+    //   }
+    // });
+    // $.ajax({
+    //   type: 'GET',
+    //   headers: { authorization: cookie },
+    //   url: `${url}/api/getUserDetails`,
+    // })
+    //   .done((data, status, xhr) => {
+    //     if (data.message === 'Success') {
+    //       console.log(data.response);
+    //       lol.setState({ isRecruiter: data.response.type });
+    //       getCompanyDetails(lol, cookie, data.response.idCompany);
+    //     }
+    //   })
+    //   .fail((jqxhr, settings, ex) => {
+    //     console.log('failed on isRecruiter');
+    //   });
+    getCompanyList((res) => {
+      if (!res) {
+        console.log('Could not get company list');
+      } else {
+        var companyID = this.props.match.params.companyId;
+        for (let i = 0; i < res.data.response.length; i++) {
+          console.log(`loop companyID: ${companyID} checked against: ${res.data.response[i].idCompany}`);
+          if (res.data.response[i].idCompany == companyID) {
+            console.log('match');
+            console.log(res.data.response[i]);
+            this.setState({company: res.data.response[i]});
+            break;
+          }
         }
-      })
-      .fail((jqxhr, settings, ex) => {
-        console.log('failed on isRecruiter');
-      });
+      }
+    });
+  }
+
+  handleChange(e, { name, value }){
+    this.setState({ [name]: value });
   }
 
   _updateInfo() {
@@ -138,59 +129,16 @@ class Company extends Component {
       );
     }
     return (
-      <div>
-        <Container className='pad-top'>
-          <Form>
-            <FormGroup row>
-              <Col>
-                <Media className='col-form-label'>
-                  <Media object className='profile-image' src={this.state.company.logo} />
-                </Media>
-              </Col>
-              <Col>
-                <h4>
-                  {this.state.company.CompanyName}
-                </h4>
-
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Input className='profile-input align-middle' id='company_description' onChange={e => this.onTodoChange(e.target.value)} type='textarea' name='description' value={this.state.company.Description} readOnly={!this.state.readOnly} />
-            </FormGroup>
-            <br />
-            <FormGroup row>
-                            Job Listings
-            </FormGroup>
-            <br />
-            <FormGroup row>
-                            Tags
-            </FormGroup>
-            <Modal isOpen={this.state.modal} toggle={this._toggle}>
-              <ModalHeader toggle={() => { this._toggle(); }}>Modal title</ModalHeader>
-              <ModalBody>
-                <Input id='recruiters' />
-              </ModalBody>
-              <ModalFooter>
-                <Button color='primary' onClick={() => { this._remove(); }}>Remove Recruiters</Button>
-                <Button color='secondary' onClick={() => { this._toggle(); }}>Cancel</Button>
-              </ModalFooter>
-            </Modal>
-            {button}
-            <FormGroup row hidden={!this.state.readOnly}>
-              <Col>
-                <Button onClick={this._click} className='col-form-label'>
-                                    Save Changes
-                </Button>
-              </Col>
-              <Col>
-                <Button onClick={this._click}>
-                                    Deactivate Account
-                </Button>
-              </Col>
-            </FormGroup>
-          </Form>
-        </Container>
-      </div>
+      <MenuContainer loggedIn>
+        <Form>
+          <Form.Group widths='equal'>
+            <Form.Input fluid label='Company' value={this.state.company.CompanyName} readOnly/>
+          </Form.Group>
+          <Form.Group widths='equal'>
+            <Form.TextArea label='About' name='description' value={this.state.company.Description}/>
+          </Form.Group>
+        </Form>
+        </MenuContainer>
     );
   }
 }
