@@ -85113,13 +85113,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var utils = require('./utils');
 
 function getCompanyList(cb) {
-  _index2.default.get('/api/getCompanyList').then(cb).catch(function () {
+  _index2.default.get('/api/getcompanylist').then(cb).catch(function () {
     cb(false);
   });
 }
 
 function getUserDetails(cb) {
-  _index2.default.get('/api/getUserDetails', { headers: { authorization: utils.getAuthToken() } }).then(cb).catch(function () {
+  _index2.default.get('/api/getuserdetails', { headers: { authorization: utils.getAuthToken() } }).then(cb).catch(function () {
     cb(false);
   });
 }
@@ -85559,14 +85559,15 @@ var Home = function (_Component) {
           console.log('Could not get user details');
         } else {
           console.log(res.data.response);
-          _this2.setState({ isRecruiter: res.data.response.type });
+          // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
+          _this2.setState({ isRecruiter: 0 }); // Mock student state
         }
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var home = '';
+      var home = ''; // TODO fix this, is Recruiter is async and not retrieved before rendered.
       if (this.state.isRecruiter === 0) {
         home = _react2.default.createElement(
           'h1',
@@ -85592,7 +85593,7 @@ var Home = function (_Component) {
           'COULD NOT GET STATE'
         );
       }
-      console.log(home);
+      console.log(this.state.isRecruiter);
       return _react2.default.createElement(
         'div',
         null,
@@ -86986,9 +86987,9 @@ var Register = function (_Component) {
           description = _state.description,
           newCompany = _state.newCompany;
 
-      var route = '/api/signUpStudent';
+      var route = '/api/signupstudent';
       if (this.activeTab === 1) {
-        route = '/api/signUpRecruiter';
+        route = '/api/signuprecruiter';
       }
       _index2.default.post(route, {
         FirstName: firstName,
