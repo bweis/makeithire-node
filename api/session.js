@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-// Utils
 const db = require('./utils/db');
 
 function login(req, res) {

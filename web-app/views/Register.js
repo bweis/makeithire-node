@@ -28,7 +28,7 @@ class Register extends Component {
   }
 
   componentWillMount() {
-    if (document.cookie.length !== 0) {
+    if (document.cookie.length !== 0) { // TODO FIX THIS, SCROLL COOKIE SPOOFS LOGIN
       this.props.history.push('/home');
     }
     getCompanyList((res) => {

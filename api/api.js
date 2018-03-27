@@ -10,6 +10,7 @@ const { verifyToken } = require('./utils/auth');
 const session = require('./session');
 const registration = require('./registration');
 const student = require('./student');
+const user = require('./user');
 const data = require('./data');
 
 // Routers
@@ -29,6 +30,8 @@ apiRouter.get('/getMajors', data.getMajors);
 apiRouter.get('/getDegrees', data.getDegrees);
 apiRouter.get('/getUniversityList', data.getUniversityList);
 apiRouter.get('/getCompanyList', data.getCompanyList);
+
+apiRouter.get('/getUserDetails', user.getUserDetails);
 
 // POST API: Add Student Details into Student Table
 apiRouter.post('/updateStudentDetails', verifyToken, (req, res) => {
@@ -74,19 +77,6 @@ apiRouter.get('/getStudentDetails', verifyToken, (req, res) => {
     return res.status(200).json({ message: 'Success', response: result });
   });
 });
-
-
-// GET API: Get Student Details
-apiRouter.get('/getUserDetails', verifyToken, (req, res) => {
-  const sql = 'SELECT * FROM User a LEFT OUTER JOIN Company b on a.idCompany = b.idCompany WHERE EmailID = ?';
-  db.query(sql, req.user.EmailID, (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err });
-    }
-    return res.status(200).json({ message: 'Success', response: result[0] });
-  });
-});
-
 
 apiRouter.get('/isRecruiter', verifyToken, (req, res) => {
   let compid = '';
