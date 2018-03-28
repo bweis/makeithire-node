@@ -102,5 +102,6 @@ function adminDeleteRecruiter(req, res) {
 }
 
 module.exports = {
-    adminAddRecruiter
+    adminAddRecruiter,
+    adminDeleteRecruiter,
 };
