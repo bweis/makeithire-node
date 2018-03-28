@@ -1,11 +1,9 @@
-require('dotenv')
-  .config();
+const { validateEmail } = require('./utils/emailValidation');
 const db = require('./utils/db');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const generator = require('generate-password');
 
-import { validateEmail } from './utils/emailValidation';
 
 function requestRecruiter(req, res) {
   if (!validateEmail(req.body.Email)) {
@@ -13,7 +11,6 @@ function requestRecruiter(req, res) {
       .json({ error: 'Bad Email Format' });
   }
 
-  // Get Name of HeadRecruiter
   const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
   db.query(sql, req.user.EmailID, (err, result) => {
     if (err) {
