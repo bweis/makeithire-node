@@ -2,12 +2,13 @@
  * Created by Zack on 3/27/18.
  */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { getUserDetails } from '../helpers/api';
 import { getCompanyList } from '../helpers/api';
 import { getCookie } from '../helpers/utils';
 
 
-import { Grid, Header, Card } from 'semantic-ui-react'
+import { Grid, Header, Card, Button } from 'semantic-ui-react'
 
 const jobs = [
     {
@@ -74,7 +75,10 @@ class JobListing extends Component {
         return (
 
                 <Grid.Column centered>
-                    <Header size='large'>Job Listings</Header>
+                    <Header size='large'>
+                        Job Listings <Link to={'/company:'+ this.props.match.params.companyId + '/newJob'}><Button circular icon='add circle' size='medium' floated="right"/></Link>
+                    </Header>
+
                     <Card.Group>
                         {this.makeTiles()}
                     </Card.Group>
