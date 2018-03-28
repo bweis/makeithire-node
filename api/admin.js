@@ -87,6 +87,20 @@ function adminAddRecruiter(req, res) {
     });
 }
 
+function adminDeleteRecruiter(req, res) {
+    const emailId = req.body.EmailID;
+    const sql = 'DELETE FROM User WHERE EmailID = \'' + emailId + '\'';
+    db.query(sql, (err, res) => {
+        if (err) {
+            return res.status(400)
+                .json({ error: err });
+        }
+
+        return res.status(200)
+            .json({ message: 'Success' });
+    });
+}
+
 module.exports = {
     adminAddRecruiter
 };
