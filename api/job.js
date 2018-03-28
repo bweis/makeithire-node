@@ -1,7 +1,7 @@
 // To write all the apis related to functionality of jobs. E.g. get getJobDetails, getAllJobs, etc
 
 function getAllJobs(req, res) {
-    
+
     const sql = 'SELECT idJobs, CompanyName, , JobName FROM Jobs j JOIN Company c ON j.idCompany = c.idCompany';
 
     db.query(sql, (err, result) => {
@@ -83,4 +83,11 @@ function editJobPosition(req, res) {
             .json({message: 'Success', response: result});
     })
 
+}
+
+module.exports = {
+    getAllJobs,
+    getJobDetails,
+    addJobPosition,
+    editJobPosition,
 }
