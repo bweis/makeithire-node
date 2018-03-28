@@ -127,7 +127,7 @@ class Recruiter extends Component {
                         Delete Your Account
                     </Modal.Header>
                     <Modal.Content>
-                        <p>Are you sure you want to delete your account</p>
+                        <p>Are you sure you want to delete {this.state.recruiterToRemove}?</p>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button negative onClick={this.hideRemove}>
