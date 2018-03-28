@@ -84591,7 +84591,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./AuthenticatedRoute":823,"./components/MyNav":824,"./helpers/session":828,"./views/Company":831,"./views/Home":832,"./views/LandingPage":833,"./views/Login":834,"./views/NewJob":835,"./views/NewProfile":836,"./views/Profile":837,"./views/Register":838,"react":574,"react-router-dom":558,"reactstrap":575}],823:[function(require,module,exports){
+},{"./AuthenticatedRoute":823,"./components/MyNav":826,"./helpers/session":830,"./views/Company":833,"./views/Home":834,"./views/LandingPage":835,"./views/Login":836,"./views/NewJob":837,"./views/NewProfile":838,"./views/Profile":839,"./views/Register":840,"react":574,"react-router-dom":558,"reactstrap":575}],823:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -84625,6 +84625,299 @@ var AuthenticatedRoute = function AuthenticatedRoute(_ref) {
 exports.default = AuthenticatedRoute;
 
 },{"react":574,"react-router-dom":558}],824:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _api = require('../helpers/api');
+
+var _utils = require('../helpers/utils');
+
+var _MenuContainer = require('../containers/MenuContainer');
+
+var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
+
+var _semanticUiReact = require('semantic-ui-react');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Zack on 3/27/18.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var CompanyInfo = function (_Component) {
+    _inherits(CompanyInfo, _Component);
+
+    /*
+     constructor(props) {
+     super(props);
+     }
+     componentWillMount(props) {
+     company = companies.find(o => o.companyId == props.location.state.companyId);
+     }
+       */
+
+    function CompanyInfo(props) {
+        _classCallCheck(this, CompanyInfo);
+
+        var _this = _possibleConstructorReturn(this, (CompanyInfo.__proto__ || Object.getPrototypeOf(CompanyInfo)).call(this, props));
+
+        _this.state = { readOnly: true, modal: false, isRecruiter: -1, company: {} };
+        _this._click = _this._click.bind(_this);
+        _this._toggle = _this._toggle.bind(_this);
+        _this._updateInfo = _this._toggle.bind(_this);
+        _this.handleChange = _this.handleChange.bind(_this);
+        (0, _api.getCompanyList)(function (res) {
+            if (!res) {
+                console.log('Could not get company list');
+            } else {
+                var companyID = _this.props.match.params.companyId;
+                for (var i = 0; i < res.data.response.length; i++) {
+                    console.log('loop companyID: ' + companyID + ' checked against: ' + res.data.response[i].idCompany);
+                    if (res.data.response[i].idCompany == companyID) {
+                        console.log('match');
+                        console.log(res.data.response[i]);
+                        _this.setState({ company: res.data.response[i] });
+                        break;
+                    }
+                }
+            }
+        });
+        return _this;
+    }
+
+    _createClass(CompanyInfo, [{
+        key: 'handleChange',
+        value: function handleChange(e, _ref) {
+            var name = _ref.name,
+                value = _ref.value;
+
+            this.setState(_defineProperty({}, name, value));
+        }
+    }, {
+        key: '_updateInfo',
+        value: function _updateInfo() {
+            console.log('update');
+        }
+    }, {
+        key: '_click',
+        value: function _click() {
+            this.setState(function (prevState) {
+                return { readOnly: !prevState.readOnly };
+            });
+        }
+    }, {
+        key: '_toggle',
+        value: function _toggle() {
+            this.setState({
+                modal: !this.state.modal
+            });
+        }
+    }, {
+        key: '_remove',
+        value: function _remove() {
+            var cookie = (0, _utils.getCookie)('token');
+            var email = { EmailToDelete: $('#recruiters').val() };
+            $.ajax({
+                type: 'POST',
+                url: url + '/api/requestDelete',
+                headers: { authorization: cookie },
+                data: email,
+                success: function success(msg) {
+                    console.log('successful request to delete');
+                },
+                failure: function failure(msg) {
+                    console.log('request to delete failed');
+                }
+            });
+            this._toggle();
+        }
+    }, {
+        key: 'onTodoChange',
+        value: function onTodoChange(value) {
+            var temp = this.company;
+            temp.Description = value;
+            this.setState({
+                company: value
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var style = {
+                textAlign: 'center',
+                margin: 'auto !important',
+                border: 'none',
+                resize: 'none'
+            };
+            return _react2.default.createElement(
+                _semanticUiReact.Grid,
+                { centered: true, columns: 2 },
+                _react2.default.createElement(
+                    _semanticUiReact.Grid.Column,
+                    { centered: true },
+                    _react2.default.createElement(
+                        _semanticUiReact.Form,
+                        null,
+                        _react2.default.createElement(
+                            _semanticUiReact.Form.Group,
+                            null,
+                            _react2.default.createElement(_semanticUiReact.Image, { src: './img/google.png', size: 'small', circular: true })
+                        ),
+                        _react2.default.createElement(
+                            _semanticUiReact.Form.Group,
+                            { widths: 'equal' },
+                            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, value: this.state.company.CompanyName, readOnly: true, transparent: true })
+                        ),
+                        _react2.default.createElement(
+                            _semanticUiReact.Form.Group,
+                            { widths: 'equal' },
+                            _react2.default.createElement(_semanticUiReact.Form.TextArea, { fluid: true, name: 'description', value: this.state.company.Description, readOnly: true, style: style })
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return CompanyInfo;
+}(_react.Component);
+
+exports.default = CompanyInfo;
+
+},{"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],825:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _api = require('../helpers/api');
+
+var _utils = require('../helpers/utils');
+
+var _semanticUiReact = require('semantic-ui-react');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Zack on 3/27/18.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var jobs = [{
+    jobID: 0,
+    title: 'Software Engineering',
+    type: 'Full-Time',
+    description: 'blah blah blah description'
+}, {
+    jobID: 1,
+    title: 'Software Engineering',
+    type: 'Internship',
+    description: 'blah blah blah description'
+}, {
+    jobID: 2,
+    title: 'Marketing',
+    type: 'Full-Time',
+    description: 'blah blah blah description'
+}, {
+    jobID: 3,
+    title: 'Sales',
+    type: 'Part-Time',
+    description: 'blah blah blah description'
+}, {
+    jobID: 4,
+    title: 'Infrastructure',
+    type: 'Full-Time',
+    description: 'blah blah blah description'
+}];
+
+var CompanyInfo = function (_Component) {
+    _inherits(CompanyInfo, _Component);
+
+    /*
+     constructor(props) {
+     super(props);
+     }
+     componentWillMount(props) {
+     company = companies.find(o => o.companyId == props.location.state.companyId);
+     }
+       */
+
+    function CompanyInfo(props) {
+        _classCallCheck(this, CompanyInfo);
+
+        var _this = _possibleConstructorReturn(this, (CompanyInfo.__proto__ || Object.getPrototypeOf(CompanyInfo)).call(this, props));
+
+        _this.state = { readOnly: true, modal: false, isRecruiter: -1, company: {} };
+        _this.makeTiles = _this.makeTiles.bind(_this);
+        return _this;
+    }
+
+    _createClass(CompanyInfo, [{
+        key: '_click',
+        value: function _click() {
+            this.setState(function (prevState) {
+                return { readOnly: !prevState.readOnly };
+            });
+        }
+    }, {
+        key: 'makeTiles',
+        value: function makeTiles() {
+            return jobs.map(function (item, index) {
+                return _react2.default.createElement(_semanticUiReact.Card, { fluid: true, header: item.title, meta: item.type, description: item.description });
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                _semanticUiReact.Grid,
+                { centered: true, columns: 2 },
+                _react2.default.createElement(
+                    _semanticUiReact.Grid.Column,
+                    { centered: true },
+                    _react2.default.createElement(
+                        _semanticUiReact.Card.Group,
+                        null,
+                        this.makeTiles()
+                    )
+                )
+            );
+        }
+    }]);
+
+    return CompanyInfo;
+}(_react.Component);
+
+exports.default = CompanyInfo;
+
+},{"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],826:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -84786,7 +85079,7 @@ var MyNav = function (_Component) {
 
 exports.default = MyNav;
 
-},{"jquery":167,"react":574,"react-router-dom":558,"reactstrap":575}],825:[function(require,module,exports){
+},{"jquery":167,"react":574,"react-router-dom":558,"reactstrap":575}],827:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -84899,7 +85192,7 @@ var MenuContainer = function (_Component) {
 
 exports.default = MenuContainer;
 
-},{"react":574,"semantic-ui-react":694}],826:[function(require,module,exports){
+},{"react":574,"semantic-ui-react":694}],828:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -84926,7 +85219,7 @@ module.exports = {
   getUserDetails: getUserDetails
 };
 
-},{"./utils":829,"axios/index":1}],827:[function(require,module,exports){
+},{"./utils":831,"axios/index":1}],829:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -84951,7 +85244,7 @@ module.exports = {
   uploadFileToS3Bucket: uploadFileToS3Bucket
 };
 
-},{"axios/index":1}],828:[function(require,module,exports){
+},{"axios/index":1}],830:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -84983,7 +85276,7 @@ module.exports = {
   logOut: logOut
 };
 
-},{"./utils":829,"axios/index":1}],829:[function(require,module,exports){
+},{"./utils":831,"axios/index":1}],831:[function(require,module,exports){
 'use strict';
 
 function getCookie(name) {
@@ -85000,7 +85293,7 @@ module.exports = {
   getAuthToken: getAuthToken
 };
 
-},{}],830:[function(require,module,exports){
+},{}],832:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85019,7 +85312,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./App":822,"react":574,"react-dom":545}],831:[function(require,module,exports){
+},{"./App":822,"react":574,"react-dom":545}],833:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85040,11 +85333,17 @@ var _MenuContainer = require('../containers/MenuContainer');
 
 var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
 
+var _CompanyInfo = require('../components/CompanyInfo');
+
+var _CompanyInfo2 = _interopRequireDefault(_CompanyInfo);
+
+var _JobListing = require('../components/JobListing');
+
+var _JobListing2 = _interopRequireDefault(_JobListing);
+
 var _semanticUiReact = require('semantic-ui-react');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -85069,156 +85368,19 @@ var Company = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Company.__proto__ || Object.getPrototypeOf(Company)).call(this, props));
 
-    console.log(_this.props.match.params.companyId);
-    _this.state = { company: '', readOnly: true, modal: false };
-    console.log(_this.props.isLoggedIn);
-    _this.state = { isRecruiter: -1, company: {} };
-    _this._click = _this._click.bind(_this);
-    _this._toggle = _this._toggle.bind(_this);
-    _this._updateInfo = _this._toggle.bind(_this);
-    _this.handleChange = _this.handleChange.bind(_this);
-    // getUserDetails((res) => {
-    //   if (!res) {
-    //     console.log('Could not get user details');
-    //   } else {
-    //     console.log(res.data.response);
-    //     // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
-    //     lol.setState({ isRecruiter: 0 }); // Mock student state
-    //     getCompanyDetails(lol, cookie, this.props.match.params.companyId);
-    //   }
-    // });
-    // $.ajax({
-    //   type: 'GET',
-    //   headers: { authorization: cookie },
-    //   url: `${url}/api/getUserDetails`,
-    // })
-    //   .done((data, status, xhr) => {
-    //     if (data.message === 'Success') {
-    //       console.log(data.response);
-    //       lol.setState({ isRecruiter: data.response.type });
-    //       getCompanyDetails(lol, cookie, data.response.idCompany);
-    //     }
-    //   })
-    //   .fail((jqxhr, settings, ex) => {
-    //     console.log('failed on isRecruiter');
-    //   });
-    (0, _api.getCompanyList)(function (res) {
-      if (!res) {
-        console.log('Could not get company list');
-      } else {
-        var companyID = _this.props.match.params.companyId;
-        for (var i = 0; i < res.data.response.length; i++) {
-          console.log('loop companyID: ' + companyID + ' checked against: ' + res.data.response[i].idCompany);
-          if (res.data.response[i].idCompany == companyID) {
-            console.log('match');
-            console.log(res.data.response[i]);
-            _this.setState({ company: res.data.response[i] });
-            break;
-          }
-        }
-      }
-    });
+    _this.state = { readOnly: true, modal: false, type: -1, company: {} };
     return _this;
   }
 
   _createClass(Company, [{
-    key: 'handleChange',
-    value: function handleChange(e, _ref) {
-      var name = _ref.name,
-          value = _ref.value;
-
-      this.setState(_defineProperty({}, name, value));
-    }
-  }, {
-    key: '_updateInfo',
-    value: function _updateInfo() {
-      console.log('update');
-    }
-  }, {
-    key: '_click',
-    value: function _click() {
-      this.setState(function (prevState) {
-        return { readOnly: !prevState.readOnly };
-      });
-    }
-  }, {
-    key: '_toggle',
-    value: function _toggle() {
-      this.setState({
-        modal: !this.state.modal
-      });
-    }
-  }, {
-    key: '_remove',
-    value: function _remove() {
-      var cookie = (0, _utils.getCookie)('token');
-      var email = { EmailToDelete: $('#recruiters').val() };
-      $.ajax({
-        type: 'POST',
-        url: url + '/api/requestDelete',
-        headers: { authorization: cookie },
-        data: email,
-        success: function success(msg) {
-          console.log('successful request to delete');
-        },
-        failure: function failure(msg) {
-          console.log('request to delete failed');
-        }
-      });
-      this._toggle();
-    }
-  }, {
-    key: 'onTodoChange',
-    value: function onTodoChange(value) {
-      var temp = this.company;
-      temp.Description = value;
-      this.setState({
-        company: value
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
 
-      var button = void 0;
-      if (this.state.isRecruiter === 2) {
-        button = _react2.default.createElement(
-          FormGroup,
-          { row: true, hidden: this.state.readOnly },
-          _react2.default.createElement(
-            Button,
-            { onClick: function onClick() {
-                _this2._toggle();
-              } },
-            'Remove recruiter'
-          ),
-          _react2.default.createElement(
-            Button,
-            { onClick: function onClick() {
-                _this2._click();
-              } },
-            'Edit Information'
-          )
-        );
-      }
       return _react2.default.createElement(
         _MenuContainer2.default,
         { loggedIn: true },
-        _react2.default.createElement(
-          _semanticUiReact.Form,
-          null,
-          _react2.default.createElement(
-            _semanticUiReact.Form.Group,
-            { widths: 'equal' },
-            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Company', value: this.state.company.CompanyName, readOnly: true })
-          ),
-          _react2.default.createElement(
-            _semanticUiReact.Form.Group,
-            { widths: 'equal' },
-            _react2.default.createElement(_semanticUiReact.Form.TextArea, { label: 'About', name: 'description', value: this.state.company.Description })
-          )
-        )
+        _react2.default.createElement(_CompanyInfo2.default, this.props),
+        _react2.default.createElement(_JobListing2.default, this.props)
       );
     }
   }]);
@@ -85228,7 +85390,7 @@ var Company = function (_Component) {
 
 exports.default = Company;
 
-},{"../containers/MenuContainer":825,"../helpers/api":826,"../helpers/utils":829,"react":574,"semantic-ui-react":694}],832:[function(require,module,exports){
+},{"../components/CompanyInfo":824,"../components/JobListing":825,"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],834:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85328,7 +85490,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../containers/MenuContainer":825,"../helpers/api":826,"react":574}],833:[function(require,module,exports){
+},{"../containers/MenuContainer":827,"../helpers/api":828,"react":574}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85551,7 +85713,7 @@ var LandingPage = function LandingPage() {
 
 exports.default = LandingPage;
 
-},{"../containers/MenuContainer":825,"react":574,"semantic-ui-react":694}],834:[function(require,module,exports){
+},{"../containers/MenuContainer":827,"react":574,"semantic-ui-react":694}],836:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85733,7 +85895,7 @@ var Login = function (_Component) {
 
 exports.default = Login;
 
-},{"../containers/MenuContainer":825,"axios":1,"react":574,"semantic-ui-react":694}],835:[function(require,module,exports){
+},{"../containers/MenuContainer":827,"axios":1,"react":574,"semantic-ui-react":694}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86068,7 +86230,7 @@ var NewJob = function (_Component) {
 
 exports.default = NewJob;
 
-},{"../containers/MenuContainer":825,"../helpers/api":826,"../helpers/utils":829,"axios/index":1,"react":574,"semantic-ui-react":694}],836:[function(require,module,exports){
+},{"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"axios/index":1,"react":574,"semantic-ui-react":694}],838:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86198,7 +86360,7 @@ var NewProfile = function (_Component) {
 
 exports.default = NewProfile;
 
-},{"../containers/MenuContainer":825,"../helpers/s3":827,"../helpers/utils":829,"axios/index":1,"react":574,"semantic-ui-react":694}],837:[function(require,module,exports){
+},{"../containers/MenuContainer":827,"../helpers/s3":829,"../helpers/utils":831,"axios/index":1,"react":574,"semantic-ui-react":694}],839:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86924,7 +87086,7 @@ var Profile = function (_Component) {
 
 exports.default = Profile;
 
-},{"jquery":167,"react":574,"reactstrap":575}],838:[function(require,module,exports){
+},{"jquery":167,"react":574,"reactstrap":575}],840:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -87309,4 +87471,4 @@ var Register = function (_Component) {
 
 exports.default = Register;
 
-},{"../containers/MenuContainer":825,"../helpers/api":826,"axios/index":1,"react":574,"semantic-ui-react":694}]},{},[830]);
+},{"../containers/MenuContainer":827,"../helpers/api":828,"axios/index":1,"react":574,"semantic-ui-react":694}]},{},[832]);
