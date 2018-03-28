@@ -2,6 +2,7 @@
 const session = require('./session');
 const registration = require('./registration');
 const student = require('./student');
+const recruiter = require('./recruiter')
 const user = require('./user');
 const data = require('./data');
 const email = require('./email');
@@ -24,6 +25,8 @@ apiRouter.get('/getStudentDetails', student.getStudentDetails);
 
 apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
 apiRouter.post('/getCompanyDetails', company.getCompanyDetails);
+
+apiRouter.post('/getApplicants', recruiter.getApplicants);
 
 apiRouter.get('/getMajors', data.getMajors);
 apiRouter.get('/getDegrees', data.getDegrees);
