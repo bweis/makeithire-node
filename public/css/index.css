@@ -88,7 +88,16 @@ body {
 
 
 .profile-image {
-    height: 180px;
-    border-radius: 50%;
-    vertical-align:middle;
+    height: 200px;
+    width: 200px;
+}
+
+.centered-text {
+    text-align: center;
+    margin: auto!important;
+}
+
+.ui.small.image {
+    height: 150px!important;
+    margin: auto;
 }
