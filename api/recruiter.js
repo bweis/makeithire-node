@@ -6,7 +6,7 @@ const generator = require('generate-password');
 
 // As a HR, invite recruiter to signup
 function requestRecruiter(req, res) {
-    if (!validateEmail(req.body.Email)) {
+    if (!validateEmail(req.body.EmailID)) {
         res.status(400)
             .json({ error: 'Bad Email Format' });
     }
@@ -50,7 +50,7 @@ function requestRecruiter(req, res) {
             }
             return res.status(200)
                 .json({
-                    message: `Email Sent to ${req.body.Email}`,
+                    message: `Email Sent to ${req.body.EmailID}`,
                     response: info.response,
                 });
         });

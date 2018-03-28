@@ -36,7 +36,7 @@ function requestRecruiter(req, res) {
 
     const mailOptions = {
       from: 'makeithire@outlook.com',
-      to: req.body.Email,
+      to: req.body.EmailID,
       subject: 'Sign Up as a Recruiter in MakeItHire',
       text: 'Your Head Recruiter has requested you to sign up as a recruiter in MakeItHire. ' +
         'Please use the following link: \n www.makeithire.com/signup \n\n - MakeItHire Admin',
@@ -50,7 +50,7 @@ function requestRecruiter(req, res) {
       }
       return res.status(200)
         .json({
-          message: `Email Sent to ${req.body.Email}`,
+          message: `Email Sent to ${req.body.EmailID}`,
           response: info.response,
         });
     });
