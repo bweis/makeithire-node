@@ -1,0 +1,1 @@
+// To write all the apis related to functionality of company. E.g. get getCompanyDetails, getAllCompanies, etc

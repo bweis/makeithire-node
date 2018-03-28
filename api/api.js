@@ -5,6 +5,7 @@ const student = require('./student');
 const user = require('./user');
 const data = require('./data');
 const email = require('./email');
+const job = require('./job');
 
 // Routers
 const apiRouter = require('express').Router();
@@ -30,5 +31,11 @@ apiRouter.get('/getUserDetails', user.getUserDetails);
 
 apiRouter.post('/requestRecruiter', email.requestRecruiter);
 apiRouter.post('/adminAddRecruiter', email.adminAddRecruiter);
+
+apiRouter.get('/getAllJobs', job.getAllJobs);
+apiRouter.post('/getJobDetails', job.getJobDetails);
+// apiRouter.post('/addJobPosting', job.addJobPosting);
+// apiRouter.post('/editJobPosting', job.editJobPosting);
+
 
 module.exports = apiRouter;
