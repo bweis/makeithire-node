@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import MenuContainer from '../containers/MenuContainer';
 import { getUserDetails } from '../helpers/api';
+import AdminDashboard from '../views/AdminDashboard';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { isRecruiter: -1 };
+    this.getHomeComponent = this.getHomeComponent.bind(this);
   }
 
   componentWillMount() {
@@ -16,25 +18,30 @@ class Home extends Component {
       } else {
         console.log(res.data.response);
         // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
-        this.setState({ isRecruiter: 0 }); // Mock student state
+        this.setState({ isRecruiter: 3 }); // Mock student state
       }
     });
   }
-  render() {
-    let home = ''; // TODO fix this, is Recruiter is async and not retrieved before rendered.
+
+  getHomeComponent() {
     if (this.state.isRecruiter === 0) {
-      home = <h1>Student Home Page</h1>;
+      return (<h1>Student Home Page</h1>);
     } else if (this.state.isRecruiter === 1) {
-      home = <h1>Recruiter Home Page</h1>;
+      return (<h1>Recruiter Home Page</h1>);
     } else if (this.state.isRecruiter === 2) {
-      home = <h1>Head Recruiter Home Page</h1>;
+      return (<h1>Head Recruiter Home Page</h1>);
+    } else if (this.state.isRecruiter === 3) {
+      return(<AdminDashboard />);
     } else {
-      home = <h1>COULD NOT GET STATE</h1>;
+      return (<h1>COULD NOT GET STATE</h1>);
     }
+  }
+
+  render() {
     return (
       <div>
         <MenuContainer loggedIn>
-          {home}
+          {this.getHomeComponent()}
         </MenuContainer>
       </div>
     );
