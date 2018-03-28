@@ -6,7 +6,7 @@ function getCompanyList(cb) {
 }
 
 function getUserDetails(cb) {
-  axios.get('/api/getuserdetails', { headers: { authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+  axios.get('/api/getuserdetails', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 module.exports = {
   getCompanyList,

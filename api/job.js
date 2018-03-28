@@ -29,7 +29,7 @@ function getJobDetails(req, res) {
     })
 }
 
-function addJobPosition(req, res) {
+function addJobPosting(req, res) {
     const jobName = req.body.JobName;
     const description = req.body.Description;
     const idCompany = req.body.idCompany;
@@ -56,7 +56,7 @@ function addJobPosition(req, res) {
     })
 }
 
-function editJobPosition(req, res) {
+function editJobPosting(req, res) {
     const idJobs = req.body.idJobs;
     const jobName = req.body.JobName;
     const description = req.body.Description;
@@ -90,6 +90,6 @@ function editJobPosition(req, res) {
 module.exports = {
     getAllJobs,
     getJobDetails,
-    addJobPosition,
-    editJobPosition,
+    addJobPosting,
+    editJobPosting,
 }

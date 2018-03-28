@@ -1,6 +1,6 @@
 const { validateEmail } = require('./utils/emailValidation');
-const db = require('./utils/db');
 const bcrypt = require('bcrypt');
+const db = require('./utils/db');
 const nodemailer = require('nodemailer');
 const generator = require('generate-password');
 
@@ -10,9 +10,8 @@ function requestRecruiter(req, res) {
         res.status(400)
             .json({ error: 'Bad Email Format' });
     }
-
     const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
-    db.query(sql, req.user.EmailID, (err, result) => {
+    db.query(sql, req.body.EmailID, (err, result) => {
         if (err) {
             return res.status(400)
                 .json({ error: err });
@@ -54,15 +53,27 @@ function requestRecruiter(req, res) {
                     response: info.response,
                 });
         });
+    
+    
     });
 }
 
+function getRecruiters(req, res) {
+    const sql = 'SELECT idUser, FirstName, LastName FROM User WHERE idCompany = ?';
+    db.query(sql, req.body.idCompany, (err, result) => {
+        if (err) {
+            return res.status(400)
+                .json({ error: err });
+        }
+        return res.status(400)
+        .json({ message: "Success", response: result });
+    });
+}
 
 module.exports = {
     requestRecruiter,
+    getRecruiters,
 };
-
-
 
 // DEPRECATED
 // POST API: Delete Recruiter

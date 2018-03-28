@@ -24,7 +24,7 @@ class Company extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { accountType: 1 };
+    this.state = { accountType: 3 };
     this.getDisplayTiles = this.getDisplayTiles.bind(this);
   }
 
