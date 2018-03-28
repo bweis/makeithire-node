@@ -23,27 +23,29 @@ apiRouter.post('/signUpStudent', registration.signUpStudent);
 apiRouter.post('/signUpRecruiter', registration.signUpRecruiter);
 
 // User Routes
+apiRouter.get('/getUserDetails', user.getUserDetails);
 
 // Student Routes
 apiRouter.get('/uploadResume', student.uploadResume);
 apiRouter.get('/uploadCoverLetter', student.uploadCoverLetter);
-apiRouter.get('/updateCompanyDetails', student.updateCompanyDetails);
 apiRouter.get('/getStudentDetails', student.getStudentDetails);
 
 // Recruiter Routes
 apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
 apiRouter.post('/getApplicants', recruiter.getApplicants);
 
-
 // Company Routes
+apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
+apiRouter.post('/getCompanyDetails', company.getCompanyDetails);
+apiRouter.post('/updateCompanyDetails', company.updateCompanyDetails);
 
 // Job Routes
 apiRouter.get('/getAllJobs', job.getAllJobs);
 apiRouter.post('/getJobDetails', job.getJobDetails);
+apiRouter.post('/addJobPosting', job.addJobPosting);
+apiRouter.post('/editJobPosting', job.editJobPosting);
 
 // Application Routes
-
-// Recruiter Routes
 
 // Data Routes
 apiRouter.get('/getMajors', data.getMajors);
@@ -52,25 +54,6 @@ apiRouter.get('/getUniversityList', data.getUniversityList);
 apiRouter.get('/getCompanyList', data.getCompanyList);
 
 // Admin Routes
-apiRouter.post('/adminAddRecruiter', admin.adminAddRecruiter);
-
-
-apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
-apiRouter.post('/getCompanyDetails', company.getCompanyDetails);
-
-
-
-
-
-apiRouter.get('/getUserDetails', user.getUserDetails);
-
-
-
-
-
-// apiRouter.post('/addJobPosting', job.addJobPosting);
-// apiRouter.post('/editJobPosting', job.editJobPosting);
-
 apiRouter.post('/adminAddRecruiter', admin.adminAddRecruiter);
 apiRouter.post('/adminDeleteRecruiter', admin.adminDeleteRecruiter);
 
