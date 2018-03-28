@@ -13,9 +13,9 @@ const app = express();
 
 const publicRoutes = [
   '/api/login',
-  '/api/signupstudent',
-  '/api/signuprecruiter',
-  '/api/getcompanylist',
+  '/api/signUpStudent',
+  '/api/signupRecruiter',
+  '/api/getCompanyList',
 ];
 
 // Protect the /api routes with JWT
