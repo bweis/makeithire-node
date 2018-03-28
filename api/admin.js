@@ -87,6 +87,7 @@ function adminAddRecruiter(req, res) {
     });
 }
 
+// Finds and delete recruiter
 function adminDeleteRecruiter(req, res) {
     const emailId = req.body.EmailID;
     const sql = 'DELETE FROM User WHERE EmailID = \'' + emailId + '\'';
