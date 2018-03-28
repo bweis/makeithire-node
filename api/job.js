@@ -1,8 +1,10 @@
 // To write all the apis related to functionality of jobs. E.g. get getJobDetails, getAllJobs, etc
+const db = require('./utils/db');
+
 
 function getAllJobs(req, res) {
 
-    const sql = 'SELECT idJobs, CompanyName, , JobName FROM Jobs j JOIN Company c ON j.idCompany = c.idCompany';
+    const sql = 'SELECT idJobs, CompanyName, JobName FROM Jobs INNER JOIN Company ON Jobs.idCompany = Company.idCompany';
 
     db.query(sql, (err, result) => {
         if(err) {
@@ -16,8 +18,8 @@ function getAllJobs(req, res) {
 
 function getJobDetails(req, res) {
     const idJobs = req.body.idJobs;
-    const sql = 'SELECT * FROM JOBS WHEER idJobs = '
-    db.query(sql, idJobs, (err, result) => {
+    const sql = 'SELECT * FROM Jobs WHERE idJobs = ' + idJobs;
+    db.query(sql, (err, result) => {
         if (err) {
             return res.status(400)
                 .json({error: err});
@@ -33,7 +35,7 @@ function addJobPosition(req, res) {
     const idCompany = req.body.idCompany;
     const deadline = req.body.Deadline;
     // const tags = ;
-    const supplementalQs = req.body.supplementalQs;
+    const supplementalQs = req.body.SupplementalQs;
     const post = {
         JobName : jobName,
         Description : description,
