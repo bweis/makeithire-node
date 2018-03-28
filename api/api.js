@@ -5,6 +5,7 @@ const student = require('./student');
 const user = require('./user');
 const data = require('./data');
 const email = require('./email');
+const company = require('./company');
 
 // Routers
 const apiRouter = require('express').Router();
@@ -21,6 +22,9 @@ apiRouter.get('/uploadCoverLetter', student.uploadCoverLetter);
 apiRouter.get('/updateCompanyDetails', student.updateCompanyDetails);
 apiRouter.get('/getStudentDetails', student.getStudentDetails);
 
+apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
+apiRouter.post('/getCompanyDetails', company.getCompanyDetails);
+
 apiRouter.get('/getMajors', data.getMajors);
 apiRouter.get('/getDegrees', data.getDegrees);
 apiRouter.get('/getUniversityList', data.getUniversityList);
@@ -30,5 +34,7 @@ apiRouter.get('/getUserDetails', user.getUserDetails);
 
 apiRouter.post('/requestRecruiter', email.requestRecruiter);
 apiRouter.post('/adminAddRecruiter', email.adminAddRecruiter);
+
+
 
 module.exports = apiRouter;

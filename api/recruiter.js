@@ -12,7 +12,7 @@ function requestRecruiter(req, res) {
     }
 
     const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
-    db.query(sql, req.user.EmailID, (err, result) => {
+    db.query(sql, req.body.EmailID, (err, result) => {
         if (err) {
             return res.status(400)
                 .json({ error: err });
@@ -56,10 +56,23 @@ function requestRecruiter(req, res) {
         });
     });
 }
+/*
+// Get Applicants for a Job
+function getApplicants(req, res) {
+     const sql = 'SELECT idUser, FirstName, MiddleName, LastName, DateTimeSubmitted, SupplementaryAs FROM Applications JOIN Users WHERE idJob = ?';
+    db.query(sql, req.body.idJob, (err, result) => {
+        if (err) {
+            return res.status(400)
+                .json({ error: err });
+        }
 
+    });
+}
+*/
 
 module.exports = {
     requestRecruiter,
+    //getApplicants
 };
 
 
