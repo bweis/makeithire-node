@@ -1,6 +1,6 @@
 const { validateEmail } = require('./utils/emailValidation');
-const db = require('./utils/db');
 const bcrypt = require('bcrypt');
+const db = require('./utils/db');
 const nodemailer = require('nodemailer');
 const generator = require('generate-password');
 
@@ -58,25 +58,22 @@ function requestRecruiter(req, res) {
     });
 }
 
-// Get Applicants for a Job
-function getApplicants(req, res) {
-    const sql = 'SELECT idUser, FirstName, MiddleName, LastName, SubmissionDate, SupplementaryAs FROM Application NATURAL JOIN User WHERE idJob = ?';
-    db.query(sql, req.body.idJob, (err, result) => {
+function getRecruiters(req, res) {
+    const sql = 'SELECT idUser, FirstName, LastName FROM User WHERE idCompany = ?';
+    db.query(sql, req.body.idCompany, (err, result) => {
         if (err) {
             return res.status(400)
                 .json({ error: err });
         }
-        return res.status(200)
-        .json({ message: "Success", response: result }); 
+        return res.status(400)
+        .json({ message: "Success", response: result });
     });
 }
 
 module.exports = {
     requestRecruiter,
-    getApplicants
+    getRecruiters,
 };
-
-
 
 // DEPRECATED
 // POST API: Delete Recruiter

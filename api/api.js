@@ -8,6 +8,7 @@ const data = require('./data');
 const job = require('./job');
 const admin = require('./admin');
 const company = require('./company');
+const application = require('./application');
 
 // Routers
 const apiRouter = require('express').Router();
@@ -32,7 +33,7 @@ apiRouter.get('/getStudentDetails', student.getStudentDetails);
 
 // Recruiter Routes
 apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
-apiRouter.post('/getApplicants', recruiter.getApplicants);
+apiRouter.post('/getRecruiters', recruiter.getRecruiters);
 
 // Company Routes
 apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
@@ -46,6 +47,7 @@ apiRouter.post('/addJobPosting', job.addJobPosting);
 apiRouter.post('/editJobPosting', job.editJobPosting);
 
 // Application Routes
+apiRouter.post('/getApplicants', application.getApplicants);
 
 // Data Routes
 apiRouter.get('/getMajors', data.getMajors);
