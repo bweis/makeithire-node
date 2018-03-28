@@ -34,14 +34,14 @@ function addJobPosting(req, res) {
     const description = req.body.Description;
     const idCompany = req.body.idCompany;
     const deadline = req.body.Deadline;
-    // const tags = ;
+    const tags = req.body.tags;
     const supplementalQs = req.body.SupplementalQs;
     const post = {
         JobName : jobName,
         Description : description,
         idCompany : idCompany,
         Deadline : deadline,
-        // tags : ,
+        Tags : tags,
         SupplementalQ : supplementalQs,
     };
 
