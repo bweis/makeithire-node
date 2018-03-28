@@ -5,11 +5,9 @@ import { getCookie } from '../helpers/utils';
 import MenuContainer from '../containers/MenuContainer';
 import CompanyInfo from '../components/CompanyInfo';
 import JobListing from '../components/JobListing'
+import Recruiters from '../components/Recruiters'
 
-
-import { Form, Grid, Image, Input } from 'semantic-ui-react'
-
-
+import { Grid } from 'semantic-ui-react';
 
 class Company extends Component {
   /*
@@ -25,15 +23,40 @@ class Company extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { readOnly: true, modal: false , type: -1, company: {} };
+    this.state = { accountType: 1 };
+    this.getDisplayTiles = this.getDisplayTiles.bind(this);
   }
 
+  getDisplayTiles() {
+    if (this.state.accountType == 0) {
+      return (
+          <Grid centered columns={2} padded>
+            <JobListing {...this.props}/>
+          </Grid>
+      );
+    }
+    else if (this.state.accountType == 1 || this.state.accountType == 2) {
+      return (
+          <Grid centered columns={2} padded>
+            <JobListing {...this.props}/>
+            <Recruiters {...this.props}/>
+          </Grid>
+      );
+    } else {
+      return (
+          <Grid centered columns={2} padded>
+            <Recruiters {...this.props}/>
+          </Grid>
+      );
+    }
+  }
+  
   render() {
 
     return (
       <MenuContainer loggedIn>
           <CompanyInfo {...this.props}/>
-          <JobListing {...this.props}/>
+        {this.getDisplayTiles()}
       </MenuContainer>
     );
   }

@@ -84500,6 +84500,10 @@ var _NewJob = require('./views/NewJob');
 
 var _NewJob2 = _interopRequireDefault(_NewJob);
 
+var _JobInfo = require('./views/JobInfo');
+
+var _JobInfo2 = _interopRequireDefault(_JobInfo);
+
 var _Home = require('./views/Home');
 
 var _Home2 = _interopRequireDefault(_Home);
@@ -84578,7 +84582,8 @@ var App = function (_Component) {
               _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/profile', name: 'Profile', component: _Profile2.default }),
               _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/newprofile', name: 'NewProfile', component: _NewProfile2.default }),
               _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/company::companyId', name: 'Company', component: _Company2.default }),
-              _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/company::companyId/newJob', name: 'NewJob', component: _NewJob2.default })
+              _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/company::companyId/newJob', name: 'NewJob', component: _NewJob2.default }),
+              _react2.default.createElement(_AuthenticatedRoute2.default, { path: '/company::companyId/job::jobId', name: 'JobInfo', component: _JobInfo2.default })
             )
           )
         )
@@ -84591,7 +84596,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"./AuthenticatedRoute":823,"./components/MyNav":826,"./helpers/session":830,"./views/Company":833,"./views/Home":834,"./views/LandingPage":835,"./views/Login":836,"./views/NewJob":837,"./views/NewProfile":838,"./views/Profile":839,"./views/Register":840,"react":574,"react-router-dom":558,"reactstrap":575}],823:[function(require,module,exports){
+},{"./AuthenticatedRoute":823,"./components/MyNav":826,"./helpers/session":831,"./views/Company":834,"./views/Home":835,"./views/JobInfo":836,"./views/LandingPage":837,"./views/Login":838,"./views/NewJob":839,"./views/NewProfile":840,"./views/Profile":841,"./views/Register":842,"react":574,"react-router-dom":558,"reactstrap":575}],823:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -84800,7 +84805,7 @@ var CompanyInfo = function (_Component) {
 
 exports.default = CompanyInfo;
 
-},{"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],825:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"../helpers/api":829,"../helpers/utils":832,"react":574,"semantic-ui-react":694}],825:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -84812,10 +84817,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _api = require('../helpers/api');
-
-var _utils = require('../helpers/utils');
 
 var _semanticUiReact = require('semantic-ui-react');
 
@@ -84857,8 +84858,8 @@ var jobs = [{
     description: 'blah blah blah description'
 }];
 
-var CompanyInfo = function (_Component) {
-    _inherits(CompanyInfo, _Component);
+var JobListing = function (_Component) {
+    _inherits(JobListing, _Component);
 
     /*
      constructor(props) {
@@ -84869,17 +84870,17 @@ var CompanyInfo = function (_Component) {
      }
        */
 
-    function CompanyInfo(props) {
-        _classCallCheck(this, CompanyInfo);
+    function JobListing(props) {
+        _classCallCheck(this, JobListing);
 
-        var _this = _possibleConstructorReturn(this, (CompanyInfo.__proto__ || Object.getPrototypeOf(CompanyInfo)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (JobListing.__proto__ || Object.getPrototypeOf(JobListing)).call(this, props));
 
         _this.state = { readOnly: true, modal: false, isRecruiter: -1, company: {} };
         _this.makeTiles = _this.makeTiles.bind(_this);
         return _this;
     }
 
-    _createClass(CompanyInfo, [{
+    _createClass(JobListing, [{
         key: '_click',
         value: function _click() {
             this.setState(function (prevState) {
@@ -84889,35 +84890,38 @@ var CompanyInfo = function (_Component) {
     }, {
         key: 'makeTiles',
         value: function makeTiles() {
+            var _this2 = this;
+
             return jobs.map(function (item, index) {
-                return _react2.default.createElement(_semanticUiReact.Card, { fluid: true, header: item.title, meta: item.type, description: item.description });
+                return _react2.default.createElement(_semanticUiReact.Card, { fluid: true, key: item.jobID, href: '/company:' + _this2.props.match.params.companyId + '/job:' + item.jobID, header: item.title, meta: item.type, description: item.description });
             });
         }
     }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
-                _semanticUiReact.Grid,
-                { centered: true, columns: 2 },
+                _semanticUiReact.Grid.Column,
+                { centered: true },
                 _react2.default.createElement(
-                    _semanticUiReact.Grid.Column,
-                    { centered: true },
-                    _react2.default.createElement(
-                        _semanticUiReact.Card.Group,
-                        null,
-                        this.makeTiles()
-                    )
+                    _semanticUiReact.Header,
+                    { size: 'large' },
+                    'Job Listings'
+                ),
+                _react2.default.createElement(
+                    _semanticUiReact.Card.Group,
+                    null,
+                    this.makeTiles()
                 )
             );
         }
     }]);
 
-    return CompanyInfo;
+    return JobListing;
 }(_react.Component);
 
-exports.default = CompanyInfo;
+exports.default = JobListing;
 
-},{"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],826:[function(require,module,exports){
+},{"react":574,"semantic-ui-react":694}],826:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85083,6 +85087,260 @@ exports.default = MyNav;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _semanticUiReact = require('semantic-ui-react');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Zack on 3/28/18.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var recruiters = [{
+    userID: 0,
+    FirstName: 'Recruiter',
+    LastName: 'Number 0'
+}, {
+    userID: 1,
+    FirstName: 'Recruiter',
+    LastName: 'Number 1'
+}, {
+    userID: 2,
+    FirstName: 'Recruiter',
+    LastName: 'Number 2'
+}, {
+    userID: 3,
+    FirstName: 'Recruiter',
+    LastName: 'Number 3'
+}, {
+    userID: 4,
+    FirstName: 'Recruiter',
+    LastName: 'Number 4'
+}];
+
+var Recruiter = function (_Component) {
+    _inherits(Recruiter, _Component);
+
+    /*
+     constructor(props) {
+     super(props);
+     }
+     componentWillMount(props) {
+     company = companies.find(o => o.companyId == props.location.state.companyId);
+     }
+       */
+
+    function Recruiter(props) {
+        _classCallCheck(this, Recruiter);
+
+        var _this = _possibleConstructorReturn(this, (Recruiter.__proto__ || Object.getPrototypeOf(Recruiter)).call(this, props));
+
+        _this.state = { openRemove: false, openAdd: false, recruiterToRemove: '', recruiterToAdd: '' };
+        _this.makeTiles = _this.makeTiles.bind(_this);
+        _this.showRemove = _this.showRemove.bind(_this);
+        _this.showAdd = _this.showAdd.bind(_this);
+        _this.hideRemove = _this.hideRemove.bind(_this);
+        _this.hideAdd = _this.hideAdd.bind(_this);
+        _this.remove = _this.remove.bind(_this);
+        _this.add = _this.add.bind(_this);
+        _this.handleChange = _this.handleChange.bind(_this);
+        return _this;
+    }
+
+    _createClass(Recruiter, [{
+        key: 'handleClick',
+        value: function handleClick(e, _ref) {
+            var name = _ref.name,
+                value = _ref.value;
+
+            this.setState(_defineProperty({}, name, value));
+        }
+    }, {
+        key: 'showRemove',
+        value: function showRemove(e, _ref2) {
+            var userID = _ref2.userID;
+
+            console.log(userID);
+            this.setState({ openRemove: true, recruiterToRemove: userID });
+        }
+    }, {
+        key: 'showAdd',
+        value: function showAdd() {
+            this.setState({ openAdd: true, recruiterToAdd: '' });
+        }
+    }, {
+        key: 'hideRemove',
+        value: function hideRemove() {
+            this.setState({ openRemove: false, recruiterToRemove: '' });
+        }
+    }, {
+        key: 'hideAdd',
+        value: function hideAdd() {
+            this.setState({ openAdd: false, recruiterToAdd: '' });
+        }
+    }, {
+        key: 'remove',
+        value: function remove() {
+            console.log('deleting ' + this.state.recruiterToRemove);
+            this.hideRemove();
+        }
+    }, {
+        key: 'add',
+        value: function add() {
+            console.log('adding ' + this.state.recruiterToAdd);
+            this.hideAdd();
+        }
+    }, {
+        key: 'handleChange',
+        value: function handleChange(e, _ref3) {
+            var name = _ref3.name,
+                value = _ref3.value;
+
+            this.setState(_defineProperty({}, name, value));
+        }
+    }, {
+        key: 'makeTiles',
+        value: function makeTiles() {
+            var _this2 = this;
+
+            return recruiters.map(function (item, index) {
+                return _react2.default.createElement(
+                    _semanticUiReact.Card,
+                    { fluid: true, key: item.userID },
+                    _react2.default.createElement(
+                        _semanticUiReact.Card.Content,
+                        null,
+                        _react2.default.createElement(
+                            _semanticUiReact.Card.Header,
+                            null,
+                            item.FirstName,
+                            ' ',
+                            item.LastName
+                        ),
+                        _react2.default.createElement(
+                            _semanticUiReact.Card.Meta,
+                            null,
+                            'Recruiter'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Card.Content,
+                        { extra: true },
+                        _react2.default.createElement(
+                            _semanticUiReact.Button,
+                            { basic: true, color: 'red', userID: item.userID, onClick: _this2.showRemove },
+                            'Remove Recruiter'
+                        )
+                    )
+                );
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                _semanticUiReact.Grid.Column,
+                { centered: true },
+                _react2.default.createElement(
+                    _semanticUiReact.Grid.Row,
+                    null,
+                    _react2.default.createElement(
+                        _semanticUiReact.Header,
+                        { size: 'large' },
+                        'Recruiters ',
+                        _react2.default.createElement(_semanticUiReact.Button, { circular: true, icon: 'add user', size: 'small', floated: 'right', onClick: this.showAdd })
+                    )
+                ),
+                _react2.default.createElement(
+                    _semanticUiReact.Card.Group,
+                    null,
+                    this.makeTiles()
+                ),
+                _react2.default.createElement(
+                    _semanticUiReact.Modal,
+                    { size: 'tiny', open: this.state.openRemove, onClose: this.hideRemove },
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Header,
+                        null,
+                        'Delete Your Account'
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Content,
+                        null,
+                        _react2.default.createElement(
+                            'p',
+                            null,
+                            'Are you sure you want to delete your account'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Actions,
+                        null,
+                        _react2.default.createElement(
+                            _semanticUiReact.Button,
+                            { negative: true, onClick: this.hideRemove },
+                            'No'
+                        ),
+                        _react2.default.createElement(_semanticUiReact.Button, { positive: true, icon: 'checkmark', labelPosition: 'right', content: 'Yes', onClick: this.remove })
+                    )
+                ),
+                _react2.default.createElement(
+                    _semanticUiReact.Modal,
+                    { size: 'tiny', open: this.state.openAdd, onClose: this.hideAdd },
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Header,
+                        null,
+                        'Add Recruiter'
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Content,
+                        null,
+                        _react2.default.createElement(
+                            'p',
+                            null,
+                            'Enter the email address of the recruiter you wish to add'
+                        ),
+                        _react2.default.createElement(_semanticUiReact.Input, { fluid: true, name: 'recruiterToAdd', placeholder: 'Recruiter email', onChange: this.handleChange })
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Modal.Actions,
+                        null,
+                        _react2.default.createElement(
+                            _semanticUiReact.Button,
+                            { negative: true, onClick: this.hideAdd },
+                            'No'
+                        ),
+                        _react2.default.createElement(_semanticUiReact.Button, { positive: true, icon: 'checkmark', labelPosition: 'right', content: 'Yes', onClick: this.add })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Recruiter;
+}(_react.Component);
+
+exports.default = Recruiter;
+
+},{"react":574,"semantic-ui-react":694}],828:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
@@ -85192,7 +85450,7 @@ var MenuContainer = function (_Component) {
 
 exports.default = MenuContainer;
 
-},{"react":574,"semantic-ui-react":694}],828:[function(require,module,exports){
+},{"react":574,"semantic-ui-react":694}],829:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85219,7 +85477,7 @@ module.exports = {
   getUserDetails: getUserDetails
 };
 
-},{"./utils":831,"axios/index":1}],829:[function(require,module,exports){
+},{"./utils":832,"axios/index":1}],830:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85244,7 +85502,7 @@ module.exports = {
   uploadFileToS3Bucket: uploadFileToS3Bucket
 };
 
-},{"axios/index":1}],830:[function(require,module,exports){
+},{"axios/index":1}],831:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85276,7 +85534,7 @@ module.exports = {
   logOut: logOut
 };
 
-},{"./utils":831,"axios/index":1}],831:[function(require,module,exports){
+},{"./utils":832,"axios/index":1}],832:[function(require,module,exports){
 'use strict';
 
 function getCookie(name) {
@@ -85293,7 +85551,7 @@ module.exports = {
   getAuthToken: getAuthToken
 };
 
-},{}],832:[function(require,module,exports){
+},{}],833:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85312,7 +85570,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('app'));
 
-},{"./App":822,"react":574,"react-dom":545}],833:[function(require,module,exports){
+},{"./App":822,"react":574,"react-dom":545}],834:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85341,6 +85599,10 @@ var _JobListing = require('../components/JobListing');
 
 var _JobListing2 = _interopRequireDefault(_JobListing);
 
+var _Recruiters = require('../components/Recruiters');
+
+var _Recruiters2 = _interopRequireDefault(_Recruiters);
+
 var _semanticUiReact = require('semantic-ui-react');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -85368,11 +85630,36 @@ var Company = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Company.__proto__ || Object.getPrototypeOf(Company)).call(this, props));
 
-    _this.state = { readOnly: true, modal: false, type: -1, company: {} };
+    _this.state = { accountType: 1 };
+    _this.getDisplayTiles = _this.getDisplayTiles.bind(_this);
     return _this;
   }
 
   _createClass(Company, [{
+    key: 'getDisplayTiles',
+    value: function getDisplayTiles() {
+      if (this.state.accountType == 0) {
+        return _react2.default.createElement(
+          _semanticUiReact.Grid,
+          { centered: true, columns: 2, padded: true },
+          _react2.default.createElement(_JobListing2.default, this.props)
+        );
+      } else if (this.state.accountType == 1 || this.state.accountType == 2) {
+        return _react2.default.createElement(
+          _semanticUiReact.Grid,
+          { centered: true, columns: 2, padded: true },
+          _react2.default.createElement(_JobListing2.default, this.props),
+          _react2.default.createElement(_Recruiters2.default, this.props)
+        );
+      } else {
+        return _react2.default.createElement(
+          _semanticUiReact.Grid,
+          { centered: true, columns: 2, padded: true },
+          _react2.default.createElement(_Recruiters2.default, this.props)
+        );
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
 
@@ -85380,7 +85667,7 @@ var Company = function (_Component) {
         _MenuContainer2.default,
         { loggedIn: true },
         _react2.default.createElement(_CompanyInfo2.default, this.props),
-        _react2.default.createElement(_JobListing2.default, this.props)
+        this.getDisplayTiles()
       );
     }
   }]);
@@ -85390,7 +85677,7 @@ var Company = function (_Component) {
 
 exports.default = Company;
 
-},{"../components/CompanyInfo":824,"../components/JobListing":825,"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"react":574,"semantic-ui-react":694}],834:[function(require,module,exports){
+},{"../components/CompanyInfo":824,"../components/JobListing":825,"../components/Recruiters":827,"../containers/MenuContainer":828,"../helpers/api":829,"../helpers/utils":832,"react":574,"semantic-ui-react":694}],835:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85490,7 +85777,77 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../containers/MenuContainer":827,"../helpers/api":828,"react":574}],835:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"../helpers/api":829,"react":574}],836:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _MenuContainer = require('../containers/MenuContainer');
+
+var _MenuContainer2 = _interopRequireDefault(_MenuContainer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Zack on 3/27/18.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+var JobInfo = function (_Component) {
+    _inherits(JobInfo, _Component);
+
+    /*
+     constructor(props) {
+     super(props);
+     }
+     componentWillMount(props) {
+     company = companies.find(o => o.companyId == props.location.state.companyId);
+     }
+       */
+
+    function JobInfo(props) {
+        _classCallCheck(this, JobInfo);
+
+        var _this = _possibleConstructorReturn(this, (JobInfo.__proto__ || Object.getPrototypeOf(JobInfo)).call(this, props));
+
+        _this.state = {};
+        console.log(_this.props.match.params.jobId);
+        return _this;
+    }
+
+    _createClass(JobInfo, [{
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                _MenuContainer2.default,
+                { loggedIn: true },
+                _react2.default.createElement(
+                    'p',
+                    null,
+                    this.props.match.params.jobId
+                )
+            );
+        }
+    }]);
+
+    return JobInfo;
+}(_react.Component);
+
+exports.default = JobInfo;
+
+},{"../containers/MenuContainer":828,"react":574}],837:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85713,7 +86070,7 @@ var LandingPage = function LandingPage() {
 
 exports.default = LandingPage;
 
-},{"../containers/MenuContainer":827,"react":574,"semantic-ui-react":694}],836:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"react":574,"semantic-ui-react":694}],838:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85895,7 +86252,7 @@ var Login = function (_Component) {
 
 exports.default = Login;
 
-},{"../containers/MenuContainer":827,"axios":1,"react":574,"semantic-ui-react":694}],837:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"axios":1,"react":574,"semantic-ui-react":694}],839:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86230,7 +86587,7 @@ var NewJob = function (_Component) {
 
 exports.default = NewJob;
 
-},{"../containers/MenuContainer":827,"../helpers/api":828,"../helpers/utils":831,"axios/index":1,"react":574,"semantic-ui-react":694}],838:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"../helpers/api":829,"../helpers/utils":832,"axios/index":1,"react":574,"semantic-ui-react":694}],840:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86360,7 +86717,7 @@ var NewProfile = function (_Component) {
 
 exports.default = NewProfile;
 
-},{"../containers/MenuContainer":827,"../helpers/s3":829,"../helpers/utils":831,"axios/index":1,"react":574,"semantic-ui-react":694}],839:[function(require,module,exports){
+},{"../containers/MenuContainer":828,"../helpers/s3":830,"../helpers/utils":832,"axios/index":1,"react":574,"semantic-ui-react":694}],841:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -87086,7 +87443,7 @@ var Profile = function (_Component) {
 
 exports.default = Profile;
 
-},{"jquery":167,"react":574,"reactstrap":575}],840:[function(require,module,exports){
+},{"jquery":167,"react":574,"reactstrap":575}],842:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -87471,4 +87828,4 @@ var Register = function (_Component) {
 
 exports.default = Register;
 
-},{"../containers/MenuContainer":827,"../helpers/api":828,"axios/index":1,"react":574,"semantic-ui-react":694}]},{},[832]);
+},{"../containers/MenuContainer":828,"../helpers/api":829,"axios/index":1,"react":574,"semantic-ui-react":694}]},{},[833]);

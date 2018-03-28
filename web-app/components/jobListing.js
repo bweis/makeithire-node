@@ -2,11 +2,8 @@
  * Created by Zack on 3/27/18.
  */
 import React, { Component } from 'react';
-import { getUserDetails } from '../helpers/api';
-import { getCompanyList } from '../helpers/api';
-import { getCookie } from '../helpers/utils';
 
-import { Form, Grid, Image, Input, Card } from 'semantic-ui-react'
+import { Grid, Header, Card } from 'semantic-ui-react'
 
 const jobs = [
     {
@@ -41,7 +38,7 @@ const jobs = [
     },
 ];
 
-class CompanyInfo extends Component {
+class JobListing extends Component {
     /*
      constructor(props) {
      super(props);
@@ -65,21 +62,20 @@ class CompanyInfo extends Component {
 
     makeTiles() {
         return jobs.map((item, index) => (
-            <Card fluid header={item.title} meta={item.type} description={item.description} />
+                <Card fluid key={item.jobID} href={'/company:'+ this.props.match.params.companyId + '/job:' + item.jobID} header={item.title} meta={item.type} description={item.description} />
         ));
     }
 
     render() {
         return (
-            <Grid centered columns={2}>
                 <Grid.Column centered>
+                    <Header size='large'>Job Listings</Header>
                     <Card.Group>
                         {this.makeTiles()}
                     </Card.Group>
                 </Grid.Column>
-            </Grid>
         );
     }
 }
 
-export default CompanyInfo;
+export default JobListing;
