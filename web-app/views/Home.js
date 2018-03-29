@@ -24,6 +24,7 @@ class Home extends Component {
   }
 
   getHomeComponent() {
+    console.log(this.state);
     if (this.state.isRecruiter === 0) {
       return (<h1>Student Home Page</h1>);
     } else if (this.state.isRecruiter === 1) {
@@ -38,6 +39,7 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.state.accountType);
     return (
       <div>
         <MenuContainer loggedIn>

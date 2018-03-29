@@ -2,6 +2,7 @@
  * Created by Zack on 3/28/18.
  */
 import React, { Component } from 'react';
+import { getRecruiters } from '../helpers/api';
 
 import { Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react'
 
@@ -47,7 +48,7 @@ class Recruiter extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { openRemove: false, openAdd: false, recruiterToRemove: '', recruiterToAdd: '' };
+        this.state = { openRemove: false, openAdd: false, recruiters: '', recruiterToRemove: '', recruiterToAdd: '' };
         this.makeTiles = this.makeTiles.bind(this);
         this.showRemove = this.showRemove.bind(this);
         this.showAdd = this.showAdd.bind(this);
@@ -56,6 +57,13 @@ class Recruiter extends Component {
         this.remove = this.remove.bind(this);
         this.add = this.add.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        getRecruiters((res) => {
+            if (!res) {
+                console.log('Could not get company list');
+            } else {
+                console.log(res);
+            }
+        }, this.props.match.params.companyId);
     }
 
     handleClick(e, { name, value }){

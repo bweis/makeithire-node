@@ -48,7 +48,7 @@ class Companies extends Component {
 
     makeTiles() {
         return this.state.companies.map((item, index) => (
-            <Card fluid key={item.key} href={'/company:'+ item.value} header={item.text} meta={item.type} description={item.description} />
+            <Card fluid key={item.key} href={'/company/'+ item.value} header={item.text} meta={item.type} description={item.description} />
         ));
     }
 

@@ -53,7 +53,7 @@ class Company extends Component {
   }
 
   render() {
-
+      console.log(this.state.accountType);
     return (
       <MenuContainer loggedIn>
           <CompanyInfo {...this.props}/>
