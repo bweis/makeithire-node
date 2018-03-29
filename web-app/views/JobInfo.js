@@ -1,20 +1,8 @@
-/**
- * Created by Zack on 3/27/18.
- */
+
 import React, { Component } from 'react';
 import MenuContainer from '../containers/MenuContainer';
 
 class JobInfo extends Component {
-  /*
-     constructor(props) {
-     super(props);
-     }
-     componentWillMount(props) {
-     company = companies.find(o => o.companyId == props.location.state.companyId);
-     }
-
-
-     */
 
   constructor(props) {
     super(props);

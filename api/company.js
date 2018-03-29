@@ -13,11 +13,11 @@ function getAllCompaniesWithJobs(req, res) {
 
 function getCompanyDetails(req, res) {
   const sql = 'SELECT idCompany, CompanyName, Description, HashTags, idUser AS idHeadRecruiter FROM Company WHERE idCompany = ?';
-  db.query(sql, req.body.idCompany, (err, result) => {
+  db.query(sql, req.params.idCompany, (err, result) => {
     if (err) {
       return res.status(400).json({ message: err });
     }
-    return res.status(200).json({ message: 'Success', response: result });
+    return res.status(200).json({ message: 'Success', response: result[0] });
   });
 }
 

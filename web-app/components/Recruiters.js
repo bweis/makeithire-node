@@ -1,54 +1,15 @@
-/**
- * Created by Zack on 3/28/18.
- */
 import React, { Component } from 'react';
 
 import { Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react';
 
-const recruiters = [
-  {
-    userID: 0,
-    FirstName: 'Recruiter',
-    LastName: 'Number 0',
-  },
-  {
-    userID: 1,
-    FirstName: 'Recruiter',
-    LastName: 'Number 1',
-  },
-  {
-    userID: 2,
-    FirstName: 'Recruiter',
-    LastName: 'Number 2',
-  },
-  {
-    userID: 3,
-    FirstName: 'Recruiter',
-    LastName: 'Number 3',
-  },
-  {
-    userID: 4,
-    FirstName: 'Recruiter',
-    LastName: 'Number 4',
-  },
-];
-
 class Recruiter extends Component {
-  /*
-     constructor(props) {
-     super(props);
-     }
-     componentWillMount(props) {
-     company = companies.find(o => o.companyId == props.location.state.companyId);
-     }
-
-
-     */
-
   constructor(props) {
     super(props);
     this.state = {
-      openRemove: false, openAdd: false, recruiterToRemove: '', recruiterToAdd: '',
+      openRemove: false,
+      openAdd: false,
+      recruiterToRemove: '',
+      recruiterToAdd: '',
     };
     this.makeTiles = this.makeTiles.bind(this);
     this.showRemove = this.showRemove.bind(this);
@@ -96,7 +57,7 @@ class Recruiter extends Component {
   }
 
   makeTiles() {
-    return recruiters.map((item, index) => (
+    return this.props.companyRecruiters.map((item, index) => (
       <Card fluid key={item.userID}>
         <Card.Content>
           <Card.Header>
