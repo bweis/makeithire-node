@@ -10,6 +10,18 @@ function getUserDetails(cb) {
   axios.get('/api/getUserDetails', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
+function getCompanyDetails(id, cb) {
+  axios.get(`/api/getCompanyDetails/${id}`, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+}
+
+function getRecruiters(id, cb) {
+  axios.get(`/api/getRecruiters/${id}`, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+}
+
+function updateCompanyDetails(company, cb) {
+  axios.post('/api/updateCompanyDetails/', company, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+}
+
 function getStudentDetails(cb) {
   axios.get('/api/getStudentDetails', {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
 }
@@ -33,6 +45,9 @@ function getDegrees(cb) {
 module.exports = {
   getCompanyList,
   getUserDetails,
+  getCompanyDetails,
+  getRecruiters,
+  updateCompanyDetails,
   getStudentDetails,
   updateStudentDetails,
   getUniversityList,

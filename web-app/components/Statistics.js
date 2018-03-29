@@ -1,6 +1,3 @@
-/**
- * Created by Zack on 3/28/18.
- */
 import React, { Component } from 'react';
 import { getCompanyList } from '../helpers/api';
 
@@ -21,7 +18,7 @@ class Statistics extends Component {
 
   render() {
     return (
-      <Grid.Column centered>
+      <Grid.Column >
         <Grid.Row>
           <Header size='large'>
                         Statistics
@@ -38,7 +35,7 @@ class Statistics extends Component {
             header='Users'
             meta='Number of Active Users'
             description={this.state.users}
-            rasised
+            raised
           />
         </Card.Group>
         <Card.Group>
@@ -52,7 +49,7 @@ class Statistics extends Component {
             header='Recruiters'
             meta='Number of Active Recruiters'
             description={this.state.recruiters}
-            rasised
+            raised
           />
         </Card.Group>
         <Card.Group>
@@ -66,7 +63,7 @@ class Statistics extends Component {
             header='Submitted Applications'
             meta='Number of Submitted Applications'
             description={this.state.applications}
-            rasised
+            raised
           />
         </Card.Group>
       </Grid.Column>
