@@ -11,4 +11,4 @@ function loginUserAction(user) {
 module.exports = {
   LOGIN_USER,
   loginUserAction,
-}
+};

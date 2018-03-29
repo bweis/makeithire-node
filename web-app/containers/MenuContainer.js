@@ -40,7 +40,6 @@ class MenuContainer extends Component {
   }
   render() {
     const { children, loggedIn } = this.props;
-    console.log('HEY! THIS IS YOUR USER DATA:', this.props.user);
     return (
       <div>
         <Segment textAlign='center' style={{ padding: '0em 0em' }} vertical>
