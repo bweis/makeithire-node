@@ -16,16 +16,15 @@ function uploadCoverLetter(req, res) {
 // GET API: Get Student Details
 function getStudentDetails(req, res) {
   const sql = 'SELECT * FROM Student WHERE idUser = (SELECT idUser FROM User WHERE EmailID = ?)';
-  db.query(sql, req.user.EmailID, (err, res) => {
+  db.query(sql, req.user.EmailID, (err, result) => {
     if (err) {
       return res.status(400)
         .json({ message: err });
     }
-    console.log(res);
     return res.status(200)
       .json({
         message: 'Success',
-        response: res,
+        response: result[0],
       });
   });
 }
