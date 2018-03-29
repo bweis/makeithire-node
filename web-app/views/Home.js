@@ -13,7 +13,6 @@ class Home extends Component {
   }
 
   getHomeComponent() {
-    console.log('Logging', this.props.user);
     if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
       return (<Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>);
     } else if (this.props.user.isHeadRecruiter) {

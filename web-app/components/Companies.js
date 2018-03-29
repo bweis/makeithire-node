@@ -1,23 +1,9 @@
-/**
- * Created by Zack on 3/28/18.
- */
 import React, { Component } from 'react';
 import { getCompanyList } from '../helpers/api';
 
 import { Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react';
 
 class Companies extends Component {
-  /*
-     constructor(props) {
-     super(props);
-     }
-     componentWillMount(props) {
-     company = companies.find(o => o.companyId == props.location.state.companyId);
-     }
-
-
-     */
-
   constructor(props) {
     super(props);
     this.state = { companies: [] };
@@ -44,8 +30,8 @@ class Companies extends Component {
   }
 
   makeTiles() {
-    return this.state.companies.map((item, index) => (
-      <Card fluid key={item.key} href={`/company:${item.value}`} header={item.text} meta={item.type} description={item.description} />
+    return this.state.companies.map(item => (
+      <Card fluid key={item.key} href={`/company/${item.value}`} header={item.text} meta={item.type} description={item.description} />
     ));
   }
 
@@ -54,7 +40,7 @@ class Companies extends Component {
       <Grid.Column centered>
         <Grid.Row>
           <Header size='large'>
-                        Companies
+            Companies
           </Header>
         </Grid.Row>
         <Card.Group>
