@@ -2,7 +2,7 @@
 const session = require('./session');
 const registration = require('./registration');
 const student = require('./student');
-const recruiter = require('./recruiter')
+const recruiter = require('./recruiter');
 const user = require('./user');
 const data = require('./data');
 const job = require('./job');
@@ -16,7 +16,7 @@ const apiRouter = require('express').Router();
 // Routes **To add public route, you must add it to the list in session.js**
 
 // Session Routes
-apiRouter.get('/ping', session.pingSession);
+apiRouter.get('/getSession', session.getSession);
 apiRouter.post('/login', session.login);
 
 // Registration Routes
@@ -30,14 +30,15 @@ apiRouter.get('/getUserDetails', user.getUserDetails);
 apiRouter.get('/uploadResume', student.uploadResume);
 apiRouter.get('/uploadCoverLetter', student.uploadCoverLetter);
 apiRouter.get('/getStudentDetails', student.getStudentDetails);
+apiRouter.post('/updateStudentDetails', student.updateStudentDetails);
 
 // Recruiter Routes
 apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
-apiRouter.post('/getRecruiters', recruiter.getRecruiters);
+apiRouter.get('/getRecruiters/:idCompany', recruiter.getRecruiters);
 
 // Company Routes
 apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
-apiRouter.post('/getCompanyDetails', company.getCompanyDetails);
+apiRouter.get('/getCompanyDetails/:idCompany', company.getCompanyDetails);
 apiRouter.post('/updateCompanyDetails', company.updateCompanyDetails);
 
 // Job Routes
