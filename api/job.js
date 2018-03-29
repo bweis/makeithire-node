@@ -33,15 +33,15 @@ function addJobPosting(req, res) {
   const description = req.body.Description;
   const idCompany = req.body.idCompany;
   const deadline = req.body.Deadline;
-  const tags = req.body.tags;
-  const supplementalQs = req.body.SupplementalQs;
+  const tags = req.body.Tags;
+  const supplementaryQs = req.body.SupplementaryQs;
   const post = {
     JobName: jobName,
     Description: description,
-    idCompany,
+    idCompany: idCompany,
     Deadline: deadline,
     Tags: tags,
-    SupplementalQ: supplementalQs,
+    SupplementaryQs: supplementaryQs,
   };
 
   const sql = 'INSERT INTO Jobs SET ?';

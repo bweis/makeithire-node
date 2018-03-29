@@ -11,6 +11,7 @@ class Recruiter extends Component {
       recruiterToRemove: '',
       recruiterToAdd: '',
     };
+    console.log(this.props);
     this.makeTiles = this.makeTiles.bind(this);
     this.showRemove = this.showRemove.bind(this);
     this.showAdd = this.showAdd.bind(this);
@@ -84,6 +85,19 @@ class Recruiter extends Component {
       <Grid.Column>
         <Grid.Row>
           <Header size='large'>
+            Head Recruiter
+          </Header>
+        </Grid.Row>
+        <Card.Group>
+          <Card fluid key={this.props.headRecruiter.idUser}>
+            <Card.Content>
+              <Card.Header>{this.props.headRecruiter.FirstName} {this.props.headRecruiter.LastName}</Card.Header>
+              <Card.Meta>Head Recruiter</Card.Meta>
+            </Card.Content>
+          </Card>
+        </Card.Group>
+        <Grid.Row>
+          <Header size='Medium'>
             Recruiters <Button circular icon='add user' size='small' floated='right' onClick={this.showAdd}/>
           </Header>
         </Grid.Row>
