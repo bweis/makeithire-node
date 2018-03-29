@@ -15,16 +15,19 @@ function getStudentDetails(cb) {
 }
 
 function updateStudentDetails(cb, studentDetails) {
-  console.log(studentDetails);
-  axios.post('/api/updateStudentDetails', studentDetails ,{headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+  axios.post('/api/updateStudentDetails', studentDetails, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
 }
 
 function getUniversityList(cb) {
-
+  axios.get('/api/getUniversityList').then(cb).catch(() => { cb(false); });
 }
 
 function getMajors(cb) {
+  axios.get('/api/getMajors').then(cb).catch(() => { cb(false); });
+}
 
+function getDegrees(cb) {
+  axios.get('/api/getDegrees').then(cb).catch(() => { cb(false); });
 }
 
 module.exports = {
@@ -33,5 +36,6 @@ module.exports = {
   getStudentDetails,
   updateStudentDetails,
   getUniversityList,
-  getMajors
+  getMajors,
+  getDegrees,
 };

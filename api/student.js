@@ -29,10 +29,28 @@ function getStudentDetails(req, res) {
   });
 }
 
+// POST API: Add Student Details into Student Table
+function updateStudentDetails(req, res) {
+   const sql = `UPDATE Student SET University = ${req.body.University}, Major = ${req.body.Major}, GraduationYear = ${req.body.GraduationYear}, CurrentPursuingDegree = ${req.body.CurrentPursuingDegree}, HighestDegreeLevel = (SELECT idDegree From Degree WHERE Level = '${req.body.HighestDegreeLevel}'), Skills = '${req.body.Skills}', Projects = '${req.body.Projects}', Bio = '${req.body.Bio}', PhoneNumber = '${req.body.PhoneNumber}', Links = '${req.body.Links}' WHERE idUser = '${req.body.idUser}'`;
+    db.query(sql, req.user.EmailID, (err, result) => {
+      if (err) {
+        return res.status(400)
+            .json({ message: err });
+      }
+      return res.status(200)
+          .json({
+            message: 'Success',
+            response: result[0],
+          });
+    });
+}
+
+
 module.exports = {
   uploadCoverLetter,
   uploadResume,
   getStudentDetails,
+  updateStudentDetails
 };
 
 function handleS3Request(req, res, fileName) {
