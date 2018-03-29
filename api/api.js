@@ -33,7 +33,7 @@ apiRouter.get('/getStudentDetails', student.getStudentDetails);
 
 // Recruiter Routes
 apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
-apiRouter.post('/getRecruiters', recruiter.getRecruiters);
+apiRouter.get('/getRecruiters/:id', recruiter.getRecruiters);
 
 // Company Routes
 apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);

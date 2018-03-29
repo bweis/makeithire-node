@@ -58,7 +58,7 @@ function requestRecruiter(req, res) {
 
 function getRecruiters(req, res) {
   const sql = 'SELECT idUser, FirstName, LastName FROM User WHERE idCompany = ?';
-  db.query(sql, req.body.idCompany, (err, result) => {
+  db.query(sql, req.params.id, (err, result) => {
     if (err) {
       return res.status(400)
         .json({ error: err });
