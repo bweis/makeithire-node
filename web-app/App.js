@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Redirect, BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Container } from 'reactstrap';
-import AuthenticatedRoute from './AuthenticatedRoute';
+import { connect } from 'react-redux';
 
-import MyNav from './components/MyNav';
+import AuthenticatedRoute from './AuthenticatedRoute';
 import NewJob from './views/NewJob';
 import JobInfo from './views/JobInfo';
 import Home from './views/Home';
@@ -14,12 +14,15 @@ import Login from './views/Login';
 import Register from './views/Register';
 import LandingPage from './views/LandingPage';
 import { checkSession } from './helpers/session';
+import { loginUserAction } from './actions/user';
 
 class App extends Component {
   componentWillMount() {
-    checkSession((valid) => {
-      if (!valid) {
+    checkSession((user) => {
+      if (!user) {
         document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      } else {
+        this.props.loginUser(user);
       }
     });
   }
@@ -46,4 +49,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  loginUser: user => dispatch(loginUserAction(user)),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(App);
