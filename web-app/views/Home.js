@@ -25,6 +25,7 @@ class Home extends Component {
     return (<h1>Recruiter Home Page</h1>);
   }
   render() {
+    console.log('home', this.props);
     return (
       <div>
         <MenuContainer loggedIn>

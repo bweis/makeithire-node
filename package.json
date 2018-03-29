@@ -63,7 +63,9 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.0",
-    "webpack": "^4.3.0"
+    "webpack": "^4.3.0",
+    "lodash": "latest",
+    "react-router": "latest"
   },
   "scripts": {
     "start": "node server.js",

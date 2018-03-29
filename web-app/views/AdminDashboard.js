@@ -1,6 +1,3 @@
-/**
- * Created by Zack on 3/28/18.
- */
 import React, { Component } from 'react';
 import { Grid, Segment } from 'semantic-ui-react';
 import Companies from '../components/Companies';
@@ -12,12 +9,11 @@ class AdminDashboard extends Component {
   }
 
   render() {
+    console.log('Admin Dash', this.props);
     return (
       <Grid centered columns={2} padded>
-        <Segment style={{ padding: '8em 0em' }} vertical>
-          <Statistics />
-          <Companies />
-        </Segment>
+        <Statistics />
+        <Companies />
       </Grid>
     );
   }
