@@ -323,7 +323,7 @@ class NewJob extends Component {
             <Form.Select fluid label='State' name='state' options={states} placeholder='State' />
             <Form.Input type='date' fluid label='Expiration Date' name='expiration' />
           </Form.Group>
-          <Form.TextArea label='Company Description' placeholder='Job description...' name='description' />
+          <Form.TextArea label='Job Description' placeholder='Job description...' name='description' />
           <Form.Input label='Tags' placeholder='Tags' name='tags' />
           <Form.Button onClick={this.postJob}>Post Job</Form.Button>
         </Form>

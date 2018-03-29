@@ -26,6 +26,7 @@ class JobInfo extends Component {
     return (
       <MenuContainer loggedIn>
         <p>
+          haha
           {this.props.match.params.jobId}
         </p>
       </MenuContainer>
