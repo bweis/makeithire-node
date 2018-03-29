@@ -16,6 +16,9 @@ const publicRoutes = [
   '/api/signUpStudent',
   '/api/signupRecruiter',
   '/api/getCompanyList',
+  '/api/getMajors',
+  '/api/getDegrees',
+  '/api/getUniversityList',
 ];
 
 // Protect the /api routes with JWT
