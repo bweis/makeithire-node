@@ -16,6 +16,7 @@ class Home extends Component {
       if (!res) {
         console.log('Could not get user details');
       } else {
+        console.log('got user details');
         console.log(res.data.response);
         // this.setState({ isRecruiter: res.data.response.type }); // Not a real thing. TODO FIX THIS OR GET STATUS ON LOGIN
         this.setState({ isRecruiter: 3 }); // Mock student state

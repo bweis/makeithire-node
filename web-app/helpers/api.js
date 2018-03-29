@@ -1,6 +1,12 @@
 import axios from 'axios/index';
 const utils = require('./utils');
 
+const config = {
+  headers: {
+    Authorization: utils.getAuthToken()
+  }
+};
+
 function getCompanyList(cb) {
   axios.get('/api/getCompanyList').then(cb).catch(() => { cb(false); });
 }
@@ -11,13 +17,10 @@ function getUserDetails(cb) {
 
 function getRecruiters(cb, idCompany) {
   axios.post('/api/getRecruiters', {
-    headers: {
-        Authorization: utils.getAuthToken()
-    },
     body: {
       'idCompany': idCompany
     },
-    })
+    }, config)
       .then(cb).catch(() => { cb(false); });
 }
 module.exports = {
