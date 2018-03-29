@@ -1,22 +1,27 @@
 import axios from 'axios/index';
-import { getCookie } from './utils';
+import { getAuthToken } from './utils';
 
 function checkSession(cb) {
-  axios.get('/api/ping', {
-    headers: {
-      Authorization: `Bearer ${getCookie('token')}`,
-    },
-  })
-    .then(() => {
-      cb(true);
+  if (!getAuthToken()) {
+    cb(false);
+  } else {
+    axios.get('/api/ping', {
+      headers: {
+        Authorization: getAuthToken(),
+      },
     })
-    .catch(() => {
-      cb(false);
-    });
+      .then(() => {
+        cb(true);
+      })
+      .catch(() => {
+        cb(false);
+      });
+  }
 }
 
 function logOut() {
   document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  window.location = '/login?logout=true';
 }
 
 module.exports = {
