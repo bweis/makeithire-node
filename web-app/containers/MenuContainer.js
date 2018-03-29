@@ -6,10 +6,12 @@ import {
   Menu,
 } from 'semantic-ui-react';
 
+const { logOut } = require('../helpers/session');
+
 
 const logoutMenuItem = (
   <Menu.Item position='right'>
-    <Button as='a' href='/logout'>Log out</Button>
+    <Button as='a' onClick={logOut}>Log out</Button>
   </Menu.Item>
 );
 

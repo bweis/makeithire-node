@@ -84819,12 +84819,15 @@ var _reactRouterDom = require('react-router-dom');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var _require = require('./helpers/utils'),
+    getAuthToken = _require.getAuthToken;
+
 var AuthenticatedRoute = function AuthenticatedRoute(_ref) {
   var Component = _ref.component,
       path = _ref.path,
       name = _ref.name;
 
-  var isLoggedIn = document.cookie.length !== 0;
+  var isLoggedIn = getAuthToken();
   return _react2.default.createElement(_reactRouterDom.Route, {
     exact: true,
     path: path,
@@ -84837,7 +84840,7 @@ var AuthenticatedRoute = function AuthenticatedRoute(_ref) {
 
 exports.default = AuthenticatedRoute;
 
-},{"react":578,"react-router-dom":562}],828:[function(require,module,exports){
+},{"./helpers/utils":838,"react":578,"react-router-dom":562}],828:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -85817,12 +85820,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _require = require('../helpers/session'),
+    logOut = _require.logOut;
+
 var logoutMenuItem = _react2.default.createElement(
   _semanticUiReact.Menu.Item,
   { position: 'right' },
   _react2.default.createElement(
     _semanticUiReact.Button,
-    { as: 'a', href: '/logout' },
+    { as: 'a', onClick: logOut },
     'Log out'
   )
 );
@@ -85907,7 +85913,7 @@ var MenuContainer = function (_Component) {
 
 exports.default = MenuContainer;
 
-},{"react":578,"semantic-ui-react":698}],835:[function(require,module,exports){
+},{"../helpers/session":837,"react":578,"semantic-ui-react":698}],835:[function(require,module,exports){
 'use strict';
 
 var _index = require('axios/index');
@@ -85971,19 +85977,24 @@ var _utils = require('./utils');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function checkSession(cb) {
-  _index2.default.get('/api/ping', {
-    headers: {
-      Authorization: 'Bearer ' + (0, _utils.getCookie)('token')
-    }
-  }).then(function () {
-    cb(true);
-  }).catch(function () {
+  if (!(0, _utils.getAuthToken)()) {
     cb(false);
-  });
+  } else {
+    _index2.default.get('/api/ping', {
+      headers: {
+        Authorization: (0, _utils.getAuthToken)()
+      }
+    }).then(function () {
+      cb(true);
+    }).catch(function () {
+      cb(false);
+    });
+  }
 }
 
 function logOut() {
   document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  window.location = '/login?logout=true';
 }
 
 module.exports = {
