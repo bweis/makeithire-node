@@ -1,6 +1,3 @@
-/**
- * Created by Zack on 3/27/18.
- */
 import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react';
 import { Button, Input } from 'semantic-ui-react';

@@ -1,8 +1,5 @@
-/**
- * Created by Zack on 3/28/18.
- */
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Segment } from 'semantic-ui-react';
 import Companies from '../components/Companies';
 import Statistics from '../components/Statistics';
 
@@ -12,6 +9,7 @@ class AdminDashboard extends Component {
   }
 
   render() {
+    console.log('Admin Dash', this.props);
     return (
       <Grid centered columns={2} padded>
         <Statistics />
