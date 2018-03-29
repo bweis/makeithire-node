@@ -47,9 +47,7 @@ class Company extends Component {
       return (<h1>Head Recruiter Company</h1>);
     } else if (this.props.user.isAdmin) { // IS ADMIN
       return (
-        <Grid centered columns={2} padded>
-          <Recruiters companyRecruiters={this.state.companyRecruiters} />
-        </Grid>
+        <Recruiters companyRecruiters={this.state.companyRecruiters} />
       );
     } else if (this.props.user.isStudent) {
       return (<h1>Student Company</h1>);
@@ -61,7 +59,7 @@ class Company extends Component {
     return (
       <MenuContainer loggedIn>
         <CompanyInfo companyDetails={this.state.companyDetails} />
-        <Grid centered columns={2} padded>
+        <Grid centered columns={2}>
           {this.getCompanyComponent()}
         </Grid>
       </MenuContainer>

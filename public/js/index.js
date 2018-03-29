@@ -86376,22 +86376,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Zack on 3/28/18.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Companies = function (_Component) {
   _inherits(Companies, _Component);
-
-  /*
-     constructor(props) {
-     super(props);
-     }
-     componentWillMount(props) {
-     company = companies.find(o => o.companyId == props.location.state.companyId);
-     }
-       */
 
   function Companies(props) {
     _classCallCheck(this, Companies);
@@ -86433,8 +86421,8 @@ var Companies = function (_Component) {
   }, {
     key: 'makeTiles',
     value: function makeTiles() {
-      return this.state.companies.map(function (item, index) {
-        return _react2.default.createElement(_semanticUiReact.Card, { fluid: true, key: item.key, href: '/company:' + item.value, header: item.text, meta: item.type, description: item.description });
+      return this.state.companies.map(function (item) {
+        return _react2.default.createElement(_semanticUiReact.Card, { fluid: true, key: item.key, href: '/company/' + item.value, header: item.text, meta: item.type, description: item.description });
       });
     }
   }, {
@@ -86481,7 +86469,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _semanticUiReact = require('semantic-ui-react');
 
+var _session = require('../helpers/session');
+
+var _api = require('../helpers/api');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -86492,39 +86486,149 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CompanyInfo = function (_Component) {
   _inherits(CompanyInfo, _Component);
 
-  function CompanyInfo() {
+  function CompanyInfo(props) {
     _classCallCheck(this, CompanyInfo);
 
-    return _possibleConstructorReturn(this, (CompanyInfo.__proto__ || Object.getPrototypeOf(CompanyInfo)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (CompanyInfo.__proto__ || Object.getPrototypeOf(CompanyInfo)).call(this, props));
+
+    _this.state = {
+      editable: false,
+      CompanyName: '',
+      Description: ''
+    };
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleEdit = _this.handleEdit.bind(_this);
+    _this.handleSave = _this.handleSave.bind(_this);
+    return _this;
   }
 
   _createClass(CompanyInfo, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      console.log('Got New Props', newProps);
+      this.setState({
+        CompanyName: newProps.companyDetails.CompanyName,
+        Description: newProps.companyDetails.Description
+      });
+    }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleEdit',
+    value: function handleEdit() {
+      this.setState({ editable: true });
+    }
+  }, {
+    key: 'handleSave',
+    value: function handleSave() {
+      this.setState({ editable: false });
+      var _state = this.state,
+          CompanyName = _state.CompanyName,
+          Description = _state.Description;
+
+      var company = {
+        CompanyName: CompanyName,
+        Description: Description,
+        HashTags: this.props.companyDetails.HashTags,
+        idCompany: this.props.companyDetails.idCompany,
+        idHeadRecruiter: this.props.companyDetails.idHeadRecruiter
+      };
+      (0, _api.updateCompanyDetails)(company, function (res, err) {
+        if (res) {
+          console.log(res);
+        } else {
+          console.log(err);
+        }
+      });
+
+      console.log(company);
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var companyDetails = this.props.companyDetails;
+      var _state2 = this.state,
+          editable = _state2.editable,
+          CompanyName = _state2.CompanyName,
+          Description = _state2.Description;
 
-      console.log(companyDetails);
-
-      return _react2.default.createElement(
-        _semanticUiReact.Grid,
-        { centered: true, columns: 2 },
-        _react2.default.createElement(
-          _semanticUiReact.Grid.Column,
-          null,
-          _react2.default.createElement(_semanticUiReact.Image, { src: '/img/google.png', size: 'small', circular: true }),
+      if (!editable) {
+        return _react2.default.createElement(
+          _semanticUiReact.Segment,
+          { style: { padding: '8em 0em' }, vertical: true, color: 'teal' },
           _react2.default.createElement(
-            _semanticUiReact.Header,
-            { as: 'h1', textAlign: 'center' },
-            companyDetails.CompanyName
-          ),
-          _react2.default.createElement(
-            _semanticUiReact.Header,
-            { as: 'h2', textAlign: 'left' },
-            'Description: ',
-            companyDetails.Description
+            _semanticUiReact.Grid,
+            { centered: true, columns: 2 },
+            _react2.default.createElement(
+              _semanticUiReact.Grid.Column,
+              null,
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/img/google.png', size: 'small', circular: true }),
+              _react2.default.createElement(
+                _semanticUiReact.Header,
+                { as: 'h1', textAlign: 'center' },
+                CompanyName
+              ),
+              _react2.default.createElement(
+                _semanticUiReact.Header,
+                { as: 'h3', textAlign: 'left' },
+                'Description: ',
+                Description
+              ),
+              _react2.default.createElement(
+                _semanticUiReact.Button,
+                { onClick: this.handleEdit },
+                'Edit'
+              )
+            )
           )
-        )
-      );
+        );
+      } else {
+        return _react2.default.createElement(
+          _semanticUiReact.Segment,
+          { style: { padding: '8em 0em' }, vertical: true, color: 'teal' },
+          _react2.default.createElement(
+            _semanticUiReact.Grid,
+            { centered: true, columns: 2 },
+            _react2.default.createElement(
+              _semanticUiReact.Grid.Column,
+              null,
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/img/google.png', size: 'small', circular: true }),
+              _react2.default.createElement(
+                _semanticUiReact.Form,
+                { onSubmit: this.handleSave },
+                _react2.default.createElement(
+                  _semanticUiReact.Segment,
+                  { stacked: true },
+                  _react2.default.createElement(_semanticUiReact.Form.Input, {
+                    name: 'CompanyName',
+                    fluid: true,
+                    value: CompanyName,
+                    onChange: this.handleChange,
+                    label: 'Company Name'
+                  }),
+                  _react2.default.createElement(_semanticUiReact.Form.Input, {
+                    name: 'Description',
+                    fluid: true,
+                    value: Description,
+                    onChange: this.handleChange,
+                    label: 'Description'
+                  }),
+                  _react2.default.createElement(
+                    _semanticUiReact.Form.Button,
+                    { color: 'teal', fluid: true },
+                    'Save'
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
     }
   }]);
 
@@ -86533,7 +86637,7 @@ var CompanyInfo = function (_Component) {
 
 exports.default = CompanyInfo;
 
-},{"react":597,"semantic-ui-react":724}],859:[function(require,module,exports){
+},{"../helpers/api":862,"../helpers/session":864,"react":597,"semantic-ui-react":724}],859:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -86596,23 +86700,34 @@ var Recruiter = function (_Component) {
     value: function showRemove(e, _ref2) {
       var userID = _ref2.userID;
 
-      console.log(userID);
-      this.setState({ openRemove: true, recruiterToRemove: userID });
+      this.setState({
+        openRemove: true,
+        recruiterToRemove: userID
+      });
     }
   }, {
     key: 'showAdd',
     value: function showAdd() {
-      this.setState({ openAdd: true, recruiterToAdd: '' });
+      this.setState({
+        openAdd: true,
+        recruiterToAdd: ''
+      });
     }
   }, {
     key: 'hideRemove',
     value: function hideRemove() {
-      this.setState({ openRemove: false, recruiterToRemove: '' });
+      this.setState({
+        openRemove: false,
+        recruiterToRemove: ''
+      });
     }
   }, {
     key: 'hideAdd',
     value: function hideAdd() {
-      this.setState({ openAdd: false, recruiterToAdd: '' });
+      this.setState({
+        openAdd: false,
+        recruiterToAdd: ''
+      });
     }
   }, {
     key: 'remove',
@@ -86639,10 +86754,10 @@ var Recruiter = function (_Component) {
     value: function makeTiles() {
       var _this2 = this;
 
-      return this.props.companyRecruiters.map(function (item, index) {
+      return this.props.companyRecruiters.map(function (item, key) {
         return _react2.default.createElement(
           _semanticUiReact.Card,
-          { fluid: true, key: item.userID },
+          { fluid: true, key: key },
           _react2.default.createElement(
             _semanticUiReact.Card.Content,
             null,
@@ -86664,7 +86779,7 @@ var Recruiter = function (_Component) {
             { extra: true },
             _react2.default.createElement(
               _semanticUiReact.Button,
-              { basic: true, color: 'red', userID: item.userID, onClick: _this2.showRemove },
+              { basic: true, color: 'red', userid: item.userId, onClick: _this2.showRemove },
               'Remove Recruiter'
             )
           )
@@ -86676,7 +86791,7 @@ var Recruiter = function (_Component) {
     value: function render() {
       return _react2.default.createElement(
         _semanticUiReact.Grid.Column,
-        { centered: true },
+        null,
         _react2.default.createElement(
           _semanticUiReact.Grid.Row,
           null,
@@ -87039,11 +87154,18 @@ function getRecruiters(id, cb) {
   });
 }
 
+function updateCompanyDetails(company, cb) {
+  _index2.default.post('/api/updateCompanyDetails/', company, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(function () {
+    cb(false);
+  });
+}
+
 module.exports = {
   getCompanyList: getCompanyList,
   getUserDetails: getUserDetails,
   getCompanyDetails: getCompanyDetails,
-  getRecruiters: getRecruiters
+  getRecruiters: getRecruiters,
+  updateCompanyDetails: updateCompanyDetails
 };
 
 },{"./utils":865,"axios/index":1}],863:[function(require,module,exports){
@@ -87260,8 +87382,12 @@ var AdminDashboard = function (_Component) {
       return _react2.default.createElement(
         _semanticUiReact.Grid,
         { centered: true, columns: 2, padded: true },
-        _react2.default.createElement(_Statistics2.default, null),
-        _react2.default.createElement(_Companies2.default, null)
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          { style: { padding: '8em 0em' }, vertical: true },
+          _react2.default.createElement(_Statistics2.default, null),
+          _react2.default.createElement(_Companies2.default, null)
+        )
       );
     }
   }]);
@@ -87370,11 +87496,7 @@ var Company = function (_Component) {
         );
       } else if (this.props.user.isAdmin) {
         // IS ADMIN
-        return _react2.default.createElement(
-          _semanticUiReact.Grid,
-          { centered: true, columns: 2, padded: true },
-          _react2.default.createElement(_Recruiters2.default, { companyRecruiters: this.state.companyRecruiters })
-        );
+        return _react2.default.createElement(_Recruiters2.default, { companyRecruiters: this.state.companyRecruiters });
       } else if (this.props.user.isStudent) {
         return _react2.default.createElement(
           'h1',
@@ -87397,7 +87519,7 @@ var Company = function (_Component) {
         _react2.default.createElement(_CompanyInfo2.default, { companyDetails: this.state.companyDetails }),
         _react2.default.createElement(
           _semanticUiReact.Grid,
-          { centered: true, columns: 2, padded: true },
+          { centered: true, columns: 2 },
           this.getCompanyComponent()
         )
       );

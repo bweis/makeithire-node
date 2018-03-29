@@ -18,9 +18,14 @@ function getRecruiters(id, cb) {
   axios.get(`/api/getRecruiters/${id}`, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
+function updateCompanyDetails(company, cb) {
+  axios.post('/api/updateCompanyDetails/', company, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+}
+
 module.exports = {
   getCompanyList,
   getUserDetails,
   getCompanyDetails,
   getRecruiters,
+  updateCompanyDetails,
 };

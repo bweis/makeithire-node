@@ -22,24 +22,35 @@ class Recruiter extends Component {
   }
 
   handleClick(e, { name, value }) {
-    this.setState({ [name]: value });
+    this.setState({ [ name ]: value });
   }
 
   showRemove(e, { userID }) {
-    console.log(userID);
-    this.setState({ openRemove: true, recruiterToRemove: userID });
+    this.setState({
+      openRemove: true,
+      recruiterToRemove: userID
+    });
   }
 
   showAdd() {
-    this.setState({ openAdd: true, recruiterToAdd: '' });
+    this.setState({
+      openAdd: true,
+      recruiterToAdd: ''
+    });
   }
 
   hideRemove() {
-    this.setState({ openRemove: false, recruiterToRemove: '' });
+    this.setState({
+      openRemove: false,
+      recruiterToRemove: ''
+    });
   }
 
   hideAdd() {
-    this.setState({ openAdd: false, recruiterToAdd: '' });
+    this.setState({
+      openAdd: false,
+      recruiterToAdd: ''
+    });
   }
 
   remove() {
@@ -53,33 +64,27 @@ class Recruiter extends Component {
   }
 
   handleChange(e, { name, value }) {
-    this.setState({ [name]: value });
+    this.setState({ [ name ]: value });
   }
 
   makeTiles() {
-    return this.props.companyRecruiters.map((item, index) => (
-      <Card fluid key={item.userID}>
+    return this.props.companyRecruiters.map((item, key) => (
+      <Card fluid key={key}>
         <Card.Content>
-          <Card.Header>
-            {item.FirstName} {item.LastName}
-          </Card.Header>
-          <Card.Meta>
-                        Recruiter
-          </Card.Meta>
+          <Card.Header>{item.FirstName} {item.LastName}</Card.Header>
+          <Card.Meta>Recruiter</Card.Meta>
         </Card.Content>
-        <Card.Content extra>
-          <Button basic color='red' userID={item.userID} onClick={this.showRemove}>Remove Recruiter</Button>
-        </Card.Content>
+        <Card.Content extra><Button basic color='red' userid={item.userId} onClick={this.showRemove}>Remove Recruiter</Button></Card.Content>
       </Card>
     ));
   }
 
   render() {
     return (
-      <Grid.Column centered>
+      <Grid.Column>
         <Grid.Row>
           <Header size='large'>
-                    Recruiters <Button circular icon='add user' size='small' floated='right' onClick={this.showAdd} />
+            Recruiters <Button circular icon='add user' size='small' floated='right' onClick={this.showAdd}/>
           </Header>
         </Grid.Row>
         <Card.Group>
@@ -87,35 +92,34 @@ class Recruiter extends Component {
         </Card.Group>
         <Modal size='tiny' open={this.state.openRemove} onClose={this.hideRemove}>
           <Modal.Header>
-                        Delete Your Account
+            Delete Your Account
           </Modal.Header>
           <Modal.Content>
             <p>Are you sure you want to delete {this.state.recruiterToRemove}?</p>
           </Modal.Content>
           <Modal.Actions>
             <Button negative onClick={this.hideRemove}>
-                            No
+              No
             </Button>
-            <Button positive icon='checkmark' labelPosition='right' content='Yes' onClick={this.remove} />
+            <Button positive icon='checkmark' labelPosition='right' content='Yes' onClick={this.remove}/>
           </Modal.Actions>
         </Modal>
         <Modal size='tiny' open={this.state.openAdd} onClose={this.hideAdd}>
           <Modal.Header>
-                        Add Recruiter
+            Add Recruiter
           </Modal.Header>
           <Modal.Content>
             <p>Enter the email address of the recruiter you wish to add</p>
-            <Input fluid name='recruiterToAdd' placeholder='Recruiter email' onChange={this.handleChange} />
+            <Input fluid name='recruiterToAdd' placeholder='Recruiter email' onChange={this.handleChange}/>
           </Modal.Content>
           <Modal.Actions>
             <Button negative onClick={this.hideAdd}>
-                            No
+              No
             </Button>
-            <Button positive icon='checkmark' labelPosition='right' content='Yes' onClick={this.add} />
+            <Button positive icon='checkmark' labelPosition='right' content='Yes' onClick={this.add}/>
           </Modal.Actions>
         </Modal>
       </Grid.Column>
-
     );
   }
 }
