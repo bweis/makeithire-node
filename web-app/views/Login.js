@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
 
+const { getAuthToken } = require('../helpers/utils');
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    if (document.cookie.length !== 0) {
+    if (getAuthToken()) {
       this.props.history.push('/home');
     }
   }

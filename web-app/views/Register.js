@@ -1,10 +1,11 @@
-/* eslint-env browser */
 import React, { Component } from 'react';
 import axios from 'axios/index';
 
 import { Form, Grid, Header, Message, Segment, Tab, Divider } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
 import { getCompanyList } from '../helpers/api';
+
+const { getAuthToken } = require('../helpers/utils');
 
 class Register extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class Register extends Component {
   }
 
   componentWillMount() {
-    if (document.cookie.length !== 0) { // TODO FIX THIS, SCROLL COOKIE SPOOFS LOGIN
+    if (getAuthToken()) {
       this.props.history.push('/home');
     }
     getCompanyList((res) => {
