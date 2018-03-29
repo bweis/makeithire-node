@@ -36,8 +36,7 @@ class App extends Component {
               <Route path='/login' name='Login' component={Login} />
               <Route path='/register' name='Register' component={Register} />
               <AuthenticatedRoute path='/home' name='Home' component={Home} />
-              <AuthenticatedRoute path='/profile' name='Profile' component={Profile} />
-              <AuthenticatedRoute path='/newprofile' name='NewProfile' component={NewProfile} />
+              <AuthenticatedRoute path='/profile' name='Profile' component={NewProfile} />
               <AuthenticatedRoute path='/company/:companyId' name='Company' component={Company} />
               <AuthenticatedRoute path='/company/:companyId/newJob' name='NewJob' component={NewJob} />
               <AuthenticatedRoute path='/company/:companyId/job/:jobId' name='JobInfo' component={JobInfo} />

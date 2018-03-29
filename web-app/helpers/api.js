@@ -42,6 +42,10 @@ function getDegrees(cb) {
   axios.get('/api/getDegrees').then(cb).catch(() => { cb(false); });
 }
 
+function addJobPosting(cb, jobDetails) {
+  axios.post('/api/addJobPosting', jobDetails, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
 module.exports = {
   getCompanyList,
   getUserDetails,
@@ -53,4 +57,5 @@ module.exports = {
   getUniversityList,
   getMajors,
   getDegrees,
+  addJobPosting,
 };

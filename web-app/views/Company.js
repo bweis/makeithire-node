@@ -15,6 +15,7 @@ class Company extends Component {
     this.state = {
       companyDetails: {},
       companyRecruiters: [],
+      headRecruiter: {}
     };
   }
 
@@ -31,8 +32,19 @@ class Company extends Component {
 
     getRecruiters(this.companyId, (res, err) => {
       if (res) {
+        var temp = res.data.response;
+        var recs = [];
+        var hr = {};
+        for(var i = 0; i < temp.length; i++) {
+          if(temp[i].idUser == this.state.companyDetails.idHeadRecruiter) {
+            hr = temp[i];
+          } else {
+            recs.push(temp[i]);
+          }
+        }
         this.setState({
-          companyRecruiters: res.data.response,
+          companyRecruiters: recs,
+          headRecruiter: hr
         });
       } else {
         console.log(err);
@@ -47,7 +59,7 @@ class Company extends Component {
       return (<h1>Head Recruiter Company</h1>);
     } else if (this.props.user.isAdmin) { // IS ADMIN
       return (
-        <Recruiters companyRecruiters={this.state.companyRecruiters} />
+        <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} />
       );
     } else if (this.props.user.isStudent) {
       return (<h1>Student Company</h1>);
