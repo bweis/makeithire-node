@@ -2,7 +2,7 @@
 const session = require('./session');
 const registration = require('./registration');
 const student = require('./student');
-const recruiter = require('./recruiter')
+const recruiter = require('./recruiter');
 const user = require('./user');
 const data = require('./data');
 const job = require('./job');
@@ -16,7 +16,7 @@ const apiRouter = require('express').Router();
 // Routes **To add public route, you must add it to the list in session.js**
 
 // Session Routes
-apiRouter.get('/ping', session.pingSession);
+apiRouter.get('/getSession', session.getSession);
 apiRouter.post('/login', session.login);
 
 // Registration Routes

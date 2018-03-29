@@ -1,25 +1,43 @@
 import axios from 'axios/index';
-import { getCookie } from './utils';
+import { getAuthToken } from './utils';
 
 function checkSession(cb) {
-  axios.get('/api/ping', {
-    headers: {
-      Authorization: `Bearer ${getCookie('token')}`,
-    },
-  })
-    .then(() => {
-      cb(true);
+  if (!getAuthToken()) {
+    cb(false);
+  } else {
+    axios.get('/api/getSession', {
+      headers: {
+        Authorization: getAuthToken(),
+      },
     })
-    .catch(() => {
+      .then((res) => {
+        cb(res.data.user);
+      })
+      .catch(() => {
+        cb(false);
+      });
+  }
+}
+
+function login(email, password, cb) {
+  axios.post('/api/login', { EmailID: email, Password: password })
+    .then((res) => {
+      cb(res);
+      console.log(res);
+    })
+    .catch((err) => {
       cb(false);
+      console.log(err);
     });
 }
 
-function logOut() {
+function logout() {
   document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  window.location = '/login?logout=true';
 }
 
 module.exports = {
   checkSession,
-  logOut,
+  logout,
+  login,
 };
