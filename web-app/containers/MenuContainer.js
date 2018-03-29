@@ -5,13 +5,15 @@ import {
   Segment,
   Menu,
 } from 'semantic-ui-react';
+import { loginUserAction } from '../actions/user';
+import { connect } from 'react-redux';
 
-const { logOut } = require('../helpers/session');
+const { logout } = require('../helpers/session');
 
 
 const logoutMenuItem = (
   <Menu.Item position='right'>
-    <Button as='a' onClick={logOut}>Log out</Button>
+    <Button as='a' onClick={logout}>Log out</Button>
   </Menu.Item>
 );
 
@@ -22,15 +24,24 @@ const loginMenuItem = (
   </Menu.Item>
 );
 
-export default class MenuContainer extends Component {
+class MenuContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
+  createNavItem(name, href) {
+    return (
+      <Menu.Item
+        as='a'
+        name={name}
+        href={href}
+        active={window.location.pathname.indexOf(href) === 0}
+      />
+    );
+  }
   render() {
     const { children, loggedIn } = this.props;
-
+    console.log('HEY! THIS IS YOUR USER DATA:', this.props.user);
     return (
       <div>
         <Segment textAlign='center' style={{ padding: '0em 0em' }} vertical>
@@ -50,15 +61,13 @@ export default class MenuContainer extends Component {
       </div>
     );
   }
-
-  createNavItem(name, href) {
-    return (
-      <Menu.Item
-        as='a'
-        name={name}
-        href={href}
-        active={window.location.pathname.indexOf(href) === 0}
-      />
-    );
-  }
 }
+
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(MenuContainer);

@@ -1,4 +1,5 @@
 import axios from 'axios/index';
+
 const utils = require('./utils');
 
 function getCompanyList(cb) {
@@ -8,6 +9,7 @@ function getCompanyList(cb) {
 function getUserDetails(cb) {
   axios.get('/api/getUserDetails', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
+
 module.exports = {
   getCompanyList,
   getUserDetails,

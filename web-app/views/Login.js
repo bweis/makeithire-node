@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 
 import { Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
+import { login } from '../helpers/session';
+import { loginUserAction } from '../actions/user';
 
 const { getAuthToken } = require('../helpers/utils');
 
@@ -30,16 +32,15 @@ class Login extends Component {
 
   handleSubmit() {
     const { email, password } = this.state;
-    axios.post('/api/login', { EmailID: email, Password: password })
-      .then((res) => {
+    login(email, password, (res) => {
+      if (res) {
+        this.props.loginUser(res.data.user);
         document.cookie = `token=${res.data.token}`;
         this.props.history.push('/home');
-        console.log(res);
-      })
-      .catch((err) => {
+      } else {
         this.setState({ didError: true });
-        console.log(err);
-      });
+      }
+    });
   }
   render() {
     const {
@@ -114,4 +115,11 @@ class Login extends Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  loginUser: user => dispatch(loginUserAction(user)),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Login);
