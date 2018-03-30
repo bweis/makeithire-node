@@ -93,7 +93,6 @@ function getEveryJobAndDetail(req, res) {
             return res.status(400)
                 .json({ error: err });
         }
-        console.log(result)
         return res.status(200)
             .json({ message: 'Success', response: result });
     });

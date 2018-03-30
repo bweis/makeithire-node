@@ -5,25 +5,19 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 
 import {
-    Container,
     Grid,
-    Header,
-    Image,
-    List,
-    Segment,
     Button,
-    Rating,
-    Table,
 } from 'semantic-ui-react';
 
 
 import MenuContainer from '../containers/MenuContainer';
 import AdminDashboard from '../views/AdminDashboard';
 
+import {getEveryJobAndDetail} from '../helpers/api'
 
-var jobs = [];
 
 class Home extends Component {
+
     constructor(props) {
         super(props);
         this.getHomeComponent = this.getHomeComponent.bind(this);
@@ -36,14 +30,13 @@ class Home extends Component {
 
     componentDidMount() {
 
-        let day = document.cookie.substr(6);
-        const AuthStr = 'Bearer '.concat(day);
+        getEveryJobAndDetail((res) => {
+                if (res) {
+                    this.setState({jobs: res.data.response})
 
-        axios.get(`api/getEveryJobAndDetail`, {headers: {authorization: AuthStr}})
-            .then(res => {
-
-                this.setState({jobs: res.data.response})
-            })
+                }
+            }
+        );
     }
 
     getHomeComponent() {
@@ -68,11 +61,10 @@ class Home extends Component {
         const jobListItems = jobs.map(job =>
             <Grid.Row stretched>
                 <Grid.Column width={5}>
-                    <Link to={`/company/${job.idCompany}/jobInfo/${job.idJobs}`}><h1>{job.CompanyName}</h1></Link>
+                    <Link to={`/company/${job.idCompany}/job/${job.idJobs}`}><h1>{job.CompanyName}</h1></Link>
                     {job.JobName}
                 </Grid.Column>
                 <Grid.Column width={8}>
-
                     <h3> {job.Description}</h3>
                     {job.type}<br/>
                     Deadline: {job.Deadline}
@@ -92,7 +84,7 @@ class Home extends Component {
                 <div>
                 </div>
 
-                <Grid celled verticalAlign='center'>
+                <Grid celled>
                     {jobListItems}
                 </Grid>
 
@@ -101,6 +93,7 @@ class Home extends Component {
 
         );
     }
+
 }
 
 const mapStateToProps = state => ({
