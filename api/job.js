@@ -85,9 +85,24 @@ function editJobPosting(req, res) {
   });
 }
 
+function getEveryJobAndDetail(req, res) {
+    const sql = 'SELECT* FROM Jobs INNER JOIN Company ON Jobs.idCompany = Company.idCompany';
+
+    db.query(sql, (err, result) => {
+        if (err) {
+            return res.status(400)
+                .json({ error: err });
+        }
+        return res.status(200)
+            .json({ message: 'Success', response: result });
+    });
+}
+
 module.exports = {
   getAllJobs,
   getJobDetails,
   addJobPosting,
   editJobPosting,
+    getEveryJobAndDetail,
+
 };
