@@ -3,7 +3,7 @@ import {Form} from 'semantic-ui-react';
 
 import MenuContainer from '../containers/MenuContainer';
 
-import {getCompanyDetails, getJobDetails} from '../helpers/api'
+import {getCompanyDetails, getJobDetails, getApplicants, getUserDetails} from '../helpers/api'
 
 class JobInfo extends Component {
 
@@ -11,15 +11,24 @@ class JobInfo extends Component {
         super(props);
         this.state = {};
         console.log(this.props.match.params.jobId);
-
-
+        this.getApps = this.getApps.bind(this);
         this.state = {
-            jobDescr: {},
+            isRecruiter: false,
+            jobDescr: {
+                JobName: '',
+                DateAdded: '',
+                Deadline: '',
+                Description: '',
+                Tags: ''
+            },
             companyName: "",
         };
+        if (this.state.isRecruiter) {
+            console.log('is recruiter');
+        }
     }
 
-    componentDidMount() {
+    componentWillMount() {
 
 
         getCompanyDetails(this.props.match.params.companyId, (res) => {
@@ -39,7 +48,19 @@ class JobInfo extends Component {
 
             }
         })
+        
+        getUserDetails((res) => {
+                if (res) {
+                    if (res.data.response.idCompany != 0) {
+                        this.state.isRecruiter = true;
+                    }
+                }
+            });
 
+
+    }
+
+    getApps() {
 
     }
 
@@ -65,6 +86,7 @@ class JobInfo extends Component {
                                    value={this.state.jobDescr.Description} name='description' readOnly/>
                     <Form.Input label='Tags' placeholder='Tags' name='tags' value={this.state.jobDescr.Tags} readOnly/>
                 </Form>
+                {this.getApps()}
             </MenuContainer>
         );
     }

@@ -33,7 +33,6 @@ class Home extends Component {
         getEveryJobAndDetail((res) => {
                 if (res) {
                     this.setState({jobs: res.data.response})
-
                 }
             }
         );
@@ -45,50 +44,43 @@ class Home extends Component {
             return (
                 <Loader size='massive' style={{marginTop: '4em'}} active inline='centered'>Loading Content</Loader>);
         } else if (this.props.user.isHeadRecruiter) {
-            return (<h1>Head Recruiter Home Page</h1>);
+            return (<Link to={'/company/' + this.props.user.idCompany}>My Company Page</Link>);
         } else if (this.props.user.isAdmin) {
             return (<AdminDashboard/>);
         } else if (this.props.user.isStudent) {
-            return (<h1>Student Home Page</h1>);
+          const  { jobs } = this.state;
+          const jobListItems = jobs.map(job =>
+              <Grid.Row stretched>
+                <Grid.Column width={5}>
+                  <Link to={`/company/${job.idCompany}`}><h1>{job.CompanyName}</h1></Link>
+                  {job.JobName}
+                </Grid.Column>
+                <Grid.Column width={8}>
+                  <h3> {job.Description}</h3>
+                  {job.type}<br/>
+                  Deadline: {job.Deadline}
+                </Grid.Column>
+                <Grid.Column width={3}>
+                  <Link to={`/company/${job.idCompany}/job/${job.idJobs}`}>
+                    <Button primary>Apply</Button>
+                  </Link>
+                </Grid.Column>
+              </Grid.Row>
+          );
+            return (
+                <Grid celled>
+                  {jobListItems}
+                </Grid>);
         }
-        return (<h1>Recruiter Home Page</h1>);
+        return (<Link to={'/company/' + this.props.user.idCompany}>My Company Page</Link>);
     }
 
     render() {
-
-        const {jobs} = this.state;
-
-        const jobListItems = jobs.map(job =>
-            <Grid.Row stretched>
-                <Grid.Column width={5}>
-                    <Link to={`/company/${job.idCompany}/job/${job.idJobs}`}><h1>{job.CompanyName}</h1></Link>
-                    {job.JobName}
-                </Grid.Column>
-                <Grid.Column width={8}>
-                    <h3> {job.Description}</h3>
-                    {job.type}<br/>
-                    Deadline: {job.Deadline}
-                </Grid.Column>
-                <Grid.Column width={3}>
-                    <Button primary>Apply</Button>
-                </Grid.Column>
-            </Grid.Row>
-        );
-
-
         return (
             <div>
                 <MenuContainer loggedIn>
                     {this.getHomeComponent()}
                 </MenuContainer>
-                <div>
-                </div>
-
-                <Grid celled>
-                    {jobListItems}
-                </Grid>
-
-
             </div>
 
         );

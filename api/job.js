@@ -103,6 +103,6 @@ module.exports = {
   getJobDetails,
   addJobPosting,
   editJobPosting,
-    getEveryJobAndDetail,
+  getEveryJobAndDetail,
 
 };

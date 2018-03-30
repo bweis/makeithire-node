@@ -67,6 +67,9 @@ function adminDeleteRecruiter(cb, EmailID) {
   axios.post('/api/adminDeleteRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
+function getApplicants(cb, idJob) {
+  axios.post('/api/getApplicants', idJob, {headers:{Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+}
 
 
 module.exports = {
@@ -86,4 +89,5 @@ module.exports = {
   requestRecruiter,
   adminAddRecruiter,
   adminDeleteRecruiter,
+  getApplicants
 };
