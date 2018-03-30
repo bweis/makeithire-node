@@ -2,7 +2,7 @@ const db = require('./utils/db');
 
 // GET API: Get Student Details
 function getUserDetails(req, res) {
-  const sql = 'SELECT idUser, FirstName, MiddleName, LastName, EmailID  FROM User WHERE EmailID = ?';
+  const sql = 'SELECT idUser, FirstName, MiddleName, LastName, EmailID, idCompany FROM User WHERE EmailID = ?';
   // const sql = 'SELECT * FROM User a LEFT OUTER JOIN Company b on a.idCompany = b.idCompany WHERE EmailID = ?';
   db.query(sql, req.user.EmailID, (err, result) => {
     if (err) {
