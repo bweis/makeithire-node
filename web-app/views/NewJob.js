@@ -331,6 +331,7 @@ class NewJob extends Component {
             <Form.Input type='date' fluid label='Date Added' name='DateAdded' onChange={this.handleChange}/>
             <Form.Input type='date' fluid label='Deadline' name='Deadline' onChange={this.handleChange}/>
           </Form.Group>
+
           <Form.TextArea label='Job Description' placeholder='Job description...' name='Description' onChange={this.handleChange}/>
           <Form.Input label='tags' placeholder='Tags' name='tags' onChange={this.handleChange}/>
           <Form.Input label='SupplementaryQs' placeholder='Tags' name='SupplementaryQs' onChange={this.handleChange}/>

@@ -5,43 +5,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserDetails } from '../helpers/api';
 import { getCompanyList } from '../helpers/api';
-import { getCookie } from '../helpers/utils';
+import { getCookie } from '../helpers/utils'
+import {getEveryJobAndDetail} from '../helpers/api';
 
 
 import { Grid, Header, Card, Button } from 'semantic-ui-react';
-
-const jobs = [
-  {
-    jobID: 0,
-    title: 'Software Engineering',
-    type: 'Full-Time',
-    description: 'blah blah blah description',
-  },
-  {
-    jobID: 1,
-    title: 'Software Engineering',
-    type: 'Internship',
-    description: 'blah blah blah description',
-  },
-  {
-    jobID: 2,
-    title: 'Marketing',
-    type: 'Full-Time',
-    description: 'blah blah blah description',
-  },
-  {
-    jobID: 3,
-    title: 'Sales',
-    type: 'Part-Time',
-    description: 'blah blah blah description',
-  },
-  {
-    jobID: 4,
-    title: 'Infrastructure',
-    type: 'Full-Time',
-    description: 'blah blah blah description',
-  },
-];
 
 class JobListing extends Component {
   /*
@@ -58,18 +26,23 @@ class JobListing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      readOnly: true, modal: false, isRecruiter: -1, company: {},
+      readOnly: true, modal: false, isRecruiter: -1, company: {}, jobs: []
     };
     this.makeTiles = this.makeTiles.bind(this);
   }
+
+  componentWillMount() {
+    
+  }
+
 
   _click() {
     this.setState(prevState => ({ readOnly: !prevState.readOnly }));
   }
 
   makeTiles() {
-    return jobs.map((item, index) => (
-      <Card fluid key={item.jobID} href={`/company/${this.props.match.params.companyId}/job/${item.jobID}`} header={item.title} meta={item.type} description={item.description} />
+    return this.state.jobs.map((item, index) => (
+        <Card fluid key={item.idJobs} href={`/company/${this.props.match.params.companyId}/job/${item.idJobs}`} header={item.JobName} meta={'Deadline: ' + item.Deadline} description={item.Description} />
     ));
   }
 
