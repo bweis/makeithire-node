@@ -33,7 +33,7 @@ apiRouter.get('/getStudentDetails', student.getStudentDetails);
 apiRouter.post('/updateStudentDetails', student.updateStudentDetails);
 
 // Recruiter Routes
-    apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
+apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
 apiRouter.get('/getRecruiters/:idCompany', recruiter.getRecruiters);
 
 // Company Routes
@@ -51,6 +51,7 @@ apiRouter.post('/editJobPosting', job.editJobPosting);
 
 // Application Routes
 apiRouter.post('/getApplicants', application.getApplicants);
+apiRouter.post('/filterApplicants', application.filterApplicants);
 
 // Data Routes
 apiRouter.get('/getMajors', data.getMajors);
