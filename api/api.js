@@ -42,6 +42,7 @@ apiRouter.post('/updateCompanyDetails', company.updateCompanyDetails);
 
 // Job Routes
 apiRouter.get('/getAllJobs', job.getAllJobs);
+apiRouter.post('/getCompanyJobs', job.getCompanyJobs);
 apiRouter.post('/getJobDetails', job.getJobDetails);
 apiRouter.post('/addJobPosting', job.addJobPosting);
 apiRouter.post('/editJobPosting', job.editJobPosting);
