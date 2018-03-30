@@ -5,7 +5,6 @@ const db = require('./utils/db');
 
 
 function signUpStudent(req, res) {
-  console.log(req.body);
   const fname = req.body.FirstName; const mname = req.body.MiddleName; const lname = req.body.LastName;
   const email = req.body.EmailID;
   const pass = req.body.Password;
@@ -42,7 +41,6 @@ function signUpRecruiter(req, res) {
   const fname = req.body.FirstName;
   const mname = req.body.MiddleName;
   const lname = req.body.LastName;
-  const bdate = '00/00/0000';
   const email = req.body.EmailID;
   const pass = req.body.Password;
   const idComp = req.body.idCompany;
@@ -59,7 +57,7 @@ function signUpRecruiter(req, res) {
     }
 
     let post = {
-      FirstName: fname, MiddleName: mname, LastName: lname, BirthDate: bdate, EmailID: email, Password: hash, idCompany: idComp,
+      FirstName: fname, MiddleName: mname, LastName: lname, EmailID: email, Password: hash, idCompany: idComp,
     };
     const sql1 = 'INSERT INTO User SET ?';
     if (idComp == '-1') {

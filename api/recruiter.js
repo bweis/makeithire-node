@@ -6,73 +6,71 @@ const generator = require('generate-password');
 
 // As a HR, invite recruiter to signup
 function requestRecruiter(req, res) {
-    if (!validateEmail(req.body.EmailID)) {
-        res.status(400)
-            .json({ error: 'Bad Email Format' });
+  if (!validateEmail(req.body.EmailID)) {
+    res.status(400)
+      .json({ error: 'Bad Email Format' });
+  }
+  const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
+  db.query(sql, req.user.EmailID, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
     }
-    const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
-    db.query(sql, req.body.EmailID, (err, result) => {
-        if (err) {
-            return res.status(400)
-                .json({ error: err });
-        }
-        const fullname = `${result[0].FirstName} ${result[0].MiddleName} ${result[0].LastName}`;
-        const transporter = nodemailer.createTransport({
-            service: 'outlook',
-            host: 'mail.outlook.com',
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: 'makeithire@outlook.com',
-                pass: process.env.EMAIL_PASS,
-            },
-            tls: {
-                rejectUnauthorized: false,
-            },
-        });
-
-        const signature = ''; // TODO add head recruiter email here
-
-        const mailOptions = {
-            from: 'makeithire@outlook.com',
-            to: req.body.EmailID,
-            subject: 'Sign Up as a Recruiter in MakeItHire',
-            text: 'Your Head Recruiter has requested you to sign up as a recruiter in MakeItHire. ' +
-                'Please use the following link: \n www.makeithire.com/signup \n\n - MakeItHire Admin',
-            html: signature,
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return res.status(400)
-                    .json({ error });
-            }
-            return res.status(200)
-                .json({
-                    message: `Email Sent to ${req.body.EmailID}`,
-                    response: info.response,
-                });
-        });
-    
-    
+    const fullname = `${result[0].FirstName} ${result[0].MiddleName} ${result[0].LastName}`;
+    const transporter = nodemailer.createTransport({
+      service: 'outlook',
+      host: 'mail.outlook.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'makeithire@outlook.com',
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
+
+    const signature = ''; // TODO add head recruiter email here
+
+    const mailOptions = {
+      from: 'makeithire@outlook.com',
+      to: req.body.EmailID,
+      subject: 'Sign Up as a Recruiter in MakeItHire',
+      text: 'Your Head Recruiter has requested you to sign up as a recruiter in MakeItHire. ' +
+                'Please use the following link: \n www.makeithire.com/signup \n\n - MakeItHire Admin',
+      html: signature,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return res.status(400)
+          .json({ error });
+      }
+      return res.status(200)
+        .json({
+          message: `Email Sent to ${req.body.EmailID}`,
+          response: info.response,
+        });
+    });
+  });
 }
 
 function getRecruiters(req, res) {
-    const sql = 'SELECT idUser, FirstName, LastName FROM User WHERE idCompany = ?';
-    db.query(sql, req.body.idCompany, (err, result) => {
-        if (err) {
-            return res.status(400)
-                .json({ error: err });
-        }
-        return res.status(400)
-        .json({ message: "Success", response: result });
-    });
+  const sql = 'SELECT idUser, FirstName, LastName FROM User WHERE idCompany = ?';
+  db.query(sql, req.params.idCompany, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    return res.status(200)
+      .json({ message: 'Success', response: result });
+  });
 }
 
 module.exports = {
-    requestRecruiter,
-    getRecruiters,
+  requestRecruiter,
+  getRecruiters,
 };
 
 // DEPRECATED
