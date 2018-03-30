@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Loader} from 'semantic-ui-react';
-import axios from 'axios';
-import {Link} from 'react-router-dom';
+
 
 import {
     Grid,
     Button,
 } from 'semantic-ui-react';
 
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Loader } from 'semantic-ui-react';
 
 import MenuContainer from '../containers/MenuContainer';
 import AdminDashboard from '../views/AdminDashboard';
