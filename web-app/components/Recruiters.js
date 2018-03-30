@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react';
 
+import { requestRecruiter, adminAddRecruiter, adminDeleteRecruiter } from '../helpers/api';
+
 class Recruiter extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +24,17 @@ class Recruiter extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  getHR() {
+    if (this.props.user.isAdmin) {
+    return (<Card.Group>
+      <Card fluid key={this.props.headRecruiter.idUser}>
+        <Card.Content>
+          <Card.Header>{this.props.headRecruiter.FirstName} {this.props.headRecruiter.LastName}</Card.Header>
+          <Card.Meta>Head Recruiter</Card.Meta>
+        </Card.Content>
+      </Card>
+    </Card.Group>)}
+  }
   handleClick(e, { name, value }) {
     this.setState({ [ name ]: value });
   }
@@ -55,12 +68,38 @@ class Recruiter extends Component {
   }
 
   remove() {
-    console.log(`deleting ${this.state.recruiterToRemove}`);
-    this.hideRemove();
+    adminDeleteRecruiter((res) => {
+      if (!res) {
+        console.log('could not delete recruiter');
+      } else {
+        console.log('deleted ' + this.state.recruiterToRemove)
+      }
+    })
   }
 
   add() {
-    console.log(`adding ${this.state.recruiterToAdd}`);
+    var emailID = {
+      EmailID: this.state.recruiterToAdd
+    };
+    if (this.props.user.isAdmin) {
+      adminAddRecruiter((res) => {
+        if (!res) {
+          console.log('Could not add recruiter');
+        } else {
+          console.log('added! ' + this.state.recruiterToAdd)
+          this.forceUpdate();
+        }
+      }, emailID);
+    } else {
+      requestRecruiter((res) => {
+        if (!res) {
+          console.log('Could not add recruiter');
+        } else {
+          console.log('added! ' + this.state.recruiterToAdd)
+          this.forceUpdate();
+        }
+      }, emailID);
+    }
     this.hideAdd();
   }
 
@@ -75,7 +114,7 @@ class Recruiter extends Component {
           <Card.Header>{item.FirstName} {item.LastName}</Card.Header>
           <Card.Meta>Recruiter</Card.Meta>
         </Card.Content>
-        <Card.Content extra><Button basic color='red' userid={item.userId} onClick={this.showRemove}>Remove Recruiter</Button></Card.Content>
+        <Card.Content extra><Button basic color='red' idUser={item.idUser} onClick={this.showRemove}>Remove Recruiter</Button></Card.Content>
       </Card>
     ));
   }
@@ -83,19 +122,13 @@ class Recruiter extends Component {
   render() {
     return (
       <Grid.Column>
+        {this.props.user.isAdmin &&
         <Grid.Row>
           <Header size='large'>
             Head Recruiter
           </Header>
-        </Grid.Row>
-        <Card.Group>
-          <Card fluid key={this.props.headRecruiter.idUser}>
-            <Card.Content>
-              <Card.Header>{this.props.headRecruiter.FirstName} {this.props.headRecruiter.LastName}</Card.Header>
-              <Card.Meta>Head Recruiter</Card.Meta>
-            </Card.Content>
-          </Card>
-        </Card.Group>
+        </Grid.Row>}
+        {this.getHR()}
         <Grid.Row>
           <Header size='Medium'>
             Recruiters <Button circular icon='add user' size='small' floated='right' onClick={this.showAdd}/>

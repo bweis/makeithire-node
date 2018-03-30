@@ -13,9 +13,9 @@ function adminAddRecruiter(req, res) {
       .json({ error: 'Bad Email Format' });
   }
 
-  const fname = req.body.FirstName;
-  const mname = req.body.MiddleName;
-  const lname = req.body.LastName;
+  const fname = 'fname';
+  const mname = 'mname';
+  const lname = 'lname';
   const email = req.body.EmailID;
   const pass = generator.generate({
     length: 6,

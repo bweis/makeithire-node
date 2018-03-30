@@ -69,7 +69,7 @@ class JobListing extends Component {
 
   makeTiles() {
     return jobs.map((item, index) => (
-      <Card fluid key={item.jobID} href={`/company:${this.props.match.params.companyId}/job:${item.jobID}`} header={item.title} meta={item.type} description={item.description} />
+      <Card fluid key={item.jobID} href={`/company/${this.props.match.params.companyId}/job/${item.jobID}`} header={item.title} meta={item.type} description={item.description} />
     ));
   }
 
@@ -78,7 +78,7 @@ class JobListing extends Component {
 
       <Grid.Column centered>
         <Header size='large'>
-                        Job Listings <Link to={`/company:${this.props.match.params.companyId}/newJob`}><Button circular icon='add circle' size='medium' floated='right' /></Link>
+                        Job Listings <Link to={`/company/${this.props.match.params.companyId}/newJob`}><Button circular icon='add circle' size='medium' floated='right' /></Link>
         </Header>
 
         <Card.Group>
