@@ -89,18 +89,12 @@ function adminAddRecruiter(req, res) {
 
 // Finds and delete recruiter
 function adminDeleteRecruiter(req, res) {
-  // Validate Email Format
-  if (!validateEmail(req.body.EmailID)) {
-    res.status(400)
-      .json({ error: 'Bad Email Format' });
-  }
-  const sql = `DELETE FROM User WHERE EmailID = '${req.body.EmailID}'`;
+  const sql = `DELETE FROM User WHERE idUser = '${req.body.idUser}'`;
   db.query(sql, (err, res) => {
     if (err) {
       return res.status(400)
         .json({ error: err });
     }
-
     return res.status(200)
       .json({ message: 'Success' });
   });
