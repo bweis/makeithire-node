@@ -96,7 +96,7 @@ function adminDeleteRecruiter(req, res) {
         .json({ error: err });
     }
     return res.status(200)
-      .json({ message: 'Success' });
+      .json({ message: 'Success', response: res });
   });
 }
 

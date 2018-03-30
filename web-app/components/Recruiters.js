@@ -68,13 +68,18 @@ class Recruiter extends Component {
   }
 
   remove() {
+    var idUser = {
+      idUser: this.state.recruiterToRemove
+    };
     adminDeleteRecruiter((res) => {
       if (!res) {
         console.log('could not delete recruiter');
       } else {
-        console.log('deleted ' + this.state.recruiterToRemove)
+        console.log('deleted ' + idUser);
+        this.setState({recruiterToRemove: ''});
+        this.forceUpdate();
       }
-    })
+    }, idUser)
   }
 
   add() {
@@ -114,7 +119,7 @@ class Recruiter extends Component {
           <Card.Header>{item.FirstName} {item.LastName}</Card.Header>
           <Card.Meta>Recruiter</Card.Meta>
         </Card.Content>
-        <Card.Content extra><Button basic color='red' idUser={item.idUser} onClick={this.showRemove}>Remove Recruiter</Button></Card.Content>
+        <Card.Content extra><Button basic color='red' userID={item.idUser} onClick={this.showRemove}>Remove Recruiter</Button></Card.Content>
       </Card>
     ));
   }
