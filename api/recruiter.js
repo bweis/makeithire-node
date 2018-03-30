@@ -11,7 +11,7 @@ function requestRecruiter(req, res) {
       .json({ error: 'Bad Email Format' });
   }
   const sql = 'SELECT FirstName, MiddleName, LastName FROM User WHERE EmailID = ?';
-  db.query(sql, req.body.EmailID, (err, result) => {
+  db.query(sql, req.user.EmailID, (err, result) => {
     if (err) {
       return res.status(400)
         .json({ error: err });
