@@ -106128,7 +106128,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Home);
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -106154,76 +106154,80 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var JobInfo = function (_Component) {
-  _inherits(JobInfo, _Component);
+    _inherits(JobInfo, _Component);
 
-  function JobInfo(props) {
-    _classCallCheck(this, JobInfo);
+    function JobInfo(props) {
+        _classCallCheck(this, JobInfo);
 
-    var _this = _possibleConstructorReturn(this, (JobInfo.__proto__ || Object.getPrototypeOf(JobInfo)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (JobInfo.__proto__ || Object.getPrototypeOf(JobInfo)).call(this, props));
 
-    _this.state = {};
-    console.log(_this.props.match.params.jobId);
+        _this.state = {};
+        console.log(_this.props.match.params.jobId);
 
-    _this.state = {
-      jobDescr: {},
-      companyName: ""
-    };
-    return _this;
-  }
-
-  _createClass(JobInfo, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      (0, _api.getCompanyDetails)(this.props.match.params.companyId, function (res) {
-        if (res) {
-          console.log(res.data.response.CompanyName);
-          _this2.setState({ companyName: res.data.response.CompanyName });
-        }
-      });
-
-      (0, _api.getJobDetails)(this.props.match.params.jobId, function (res) {
-        if (res) {
-          console.log(res.data.response[0]);
-          _this2.setState({ jobDescr: res.data.response[0] });
-        }
-      });
+        _this.state = {
+            jobDescr: {},
+            companyName: ""
+        };
+        return _this;
     }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        _MenuContainer2.default,
-        { loggedIn: true },
-        _react2.default.createElement(
-          'h1',
-          null,
-          'Job  Detailed  Information'
-        ),
-        _react2.default.createElement(
-          _semanticUiReact.Form,
-          null,
-          _react2.default.createElement(
-            _semanticUiReact.Form.Group,
-            { widths: 'equal' },
-            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Company', value: this.state.companyName, readOnly: true }),
-            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Job Title', name: 'title', placeholder: 'Job Title', value: this.state.jobDescr.JobName, readOnly: true })
-          ),
-          _react2.default.createElement(
-            _semanticUiReact.Form.Group,
-            { widths: 'equal' },
-            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Job posted', name: 'postDate', value: this.state.jobDescr.DateAdded, readOnly: true }),
-            _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Submission deadline', name: 'expiration', value: this.state.jobDescr.Deadline, readOnly: true })
-          ),
-          _react2.default.createElement(_semanticUiReact.Form.TextArea, { label: 'Job Description', placeholder: 'Job description...', value: this.state.jobDescr.Description, name: 'description', readOnly: true }),
-          _react2.default.createElement(_semanticUiReact.Form.Input, { label: 'Tags', placeholder: 'Tags', name: 'tags', value: this.state.jobDescr.Tags, readOnly: true })
-        )
-      );
-    }
-  }]);
 
-  return JobInfo;
+    _createClass(JobInfo, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            (0, _api.getCompanyDetails)(this.props.match.params.companyId, function (res) {
+                if (res) {
+                    console.log(res.data.response.CompanyName);
+                    _this2.setState({ companyName: res.data.response.CompanyName });
+                }
+            });
+
+            (0, _api.getJobDetails)(this.props.match.params.jobId, function (res) {
+                if (res) {
+                    console.log(res.data.response[0]);
+                    _this2.setState({ jobDescr: res.data.response[0] });
+                }
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                _MenuContainer2.default,
+                { loggedIn: true },
+                _react2.default.createElement(
+                    'h1',
+                    null,
+                    'Job Detailed Information'
+                ),
+                _react2.default.createElement(
+                    _semanticUiReact.Form,
+                    null,
+                    _react2.default.createElement(
+                        _semanticUiReact.Form.Group,
+                        { widths: 'equal' },
+                        _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Company', value: this.state.companyName, readOnly: true }),
+                        _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Job Title', name: 'title', placeholder: 'Job Title',
+                            value: this.state.jobDescr.JobName, readOnly: true })
+                    ),
+                    _react2.default.createElement(
+                        _semanticUiReact.Form.Group,
+                        { widths: 'equal' },
+                        _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Job posted', name: 'postDate', value: this.state.jobDescr.DateAdded,
+                            readOnly: true }),
+                        _react2.default.createElement(_semanticUiReact.Form.Input, { fluid: true, label: 'Submission deadline', name: 'expiration',
+                            value: this.state.jobDescr.Deadline, readOnly: true })
+                    ),
+                    _react2.default.createElement(_semanticUiReact.Form.TextArea, { label: 'Job Description', placeholder: 'Job description...',
+                        value: this.state.jobDescr.Description, name: 'description', readOnly: true }),
+                    _react2.default.createElement(_semanticUiReact.Form.Input, { label: 'Tags', placeholder: 'Tags', name: 'tags', value: this.state.jobDescr.Tags, readOnly: true })
+                )
+            );
+        }
+    }]);
+
+    return JobInfo;
 }(_react.Component);
 
 exports.default = JobInfo;
