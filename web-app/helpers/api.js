@@ -42,6 +42,22 @@ function getDegrees(cb) {
   axios.get('/api/getDegrees').then(cb).catch(() => { cb(false); });
 }
 
+function addJobPosting(cb, jobDetails) {
+  axios.post('/api/addJobPosting', jobDetails, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function requestRecruiter(cb, EmailID) {
+  axios.post('/api/requestRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function adminAddRecruiter(cb, EmailID) {
+  axios.post('/api/adminAddRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function adminDeleteRecruiter(cb, EmailID) {
+  axios.post('/api/adminDeleteRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+}
+
 module.exports = {
   getCompanyList,
   getUserDetails,
@@ -53,4 +69,8 @@ module.exports = {
   getUniversityList,
   getMajors,
   getDegrees,
+  addJobPosting,
+  requestRecruiter,
+  adminAddRecruiter,
+  adminDeleteRecruiter,
 };

@@ -6,6 +6,7 @@ import { getCompanyDetails, getRecruiters } from '../helpers/api';
 import MenuContainer from '../containers/MenuContainer';
 import CompanyInfo from '../components/CompanyInfo';
 import Recruiters from '../components/Recruiters';
+import JobListing from '../components/JobListing';
 
 class Company extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Company extends Component {
     this.state = {
       companyDetails: {},
       companyRecruiters: [],
+      headRecruiter: {}
     };
   }
 
@@ -31,8 +33,24 @@ class Company extends Component {
 
     getRecruiters(this.companyId, (res, err) => {
       if (res) {
+        var temp = res.data.response;
+        var recs = [];
+        var hr = {};
+        for(var i = 0; i < temp.length; i++) {
+          if(temp[i].idUser == this.state.companyDetails.idHeadRecruiter) {
+            hr = temp[i];
+          } else {
+            recs.push(temp[i]);
+          }
+        }
+        if (this.props.user.isHeadRecruiter) {
+          this.setState({
+            companyRecruiters: recs
+          });
+        }
         this.setState({
-          companyRecruiters: res.data.response,
+          companyRecruiters: recs,
+          headRecruiter: hr
         });
       } else {
         console.log(err);
@@ -42,26 +60,43 @@ class Company extends Component {
   getCompanyComponent() {
     console.log(this.state.companyRecruiters);
     if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
-      return (<Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>);
+      return (
+          <Grid centered columns={2}>
+            <Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>
+          </Grid>
+      );
     } else if (this.props.user.isHeadRecruiter) {
-      return (<h1>Head Recruiter Company</h1>);
+      return (
+      <Grid centered columns={2}>
+          <JobListing {...this.props} />
+          <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
+      </Grid>
+      );
     } else if (this.props.user.isAdmin) { // IS ADMIN
       return (
-        <Recruiters companyRecruiters={this.state.companyRecruiters} />
+          <Grid centered columns={2}>
+            <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
+          </Grid>
       );
     } else if (this.props.user.isStudent) {
-      return (<h1>Student Company</h1>);
+      return (
+          <Grid centered columns={2}>
+            <JobListing {...this.props}/>
+          </Grid>
+      );
     }
-    return (<h1>Recruiter Company</h1>);
+    return (
+        <Grid centered columns={2}>
+          <JobListing {...this.props}/>
+        </Grid>
+    );
   }
 
   render() {
     return (
       <MenuContainer loggedIn>
         <CompanyInfo companyDetails={this.state.companyDetails} />
-        <Grid centered columns={2}>
-          {this.getCompanyComponent()}
-        </Grid>
+        {this.getCompanyComponent()}
       </MenuContainer>
     );
   }
