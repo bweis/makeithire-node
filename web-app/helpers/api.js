@@ -28,8 +28,7 @@ function getStudentDetails(cb) {
 }
 
 function updateStudentDetails(cb, studentDetails) {
-  console.log(studentDetails);
-  axios.post('/api/updateStudentDetails', studentDetails ,{headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+  axios.post('/api/updateStudentDetails', studentDetails, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
 }
 
 function getJobDetails(id, cb) {
@@ -41,11 +40,31 @@ function getEveryJobAndDetail(cb) {
 }
 
 function getUniversityList(cb) {
-
+  axios.get('/api/getUniversityList').then(cb).catch(() => { cb(false); });
 }
 
 function getMajors(cb) {
+  axios.get('/api/getMajors').then(cb).catch(() => { cb(false); });
+}
 
+function getDegrees(cb) {
+  axios.get('/api/getDegrees').then(cb).catch(() => { cb(false); });
+}
+
+function addJobPosting(cb, jobDetails) {
+  axios.post('/api/addJobPosting', jobDetails, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function requestRecruiter(cb, EmailID) {
+  axios.post('/api/requestRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function adminAddRecruiter(cb, EmailID) {
+  axios.post('/api/adminAddRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
+function adminDeleteRecruiter(cb, EmailID) {
+  axios.post('/api/adminDeleteRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
 
@@ -62,4 +81,9 @@ module.exports = {
   getMajors,
     getEveryJobAndDetail,
     getJobDetails,
+  getDegrees,
+  addJobPosting,
+  requestRecruiter,
+  adminAddRecruiter,
+  adminDeleteRecruiter,
 };

@@ -4,7 +4,7 @@ import { Button, Input } from 'semantic-ui-react';
 import axios from 'axios/index';
 
 import MenuContainer from '../containers/MenuContainer';
-import { getCompanyList } from '../helpers/api';
+import { getCompanyList, addJobPosting } from '../helpers/api';
 import { getCookie } from '../helpers/utils';
 
 
@@ -271,13 +271,16 @@ class NewJob extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      company: '',
-      title: '',
-      city: '',
-      state: '',
-      expiration: '',
-      description: '',
-      tags: '',
+      company: {},
+      jobInfo: {
+        idCompany: this.props.match.params.companyId,
+        JobName: '',
+        Description: '',
+        DateAdded: '',
+        Deadline: '',
+        tags: '',
+        SupplementaryQs: '',
+      }
     };
     this.postJob = this.postJob.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -300,28 +303,38 @@ class NewJob extends Component {
   }
 
   handleChange(e, { name, value }) {
-    this.setState({ [name]: value });
+    let info = this.state.jobInfo;
+    info[name] = value;
+    this.setState({ info });
   }
 
   postJob() {
-    console.log(`${this.state.title} ${this.state.type}`);
+    addJobPosting((res) => {
+      if (!res) {
+        console.log('Could not get student details');
+      } else {
+        console.log('updated!')
+      }
+    }, this.state.jobInfo);
   }
+  
   render() {
     return (
       <MenuContainer loggedIn>
         <Form>
           <Form.Group widths='equal'>
             <Form.Input fluid label='Company' value={this.state.company.CompanyName} readOnly />
-            <Form.Input fluid label='Job Title' name='title' placeholder='Job Title' onChange={this.handleChange} />
+            <Form.Input fluid label='Job Name' name='JobName' placeholder='Job Title' onChange={this.handleChange} />
             <Form.Select fluid label='Type' name='type' options={jobTypes} placeholder='Type' onChange={this.handleChange} />
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.Input fluid label='City' name='city' placeholder='City' />
-            <Form.Select fluid label='State' name='state' options={states} placeholder='State' />
-            <Form.Input type='date' fluid label='Expiration Date' name='expiration' />
+            <Form.Input type='date' fluid label='Date Added' name='DateAdded' onChange={this.handleChange}/>
+            <Form.Input type='date' fluid label='Deadline' name='Deadline' onChange={this.handleChange}/>
           </Form.Group>
-          <Form.TextArea label='Job Description' placeholder='Job description...' name='description' />
-          <Form.Input label='Tags' placeholder='Tags' name='tags' />
+
+          <Form.TextArea label='Job Description' placeholder='Job description...' name='Description' onChange={this.handleChange}/>
+          <Form.Input label='tags' placeholder='Tags' name='tags' onChange={this.handleChange}/>
+          <Form.Input label='SupplementaryQs' placeholder='Tags' name='SupplementaryQs' onChange={this.handleChange}/>
           <Form.Button onClick={this.postJob}>Post Job</Form.Button>
         </Form>
       </MenuContainer>

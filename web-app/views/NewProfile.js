@@ -3,40 +3,40 @@ import { Button, Input, Grid, TextArea, Image, Form, Header  } from 'semantic-ui
 import axios from 'axios/index';
 
 import MenuContainer from '../containers/MenuContainer';
-import { getStudentDetails, getUserDetails, updateStudentDetails } from '../helpers/api'
+import { getStudentDetails, getUserDetails, updateStudentDetails, getUniversityList, getMajors, getDegrees } from '../helpers/api'
 import { getCookie } from '../helpers/utils';
 import { uploadFileToS3Bucket } from '../helpers/s3';
 
 const gradYears = [
   {
-    text: '2018',
+    text: 2018,
     key: '2018',
-    value: '2018',
+    value: 2018,
   },
   {
-    text: '2019',
+    text: 2019,
     key: '2019',
-    value: '2019',
+    value: 2019,
   },
   {
-    text: '2020',
+    text: 2020,
     key: '2020',
-    value: '2020',
+    value: 2020,
   },
   {
-    text: '2021',
+    text: 2021,
     key: '2021',
-    value: '2021',
+    value: 2021,
   },
   {
-    text: '2022',
+    text: 2022,
     key: '2022',
-    value: '2022',
+    value: 2022,
   },
   {
-    text: '2023',
+    text: 2023,
     key: '2023',
-    value: '2023',
+    value: 2023,
   },
 ];
 
@@ -47,21 +47,9 @@ export default class NewProfile extends Component {
     this.state = {
       studentInfo: {},
       userInfo: {},
-      universities: [{
-        text: 'Purdue',
-        key: 'Purdue',
-        value: 'Purdue',
-      },
-        {
-          text: 'IU',
-          key: 'IU',
-          value: 'IU',
-        },
-        {
-          text: 'IUPUI',
-          key: 'IUPUI',
-          value: 'IUPUI',
-        },],
+      universities: [],
+      majors: [],
+      degrees: [],
       editing: false
     };
     this.uploadResume = this.uploadResume.bind(this);
@@ -80,6 +68,62 @@ export default class NewProfile extends Component {
         console.log('Could not get student details');
       } else {
         this.setState({ studentInfo: res.data.response});
+      }
+    });
+  }
+
+  componentWillMount() {
+    getMajors((res) => {
+      if (!res) {
+        console.log('Could not get majors');
+      } else {
+        var temp = res.data.response;
+        var majors = [];
+        temp.forEach(function (arrayItem) {
+          var major = {};
+          major.key = arrayItem.idMajor;
+          major.text = arrayItem.MajorName;
+          major.value = arrayItem.idMajor;
+          majors.push(major);
+        });
+        console.log(majors);
+        this.setState({majors: majors});
+      }
+    });
+    getDegrees((res) => {
+      if (!res) {
+        console.log('Could not get degrees');
+      } else {
+        var temp = res.data.response;
+        var degrees = [];
+        temp.forEach( function (arrayItem)
+        {
+          var degree = {};
+          degree.key = arrayItem.idDegree;
+          degree.text = arrayItem.Level;
+          degree.value = arrayItem.idDegree;
+          degrees.push(degree);
+        });
+        console.log(degrees);
+        this.setState({ degrees: degrees});
+      }
+    });
+    getUniversityList((res) => {
+      if (!res) {
+        console.log('Could not get universities');
+      } else {
+        var temp = res.data.response;
+        var univs = [];
+        temp.forEach( function (arrayItem)
+        {
+          var univ = {};
+          univ.key = arrayItem.idUniversity;
+          univ.text = arrayItem.UnivName;
+          univ.value = arrayItem.idUniversity;
+          univs.push(univ);
+        });
+        console.log(univs);
+        this.setState({ universities: univs});
       }
     });
   }
@@ -133,13 +177,20 @@ export default class NewProfile extends Component {
   }
 
   updateInfo() {
+    var studentInfo = this.state.studentInfo;
+    for (var property in studentInfo) {
+      console.log(studentInfo[property]);
+      if (studentInfo[property] == null) {
+        studentInfo[property] = 'blah';
+      }
+    }
     updateStudentDetails((res) => {
       if (!res) {
         console.log('Could not get student details');
       } else {
         console.log('updated!')
       }
-    }, this.state.studentInfo);
+    }, studentInfo);
   }
 
   render() {
@@ -160,8 +211,11 @@ export default class NewProfile extends Component {
             <Form.TextArea fluid name='Bio' value={this.state.studentInfo.Bio} onChange={this.handleChange}/>
             <Form.Group widths='equal'>
               <Form.Select fluid name='University' placeholder='University' value={this.state.studentInfo.University} options={this.state.universities}  onChange={this.handleChange}/>
-              <Form.Select fluid name='GraduationYear' options={gradYears} onChange={this.handleChange}/>
-              <Form.Input fluid name='Major' value={this.state.studentInfo.Major} onChange={this.handleChange}/>
+              <Form.Select fluid name='GraduationYear' placeholder='Graduation Year' value={this.state.studentInfo.GraduationYear} options={gradYears} onChange={this.handleChange}/>
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <Form.Select fluid name='Major' value={this.state.studentInfo.Major} placeholder='Major' options={this.state.majors} onChange={this.handleChange}/>
+              <Form.Select fluid name='CurrentPursuingDegree' placeholder='Current Degree' value={this.state.studentInfo.CurrentPursuingDegree} options={this.state.degrees} onChange={this.handleChange}/>
             </Form.Group>
             <Form.Group>
             <Form.Input

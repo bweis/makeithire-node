@@ -30,9 +30,10 @@ apiRouter.get('/getUserDetails', user.getUserDetails);
 apiRouter.get('/uploadResume', student.uploadResume);
 apiRouter.get('/uploadCoverLetter', student.uploadCoverLetter);
 apiRouter.get('/getStudentDetails', student.getStudentDetails);
+apiRouter.post('/updateStudentDetails', student.updateStudentDetails);
 
 // Recruiter Routes
-apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
+    apiRouter.post('/requestRecruiter', recruiter.requestRecruiter);
 apiRouter.get('/getRecruiters/:idCompany', recruiter.getRecruiters);
 
 // Company Routes
