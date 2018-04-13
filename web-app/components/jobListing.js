@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserDetails } from '../helpers/api';
+import { getUserDetails, getCompanyJobs } from '../helpers/api';
 import { getCompanyList } from '../helpers/api';
 import { getCookie } from '../helpers/utils'
 import {getEveryJobAndDetail} from '../helpers/api';
@@ -31,8 +31,19 @@ class JobListing extends Component {
     this.makeTiles = this.makeTiles.bind(this);
   }
 
-  componentWillMount() {
-    
+  componentDidMount() {
+    var companyId = {
+      idCompany: this.props.match.params.companyId
+    };
+    getCompanyJobs((res) => {
+      if (!res) {
+        console.log('could not get company jobs');
+      } else {
+        console.log(res.data.response);
+        
+        this.setState({jobs: res.data.response});
+      }
+    }, companyId);
   }
 
 
