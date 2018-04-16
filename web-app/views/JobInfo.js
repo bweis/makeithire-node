@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form} from 'semantic-ui-react';
+import {Form, Grid, Card, Header, Input, Button} from 'semantic-ui-react';
 
 import MenuContainer from '../containers/MenuContainer';
 
@@ -22,6 +22,8 @@ class JobInfo extends Component {
                 Tags: ''
             },
             companyName: "",
+            applicants: [],
+            filter: ''
         };
         if (this.state.isRecruiter) {
             console.log('is recruiter');
@@ -57,12 +59,33 @@ class JobInfo extends Component {
                 }
             });
 
+        var idJob = {
+            idJob: this.props.match.params.jobId
+        }
+        getApplicants((res) => {
+            if (!res) {
+                console.log('could not get applicants')
+            } else {
+                console.log('get applicants ' + res.data.response);
+                this.setState({applicants: res.data.response})
+            }
+        }, idJob)
 
     }
 
     getApps() {
+        console.log(this.state.applicants);
+        return this.state.applicants.map((item, index) => (
+             <Card fluid key={item.idUser} header={item.FirstName + ' ' + item.LastName} meta={item.SubmissionDate} />
+         ));
 
     }
+
+    applyFilter() {
+       alert('Rajat Srivastava');
+
+    }
+
 
     render() {
         return (
@@ -86,7 +109,15 @@ class JobInfo extends Component {
                                    value={this.state.jobDescr.Description} name='description' readOnly/>
                     <Form.Input label='Tags' placeholder='Tags' name='tags' value={this.state.jobDescr.Tags} readOnly/>
                 </Form>
+                <br />
+                <Grid centered>
+                    <Form>
+                    <Form.Input label="Filter" name="filter" placeholder="filter" />
+                    <Button onClick={this.applyFilter}>Apply</Button>
+                    </Form>
+                    <Header size="medium">Applicants</Header>
                 {this.getApps()}
+                </Grid>
             </MenuContainer>
         );
     }

@@ -57,7 +57,7 @@ class Company extends Component {
       }
     });
   }
-  
+
   getCompanyComponent() {
     console.log(this.state.companyRecruiters);
     if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
@@ -69,7 +69,7 @@ class Company extends Component {
     } else if (this.props.user.isHeadRecruiter) {
       return (
       <Grid centered columns={2}>
-          <JobListing {...this.props} jobs={this.state.jobs}/>
+          <JobListing {...this.props} />
           <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
       </Grid>
       );
@@ -82,7 +82,7 @@ class Company extends Component {
     } else if (this.props.user.isStudent) {
       return (
           <Grid centered columns={2}>
-            <JobListing {...this.props} jobs={this.state.jobs}/>
+            <JobListing {...this.props}/>
           </Grid>
       );
     }
