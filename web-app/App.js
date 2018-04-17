@@ -7,7 +7,6 @@ import AuthenticatedRoute from './AuthenticatedRoute';
 import NewJob from './views/NewJob';
 import JobInfo from './views/JobInfo';
 import Home from './views/Home';
-import Profile from './views/Profile';
 import NewProfile from './views/NewProfile';
 import Company from './views/Company';
 import Login from './views/Login';
