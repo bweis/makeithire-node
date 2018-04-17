@@ -16,7 +16,7 @@ function getAllJobs(req, res) {
 }
 
 function getCompanyJobs(req, res) {
-    const sql = 'SELECT idJobs, JobName FROM Jobs WHERE Jobs.idCompany = ?';
+    const sql = 'SELECT idJobs, CompanyName, JobName FROM Jobs INNER JOIN Company ON Jobs.idCompany = ?';
 
     db.query(sql, req.body.idCompany, (err, result) => {
         if(err) {
@@ -118,5 +118,4 @@ module.exports = {
   editJobPosting,
   getEveryJobAndDetail,
   getCompanyJobs
-
 };
