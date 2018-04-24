@@ -24,8 +24,54 @@ function createMessage(req, res) {
 
 }
 
-function getChats(req, res) {
+function getRecruiterChats(req, res) {
+  var userId;
+  const sqlID = 'SELECT idUser FROM User WHERE EmailID = \'' + req.user.EmailID + '\'';
+  db.query(sqlID, (err, result) => {
+    if (err) {
+      return res.status(400)
+          .json({ error: err });
+    }
+    else{
+      userId = result[0].idUser;
+    }
+  });
 
+  const sql = 'SELECT * FROM Chat WHERE RecruiterID = \'' + userId;
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400)
+          .json({ error: err });
+    }
+    else {
+      return res.status(200).json({message: 'Success', response: result });
+    }
+  });
+}
+
+function getStudentChats(req, res) {
+  var userId;
+  const sqlID = 'SELECT idUser FROM User WHERE EmailID = \'' + req.user.EmailID+'\'';
+  db.query(sqlID, (err, result) => {
+    if (err) {
+      return res.status(400)
+          .json({ error: err });
+    }
+    else{
+      userId = result[0].idUser;
+    }
+  });
+
+  const sql = 'SELECT * FROM Chat WHERE StudentID = \'' + userId;
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400)
+          .json({ error: err });
+    }
+    else {
+      return res.status(200).json({message: 'Success', response: result });
+    }
+  });
 }
 
 function getMessages(req, res) {
@@ -34,7 +80,8 @@ function getMessages(req, res) {
 
 module.exports = {
     getMessages,
-    getChats,
+    getRecruiterChats,
+    getStudentChats,
     createMessage,
     replyMessage,
   };
