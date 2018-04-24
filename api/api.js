@@ -9,6 +9,7 @@ const job = require('./job');
 const admin = require('./admin');
 const company = require('./company');
 const application = require('./application');
+const chat = require('./chat');
 
 // Routers
 const apiRouter = require('express').Router();
@@ -62,5 +63,11 @@ apiRouter.get('/getCompanyList', data.getCompanyList);
 // Admin Routes
 apiRouter.post('/adminAddRecruiter', admin.adminAddRecruiter);
 apiRouter.post('/adminDeleteRecruiter', admin.adminDeleteRecruiter);
+
+// Chat Routes
+apiRouter.post('/createMessage', chat.sendMessage);
+apiRouter.post('/replyMessage', chat.sendMessage);
+apiRouter.post('/getChats', chat.sendMessage);
+apiRouter.post('/getMessages', chat.getMessages);
 
 module.exports = apiRouter;
