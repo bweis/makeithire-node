@@ -64,9 +64,9 @@ apiRouter.post('/adminAddRecruiter', admin.adminAddRecruiter);
 apiRouter.post('/adminDeleteRecruiter', admin.adminDeleteRecruiter);
 
 // Chat Routes
-apiRouter.post('/createMessage', chat.sendMessage);
-apiRouter.post('/replyMessage', chat.sendMessage);
-apiRouter.post('/getChats', chat.sendMessage);
+apiRouter.post('/createMessage', chat.createMessage);
+apiRouter.post('/replyMessage', chat.replyMessage);
+apiRouter.post('/getChats', chat.getChats);
 apiRouter.post('/getMessages', chat.getMessages);
 
 module.exports = apiRouter;
