@@ -52,6 +52,7 @@ apiRouter.post('/editJobPosting', job.editJobPosting);
 
 // Application Routes
 apiRouter.post('/getApplicants', application.getApplicants);
+apiRouter.post('/apply/', application.apply);
 
 // Data Routes
 apiRouter.get('/getMajors', data.getMajors);
@@ -66,7 +67,8 @@ apiRouter.post('/adminDeleteRecruiter', admin.adminDeleteRecruiter);
 // Chat Routes
 apiRouter.post('/createMessage', chat.createMessage);
 apiRouter.post('/replyMessage', chat.replyMessage);
-apiRouter.post('/getChats', chat.getChats);
+apiRouter.post('/getRecruiterChats', chat.getRecruiterChats);
+apiRouter.post('/getStudentChats', chat.getStudentChats);
 apiRouter.post('/getMessages', chat.getMessages);
 
 module.exports = apiRouter;
