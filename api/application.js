@@ -15,11 +15,11 @@ function getApplicants(req, res) {
 
 function apply(req, res) {
   const post = {
-    idApplication = req.body.idApplication,
-    idUser = req.body.idUser,
-    idJob = req.body.idJob,
-    SubmissionDate = req.body.SubmissionDate,
-    SupplementaryAs = req.body.SupplementaryAs
+    idApplication : req.body.idApplication,
+    idUser : req.body.idUser,
+    idJob : req.body.idJob,
+    SubmissionDate : req.body.SubmissionDate,
+    SupplementaryAs : req.body.SupplementaryAs
   }
   const sql = "INSERT INTO Application SET ?";
     db.query(sql , post, (err, result) => {
