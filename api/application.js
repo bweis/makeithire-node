@@ -14,9 +14,20 @@ function getApplicants(req, res) {
 }
 
 function apply(req, res) {
+  var userId;
+  const sqlId = 'Select idUser FROM User WHERE EmailID = \'' + req.user.EmailID +'\'';
+  db.query(sqlId, (err, result) => {
+    if(err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    else {
+      userId = result[0].idUser;
+    }
+  });
   const post = {
     idApplication : req.body.idApplication,
-    idUser : req.body.idUser,
+    idUser : userId,
     idJob : req.body.idJob,
     SubmissionDate : req.body.SubmissionDate,
     SupplementaryAs : req.body.SupplementaryAs
