@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react';
-import { Button, Input } from 'semantic-ui-react';
+import { Button, Input, Checkbox } from 'semantic-ui-react';
 import axios from 'axios/index';
 
 import MenuContainer from '../containers/MenuContainer';
 import { getCompanyList, addJobPosting } from '../helpers/api';
-import { getCookie } from '../helpers/utils';
 
 
 const jobTypes = [
@@ -272,6 +271,7 @@ class NewJob extends Component {
     super(props);
     this.state = {
       company: {},
+      supp: false,
       jobInfo: {
         idCompany: this.props.match.params.companyId,
         JobName: '',
@@ -284,6 +284,7 @@ class NewJob extends Component {
     };
     this.postJob = this.postJob.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.toggleSupp = this.toggleSupp.bind(this);
     getCompanyList((res) => {
       if (!res) {
         console.log('Could not get company list');
@@ -307,6 +308,12 @@ class NewJob extends Component {
     info[name] = value;
     this.setState({ info });
   }
+
+  toggleSupp() {
+    var s = !this.state.supp;
+    this.setState({supp: s});
+  }
+
 
   postJob() {
     addJobPosting((res) => {
@@ -334,7 +341,8 @@ class NewJob extends Component {
 
           <Form.TextArea label='Job Description' placeholder='Job description...' name='Description' onChange={this.handleChange}/>
           <Form.Input label='tags' placeholder='Tags' name='tags' onChange={this.handleChange}/>
-          <Form.Input label='SupplementaryQs' placeholder='Tags' name='SupplementaryQs' onChange={this.handleChange}/>
+          <Form.Checkbox label='Include Supplemental Question' onClick={this.toggleSupp}/>
+          {this.state.supp && <Form.Input fluid label='Supplemental Question' placeholder='Supplemental ...' name="SupplementaryQs" onChange={this.handleChange} />}
           <Form.Button onClick={this.postJob}>Post Job</Form.Button>
         </Form>
       </MenuContainer>
