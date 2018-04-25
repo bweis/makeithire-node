@@ -1,3 +1,4 @@
+var io = require('socket.io')(http);
 const db = require('./utils/db');
 
 function replyMessage(req, res) {
@@ -89,13 +90,23 @@ function getStudentChats(req, res) {
       });
     }
   });
-
-
 }
 
-function getMessages(req, res) {
+// Socket.io
+io.on('connection', function(socket){
+  console.log('user connected');
+  socket.on('chat message', function(msg){
+    io.emit('chat message', msg);
+  });
 
-}
+  // Disconnect
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+
+  // Send Message
+
+});
 
 module.exports = {
   getMessages,
