@@ -12,6 +12,7 @@ import NewProfile from './views/NewProfile';
 import Company from './views/Company';
 import Login from './views/Login';
 import Register from './views/Register';
+import Chat from './views/Chat';
 import LandingPage from './views/LandingPage';
 import { checkSession } from './helpers/session';
 import { loginUserAction } from './actions/user';
@@ -37,6 +38,7 @@ class App extends Component {
               <Route path='/register' name='Register' component={Register} />
               <AuthenticatedRoute path='/home' name='Home' component={Home} />
               <AuthenticatedRoute path='/profile' name='Profile' component={NewProfile} />
+              <AuthenticatedRoute path='/chat' name='Chat' component={Chat} />
               <AuthenticatedRoute path='/company/:companyId' name='Company' component={Company} />
               <AuthenticatedRoute path='/company/:companyId/newJob' name='NewJob' component={NewJob} />
               <AuthenticatedRoute path='/company/:companyId/job/:jobId' name='JobInfo' component={JobInfo} />

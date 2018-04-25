@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@livechat/ui-kit": "^0.1.0",
     "abbrev": "^1.1.1",
     "ansi-regex": "^3.0.0",
     "ansi-wrap": "^0.1.0",
