@@ -1,14 +1,8 @@
-
-
-import {
-    Grid,
-    Button,
-} from 'semantic-ui-react';
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react';
+
 
 import MenuContainer from '../containers/MenuContainer';
 import AdminDashboard from '../views/AdminDashboard';
@@ -21,22 +15,88 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.getHomeComponent = this.getHomeComponent.bind(this);
-
+        this.showSupp = this.showSupp.bind(this);
+        this.hideSupp = this.hideSupp.bind(this);
+        this.suppApply = this.suppApply.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             jobs: [],
+            openModal: false,
+            idJob: '',
+            supplementaryQ: '',
+            supplementaryA: ''
         };
     }
 
-
     componentDidMount() {
-
         getEveryJobAndDetail((res) => {
                 if (res) {
-                    this.setState({jobs: res.data.response})
+                    var jobsRes = res.data.response;
+                    for (var i = 0; i < jobsRes.length; i++) {
+                        jobsRes[i].applied = 0;
+                    }
+                    console.log('jobs: ' + jobsRes);
+                    this.setState({jobs: jobsRes})
                 }
             }
         );
     }
+
+    showSupp(e, { idjob }) {
+        var jobs = this.state.jobs;
+        for (var i = 0; i < jobs.length; i++) {
+            if (jobs[i].idJobs == idjob) {
+                if (jobs[i].SupplementaryQs == "None" || jobs[i].SupplementaryQs == "No Supp Questions") {
+                    //apply();
+                    jobs[i].applied = 1;
+                    console.log('apply no supp->');
+                    this.setState({jobs: jobs});
+                    break;
+
+                } else {
+                    var stateVars = {
+                        openModal: true,
+                        supplementaryQ: jobs[i].SupplementaryQs,
+                        idJob: idjob,
+                    };
+                    this.setState(stateVars);
+                }
+            }
+        }
+    }
+
+    suppApply() {
+        var jobs = this.state.jobs;
+        for (var i = 0; i < jobs.length; i++) {
+            if (jobs[i].idJobs == this.state.idJob) {
+                jobs[i].applied = 1;
+                console.log('suppApply: ' + this.state.supplementaryA);
+                var stateVars = {
+                    jobs: jobs,
+                    idJob: '',
+                    openModal: false,
+                    supplementaryQ: '',
+                    supplementaryA: ''
+                }
+                this.setState(stateVars);
+                break;
+            }
+        }
+    }
+
+    handleChange(e, { name, value }) {
+        this.setState({ [ name ]: value });
+    }
+
+    hideSupp() {
+        this.setState({
+            openModal: false,
+            idJob: '',
+            supplementaryQ: '',
+            supplementaryA: ''
+        });
+    }
+
 
     getHomeComponent() {
         console.log('Logging', this.props.user);
@@ -48,22 +108,20 @@ class Home extends Component {
         } else if (this.props.user.isAdmin) {
             return (<AdminDashboard/>);
         } else if (this.props.user.isStudent) {
-          const  { jobs } = this.state;
+          const jobs = this.state.jobs;
           const jobListItems = jobs.map(job =>
-              <Grid.Row stretched>
+              <Grid.Row stretched key={job.idJobs}>
                 <Grid.Column width={5}>
                   <Link to={`/company/${job.idCompany}`}><h1>{job.CompanyName}</h1></Link>
                   {job.JobName}
                 </Grid.Column>
                 <Grid.Column width={8}>
-                  <h3> {job.Description}</h3>
+                  <h3> {job.Description}</h3> {job.SupplementaryQs != '' ? <span style={{textAlign: "right"}}>Supplementary Q Required</span> : null}
                   {job.type}<br/>
                   Deadline: {job.Deadline}
                 </Grid.Column>
                 <Grid.Column width={3}>
-                  <Link to={`/company/${job.idCompany}/job/${job.idJobs}`}>
-                    <Button primary>Apply</Button>
-                  </Link>
+                    {job.applied == 1 ? <Button positive idjob={job.idJobs} disabled>Applied</Button> : <Button primary idjob={job.idJobs} onClick={this.showSupp}>Apply</Button>}
                 </Grid.Column>
               </Grid.Row>
           );
@@ -80,6 +138,21 @@ class Home extends Component {
             <div>
                 <MenuContainer loggedIn>
                     {this.getHomeComponent()}
+                    <Modal size='small' open={this.state.openModal} onClose={this.hideSupp}>
+                        <Modal.Header>
+                            Please Answer The Following Supplementary Question To Complete This Application
+                        </Modal.Header>
+                        <Modal.Content>
+                            <p>{this.state.supplementaryQ}</p>
+                            <Input fluid name='supplementaryA' placeholder='Answer...' onChange={this.handleChange}/>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Button negative onClick={this.hideSupp}>
+                                No
+                            </Button>
+                            <Button positive icon='checkmark' labelPosition='right' content='Apply' onClick={this.suppApply}/>
+                        </Modal.Actions>
+                    </Modal>
                 </MenuContainer>
             </div>
 
