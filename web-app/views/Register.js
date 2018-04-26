@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios/index';
-
 import { Form, Grid, Header, Message, Segment, Tab, Divider } from 'semantic-ui-react';
 import MenuContainer from '../containers/MenuContainer';
-import { getCompanyList } from '../helpers/api';
 
+const { getCompanyList } = require('../helpers/api');
 const { getAuthToken } = require('../helpers/utils');
 
 class Register extends Component {
@@ -12,14 +11,13 @@ class Register extends Component {
     super(props);
     this.activeTab = 0;
     this.state = {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      email: '',
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      email_address: '',
       password: '',
-      company: '',
-      newCompany: '',
-      description: '',
+      company_id: '',
+      company_name: '',
       didError: false,
       companyOptions: [],
     };
@@ -32,15 +30,21 @@ class Register extends Component {
     if (getAuthToken()) {
       this.props.history.push('/home');
     }
+  }
+
+  componentDidMount() {
     getCompanyList((res) => {
       if (!res) {
         console.log('Could not get company list');
+        console.log(res);
       } else {
-        const companyOptions = res.data.response.map(company => ({
-          key: company.idCompany,
-          value: company.idCompany,
-          text: company.CompanyName,
+        const companyOptions = res.data.map(company => ({
+          key: company.id,
+          text: company.name,
         }));
+
+        console.log('array', res.data);
+        console.log('formatted', companyOptions);
         this.setState({ companyOptions });
       }
     });
@@ -56,31 +60,35 @@ class Register extends Component {
 
   handleSubmit() {
     const {
-      firstName,
-      middleName,
-      lastName,
-      email,
+      first_name,
+      middle_name,
+      last_name,
+      email_address,
       password,
-      company,
-      description,
-      newCompany,
+      company_id,
+      company_name,
     } = this.state;
-    let route = '/api/signupstudent';
+
+    // Determine the kind of user to sign up.
+    let user_type = 0;
     if (this.activeTab === 1) {
-      route = '/api/signuprecruiter';
+      user_type = 1;
+      if (this.company_id === undefined) {
+        user_type = 2;
+      }
     }
+
     axios.post(
-      route,
+      '/api/user',
       {
-        FirstName: firstName,
-        MiddleName: middleName,
-        LastName: lastName,
-        EmailID: email,
-        Password: password,
-        idCompany: company, // 0 = student, -1 = head Recruiter, id = company ID
-        CompanyName: company,
-        Description: description,
-        Published: 0, // Flag for if we publish the page
+        user_type,
+        first_name,
+        middle_name,
+        last_name,
+        email_address,
+        password,
+        company_id,
+        company_name,
       },
     )
       .then((res) => {
@@ -95,13 +103,13 @@ class Register extends Component {
 
   render() {
     const {
-      firstName,
-      middleName,
-      lastName,
-      email,
+      first_name,
+      middle_name,
+      last_name,
+      email_address,
       password,
-      company,
-      description,
+      company_id,
+      company_name,
       companyOptions,
     } = this.state;
 
@@ -137,35 +145,35 @@ class Register extends Component {
                           <Form size='large' onSubmit={this.handleSubmit} error={this.state.didError}>
                             <Segment stacked>
                               <Form.Input
-                                name='firstName'
+                                name='first_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='First Name'
-                                value={firstName}
+                                value={first_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='middleName'
+                                name='middle_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Middle Name'
-                                value={middleName}
+                                value={middle_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='lastName'
+                                name='last_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Last Name'
-                                value={lastName}
+                                value={last_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='email'
+                                name='email_address'
                                 icon='user'
                                 iconPosition='left'
                                 placeholder='E-mail address'
-                                value={email}
+                                value={email_address}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
@@ -198,35 +206,35 @@ class Register extends Component {
                           <Form size='large' onSubmit={this.handleSubmit} error={this.state.didError}>
                             <Segment stacked>
                               <Form.Input
-                                name='firstName'
+                                name='first_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='First Name'
-                                value={firstName}
+                                value={first_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='middleName'
+                                name='middle_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Middle Name'
-                                value={middleName}
+                                value={middle_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='lastName'
+                                name='last_name'
                                 icon='angle right'
                                 iconPosition='left'
                                 placeholder='Last Name'
-                                value={lastName}
+                                value={last_name}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
-                                name='email'
+                                name='email_address'
                                 icon='user'
                                 iconPosition='left'
                                 placeholder='E-mail address'
-                                value={email}
+                                value={email_address}
                                 onChange={this.handleChange}
                               />
                               <Form.Input
@@ -240,25 +248,19 @@ class Register extends Component {
                               />
                               <Divider horizontal section>Company Details</Divider>
                               <Form.Select
-                                name='company'
+                                name='company_id'
                                 placeholder='Select Your Company'
-                                value={company}
+                                value={company_id}
                                 onChange={this.handleChange}
                                 options={companyOptions}
                               />
                               <div>
                                 <Form.Input
-                                  name='newCompany'
+                                  name='company_name'
                                   icon='angle right'
                                   iconPosition='left'
                                   placeholder='Company name'
-                                  value={company}
-                                  onChange={this.handleChange}
-                                />
-                                <Form.TextArea
-                                  name='description'
-                                  placeholder='Tell us more about the company...'
-                                  value={description}
+                                  value={company_name}
                                   onChange={this.handleChange}
                                 />
                               </div>

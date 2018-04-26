@@ -57,7 +57,8 @@ async function create(user_params) {
                 head_recruiter_id: user_id,
                 email_domain,
               });
-              company_id = company_data.data.insertId;
+              company_id = company_data.data.company_id;
+              console.log(company_data);
             } catch (err) {
               return reject(err);
             }

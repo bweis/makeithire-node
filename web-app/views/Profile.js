@@ -89,7 +89,7 @@ function mount(yo) {
         mail = ref.EmailID;
 
         const terra = yo.state.user;
-        terra.firstName = name;
+        terra.first_name = name;
         terra.lastName = surName;
         terra.email = mail;
         yo.setState({ user: terra });
@@ -400,7 +400,7 @@ class Profile extends Component {
               </Col>
               <Col>
                 <h4 onChange={e => this.onTodoChange(e.target.value)} >
-                  {this.state.user.firstName } {this.state.user.lastName}
+                  {this.state.user.first_name } {this.state.user.lastName}
                 </h4>
                 <h4 />
                 <Input className='profile-input align-middle' onChange={e => this.onTodoChange(e.target.value)} id='profile_email' type='email' value={this.state.user.email} readOnly />
