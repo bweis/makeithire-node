@@ -29,6 +29,8 @@
     "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
     "consistent-return": 0,
     "no-console": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "no-trailing-spaces": "off",
+    "no-fallthrough": "off"
   }
 }
