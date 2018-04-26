@@ -12,6 +12,17 @@ function getUserDetails(req, res) {
   });
 }
 
+function getOtherUserDetails(req, res) {
+  const sql = 'SELECT FirstName, MiddleName, LastName, EmailID, idCompany FROM User WHERE idUser = ?';
+  db.query(sql, req.body.idUser, (err, result) => {
+    if (err) {
+      return res.status(400).json({error: err});
+    }
+    return res.status(200).json({ message: 'Success', response: result})
+  });
+}
+
 module.exports = {
   getUserDetails,
+  getOtherUserDetails,
 };
