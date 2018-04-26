@@ -91,6 +91,18 @@ function getStudentChats(req, res) {
   });
 }
 
+function getMessages(req, res) {
+  const sql = 'SELECT Timestamp, idUser, Message FROM Message WHERE idChat = ' + req.body.idChat + ' ORDER BY Timestamp ASC';
+  db.query(sqlID, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    return res.status(200)
+      .json({ message: 'Success', response: result });
+  });
+}
+
 function getReceiver(idChat) {
   const sql = 'SELECT * FROM Chat WHERE idChat = ?';
   db.query(sqlID, idChat, (err, result) => {
@@ -98,7 +110,7 @@ function getReceiver(idChat) {
       return res.status(400)
         .json({ error: err });
     }
-    const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID+'\'';
+    const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID + '\'';
     db.query(sql2, idChat, (err2, result2) => {
       if (err2) {
         return res.status(400)
@@ -127,6 +139,7 @@ function getReceiver(idChat) {
 
 module.exports = {
   onConnect,
+  getMessages,
   getRecruiterChats,
   getStudentChats,
   createMessage,
