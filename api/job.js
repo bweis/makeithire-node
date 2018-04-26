@@ -16,16 +16,16 @@ function getAllJobs(req, res) {
 }
 
 function getCompanyJobs(req, res) {
-    const sql = 'SELECT idJobs, JobName FROM Jobs WHERE Jobs.idCompany = ?';
+  const sql = 'SELECT idJobs, JobName FROM Jobs WHERE Jobs.idCompany = ?';
 
-    db.query(sql, req.body.idCompany, (err, result) => {
-        if(err) {
-            return res.status(400)
-                .json({error: err});
-        }
-        return res.status(200)
-            .json({ message: 'Success', response: result });
-    })
+  db.query(sql, req.body.idCompany, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    return res.status(200)
+      .json({ message: 'Success', response: result });
+  })
 }
 
 function getJobDetails(req, res) {
@@ -99,16 +99,22 @@ function editJobPosting(req, res) {
 }
 
 function getEveryJobAndDetail(req, res) {
-    const sql = 'SELECT* FROM Jobs INNER JOIN Company ON Jobs.idCompany = Company.idCompany';
-
-    db.query(sql, (err, result) => {
+  var email = req.user.EmailID;
+  var sql = 'SELECT idUser FROM User WHERE EmailID = ?';
+  db.query(sql, email, (err1, result) => {
+    if (err1) {
+      return res.status(400).json({ error: err1 });
+      const sql = 'SELECT B.idJobs, B.JobName, B.Description, C.CompanyName, B.DateAdded, B.Deadline, B.Tags, B.SupplementaryQs, B.idApplication FROM (Select J.idJobs, JobName, Description, idCompany, DateAdded, Deadline, Tags, SupplementaryQs, idApplication FROM Jobs AS J LEFT JOIN (SELECT * FROM Application WHERE idUser = ' + result[0].idUser + ') AS A ON A.idJobs = J.idJobs) AS B INNER JOIN Company AS C ON C.idCompany = B.idCompany'
+      db.query(sql, (err, result) => {
         if (err) {
-            return res.status(400)
-                .json({ error: err });
+          return res.status(400)
+            .json({ error: err });
         }
         return res.status(200)
-            .json({ message: 'Success', response: result });
-    });
+          .json({ message: 'Success', response: result });
+      });
+    }
+  });
 }
 
 module.exports = {
