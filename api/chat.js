@@ -120,24 +120,24 @@ function deleteChat(req, res) {
   });
 }
 
-// function getReceiver(idChat) {
-//   const sql = 'SELECT * FROM Chat WHERE idChat = ?';
-//   db.query(sqlID, idChat, (err, result) => {
-//     if (err) {
-//       return res.status(400)
-//         .json({ error: err });
-//     }
-//     const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID + '\'';
-//     db.query(sql2, idChat, (err2, result2) => {
-//       if (err2) {
-//         return res.status(400)
-//           .json({ error: err });
-//       }
-//       return res.status(200)
-//         .json({ message: 'Success', response: result2[0].EmailID });
-//     });
-//   });
-// }
+function getReceiver(idChat) {
+  const sql = 'SELECT * FROM Chat WHERE idChat = ?';
+  db.query(sqlID, idChat, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID + '\'';
+    db.query(sql2, idChat, (err2, result2) => {
+      if (err2) {
+        return res.status(400)
+          .json({ error: err });
+      }
+      return res.status(200)
+        .json({ message: 'Success', response: result2[0].EmailID });
+    });
+  });
+}
 
 // // SocketIO
 // function onConnect(socket) {
