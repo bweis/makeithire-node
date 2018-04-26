@@ -116793,9 +116793,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var utils = require('./utils');
 
-async function getCompanyList(cb) {
-  _index2.default.get('/api/company').then(cb).catch(function (err) {
-    cb(err);
+function getCompanyList(cb) {
+  _index2.default.get('api/company/?hasJobs=false').then(cb).catch(function () {
+    cb(false);
   });
 }
 
@@ -116895,8 +116895,8 @@ function getApplicants(cb, idJob) {
   });
 }
 
-function getCompanyJobs(cb, idCompany) {
-  _index2.default.post('/api/getCompanyJobs', idCompany, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(function () {
+function getCompanyJobs(cb, company_id) {
+  _index2.default.post('/api/job/?company_id=' + company_id, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(function () {
     cb(false);
   });
 }
@@ -119209,21 +119209,24 @@ var Register = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      console.log('mounting!');
       getCompanyList(function (res) {
-        if (!res) {
-          console.log('Could not get company list');
-          console.log(res);
-        } else {
-          var companyOptions = res.data.map(function (company) {
+        console.log(res.data.data);
+        if (res) {
+          var companyOptions = res.data.data.map(function (company) {
             return {
               key: company.id,
-              text: company.name
+              text: company.name,
+              value: company.id
             };
           });
+          companyOptions.push({
+            key: -1,
+            text: 'Company Not Listed',
+            value: -1
+          });
 
-          console.log('array', res.data);
-          console.log('formatted', companyOptions);
+          // console.log('array', res.data);
+          // console.log('formatted', companyOptions);
           _this2.setState({ companyOptions: companyOptions });
         }
       });
@@ -119260,7 +119263,8 @@ var Register = function (_Component) {
       var user_type = 0;
       if (this.activeTab === 1) {
         user_type = 1;
-        if (this.company_id === undefined) {
+        console.log('company_id', this.state.company_id);
+        if (this.state.company_id == -1) {
           user_type = 2;
         }
       }
@@ -119473,7 +119477,7 @@ var Register = function (_Component) {
                               onChange: _this4.handleChange,
                               options: companyOptions
                             }),
-                            _react2.default.createElement(
+                            _this4.state.company_id == -1 ? _react2.default.createElement(
                               'div',
                               null,
                               _react2.default.createElement(_semanticUiReact.Form.Input, {
@@ -119484,7 +119488,8 @@ var Register = function (_Component) {
                                 value: company_name,
                                 onChange: _this4.handleChange
                               })
-                            ),
+                            ) : _react2.default.createElement('div', null),
+                            _react2.default.createElement(_semanticUiReact.Divider, null),
                             _react2.default.createElement(
                               _semanticUiReact.Form.Button,
                               { color: 'teal', fluid: true, size: 'large' },

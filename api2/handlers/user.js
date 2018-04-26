@@ -35,8 +35,8 @@ async function create(user_params) {
           return reject(response.buildDatabaseError(err));
         }
         const user_id = res.insertId;
-
-        switch (user_type) {
+        console.log(typeof user_type)
+        switch (user_type.toString()) {
           case '0': // Student
             if (!email_domain.includes('.edu')) {
               return reject(response.buildParamError('Invalid Parameters: Email does not belong to educational institution'));

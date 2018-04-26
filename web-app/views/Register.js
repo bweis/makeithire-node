@@ -33,19 +33,22 @@ class Register extends Component {
   }
 
   componentDidMount() {
-    console.log('mounting!')
     getCompanyList((res) => {
-      if (!res) {
-        console.log('Could not get company list');
-        console.log(res);
-      } else {
-        const companyOptions = res.data.map(company => ({
+      console.log(res.data.data);
+      if (res) {
+        const companyOptions = res.data.data.map(company => ({
           key: company.id,
           text: company.name,
+          value: company.id,
         }));
+        companyOptions.push({
+          key: -1,
+          text: 'Company Not Listed',
+          value: -1,
+        });
 
-        console.log('array', res.data);
-        console.log('formatted', companyOptions);
+        // console.log('array', res.data);
+        // console.log('formatted', companyOptions);
         this.setState({ companyOptions });
       }
     });
@@ -74,7 +77,8 @@ class Register extends Component {
     let user_type = 0;
     if (this.activeTab === 1) {
       user_type = 1;
-      if (this.company_id === undefined) {
+      console.log('company_id', this.state.company_id);
+      if (this.state.company_id == -1) {
         user_type = 2;
       }
     }
@@ -255,16 +259,23 @@ class Register extends Component {
                                 onChange={this.handleChange}
                                 options={companyOptions}
                               />
-                              <div>
-                                <Form.Input
-                                  name='company_name'
-                                  icon='angle right'
-                                  iconPosition='left'
-                                  placeholder='Company name'
-                                  value={company_name}
-                                  onChange={this.handleChange}
-                                />
-                              </div>
+
+                              {this.state.company_id == -1 ? (
+                                <div>
+                                  <Form.Input
+                                    name='company_name'
+                                    icon='angle right'
+                                    iconPosition='left'
+                                    placeholder='Company name'
+                                    value={company_name}
+                                    onChange={this.handleChange}
+                                  />
+                                </div>
+                              ) : (
+                                <div></div>
+                              )}
+
+                              <Divider />
                               <Form.Button color='teal' fluid size='large'>Register as a Recruiter</Form.Button>
                               <Message
                                 error

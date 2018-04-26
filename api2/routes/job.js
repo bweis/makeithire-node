@@ -10,7 +10,7 @@ router.use('/:id/tag/', (req, res, next) => {
 
 router.get('/', async (req, res) => {
   try {
-    const data = await jobHandler.getAllJobs();
+    const data = await jobHandler.getAllJobs(req);
     return response.sendSuccess(res, data);
   } catch (err) {
     return response.sendError(res, err);

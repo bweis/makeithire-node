@@ -2,8 +2,8 @@ import axios from 'axios/index';
 
 const utils = require('./utils');
 
-async function getCompanyList(cb) {
-  axios.get('/api/company').then(cb).catch((err) => { cb(err); });
+function getCompanyList(cb) {
+  axios.get('api/company/?hasJobs=false').then(cb).catch(() => { cb(false); });
 }
 
 function getUserDetails(cb) {
@@ -70,8 +70,8 @@ function getApplicants(cb, idJob) {
   axios.post('/api/getApplicants', idJob, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
-function getCompanyJobs(cb, idCompany) {
-  axios.post('/api/getCompanyJobs', idCompany, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+function getCompanyJobs(cb, company_id) {
+  axios.post(`/api/job/?company_id=${company_id}`, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
 module.exports = {

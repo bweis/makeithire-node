@@ -13,10 +13,14 @@ async function create(job_params) {
   });
 }
 
-async function getAllJobs() {
+async function getAllJobs(req) {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT id, name, description, company_id, created, deadline, supplementary_question FROM job';
-    db.query(sql, (err, res) => {
+    let sql = 'SELECT id, name, description, company_id, created, deadline, supplementary_question FROM job';
+    if (req.query.company_id) {
+      sql = 'SELECT id, name, description, company_id, created, deadline, supplementary_question FROM job WHERE company_id = ?';
+    }
+    console.log(sql);
+    db.query(sql, req.query.company_id, (err, res) => {
       if (err) {
         return reject(response.buildDatabaseError(err));
       }
