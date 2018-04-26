@@ -7,7 +7,7 @@ require('socket.io')(app);
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
-const chat = require('/api/chat');
+// const chat = require('./api/chat');
 const api = require('./api/api');
 
 const app = express();
@@ -38,5 +38,5 @@ app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
 });
 
-var io = require('socket.io').listen(app.get('port'));
-io.on('connection', chat.onConnect);
+// var io = require('socket.io').listen(app.get('port'));
+// io.on('connection', chat.onConnect);

@@ -1,6 +1,6 @@
-const io = ('../server.js')
+// const io = ('../server.js')
 const db = require('./utils/db');
-var onlineUsers = {};
+// var onlineUsers = {};
 
 function replyMessage(req, res) {
   var email = req.user.EmailID;
@@ -139,38 +139,37 @@ function getReceiver(idChat) {
   });
 }
 
-// SocketIO
-function onConnect(socket) {
-  onlineUsers[req.user.EmailID] = socket;
+// // SocketIO
+// function onConnect(socket) {
+//   onlineUsers[req.user.EmailID] = socket;
 
-  // New Message Window
-  socket.on('new window', function(data, callback) {
-      if (data in onlineUsers) {
-        callback(false);
-      }
-      else {
-        callback(true);
-        socket.nickname = data;
-        onlineUsers[socket.nickname] = socket;
-      }
-  });
+//   // New Message Window
+//   socket.on('new window', function(data, callback) {
+//       if (data in onlineUsers) {
+//         callback(false);
+//       }
+//       else {
+//         callback(true);
+//         socket.nickname = data;
+//         onlineUsers[socket.nickname] = socket;
+//       }
+//   });
 
-  // Disconnect
-  socket.on('disconnect', function() {
-    delete onlineUsers[socket.nickname];
-  });
+//   // Disconnect
+//   socket.on('disconnect', function() {
+//     delete onlineUsers[socket.nickname];
+//   });
 
-  // Send Message
-  socket.on('send message', function (data) {
-    var result = getReceiver(idChat);
-    if (result.response in onlineUsers) {
-      onlineUsers[result.response].emit('new message', {message: data.message, sender: socket.nickname});
-    }
-  });
-}
+//   // Send Message
+//   socket.on('send message', function (data) {
+//     var result = getReceiver(idChat);
+//     if (result.response in onlineUsers) {
+//       onlineUsers[result.response].emit('new message', {message: data.message, sender: socket.nickname});
+//     }
+//   });
+// }
 
 module.exports = {
-  onConnect,
   getMessages,
   getRecruiterChats,
   getStudentChats,
