@@ -1,5 +1,6 @@
-var io = require('socket.io')(http);
+const io = ('../server.js')
 const db = require('./utils/db');
+var onlineUsers = {};
 
 function replyMessage(req, res) {
   var email = req.user.EmailID;
@@ -66,8 +67,6 @@ function getRecruiterChats(req, res) {
       });
     }
   });
-
-
 }
 
 function getStudentChats(req, res) {
@@ -92,26 +91,60 @@ function getStudentChats(req, res) {
   });
 }
 
-// Socket.io
-io.on('connection', function(socket){
-  console.log('user connected');
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+function getReceiver(idChat) {
+  const sql = 'SELECT * FROM Chat WHERE idChat = ?';
+  db.query(sqlID, idChat, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+   
+    '${result[0].StudentID}'
+    
+      const sql2 = 'SELECT EmailID FROM User WHERE (idUser = '+result[0].RecruiterID+' OR idUser = '+result[0].RecruiterID+') AND EmailID != req.user.EmailID';
+      return res.status(200)
+        .json({message: 'Success', response: result[0].EmailID});
   });
+}
 
-  // Disconnect
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+// // SocketIO
+// function onConnect(socket) {
+//   onlineUsers[req.user.EmailID] = socket;
 
-  // Send Message
+//   // Disconnect
+//   socket.on('disconnect', function() {
 
-});
+//   });
+
+//   // Send Message
+//   socket.on('send message', function (data) {
+//     onlineUsers[req.user.EmailID].emit('new message', {message: data, sender: req.user.Email});
+//   });
+// }
 
 module.exports = {
-  getMessages,
+  onConnect,
   getRecruiterChats,
   getStudentChats,
   createMessage,
   replyMessage,
 };
+
+// // JQuery
+// <script src='/socket.io/socket.io.js'></script>
+// var socket = io.connect();
+// var $messageForm = $('#send-message');
+// var $messageBox = $('message');
+// var $chat = $('#chat');
+
+// $messageForm.submit(function (e) {
+//   e.preventDefault(); // Prevent refresh
+//   // Send message from client to server
+//   socket.emit('send message', messageBox.val());
+//   messageBox.val('');   // Empty the message box
+// });
+
+// socket.on('new message'), function(data) {
+//   // Display the new message
+//   $chat.append(data + '<br/>');
+// }
