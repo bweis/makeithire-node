@@ -1,5 +1,5 @@
-// const io = ('../server.js')
 const db = require('./utils/db');
+// const io = ('../server.js')
 // var onlineUsers = {};
 
 function replyMessage(req, res) {
