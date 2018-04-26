@@ -116281,7 +116281,7 @@ var Recruiter = function (_Component) {
   _createClass(Recruiter, [{
     key: 'getHR',
     value: function getHR() {
-      if (this.props.user.isAdmin) {
+      if (this.props.user.user_type === 3) {
         return _react2.default.createElement(
           _semanticUiReact.Card.Group,
           null,
@@ -116376,7 +116376,7 @@ var Recruiter = function (_Component) {
       var emailID = {
         EmailID: this.state.recruiterToAdd
       };
-      if (this.props.user.isAdmin) {
+      if (this.props.user.user_type === 3) {
         (0, _api.adminAddRecruiter)(function (res) {
           if (!res) {
             console.log('Could not add recruiter');
@@ -116448,7 +116448,7 @@ var Recruiter = function (_Component) {
       return _react2.default.createElement(
         _semanticUiReact.Grid.Column,
         null,
-        this.props.user.isAdmin && _react2.default.createElement(
+        this.props.user.user_type === 3 && _react2.default.createElement(
           _semanticUiReact.Grid.Row,
           null,
           _react2.default.createElement(
@@ -116793,9 +116793,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var utils = require('./utils');
 
-function getCompanyList(cb) {
-  _index2.default.get('/api/company').then(cb).catch(function () {
-    cb(false);
+async function getCompanyList(cb) {
+  _index2.default.get('/api/company').then(cb).catch(function (err) {
+    cb(err);
   });
 }
 
@@ -116842,19 +116842,19 @@ function getJobDetails(id, cb) {
 }
 
 function getEveryJobAndDetail(cb) {
-  _index2.default.get('api/getEveryJobAndDetail', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(function () {
+  _index2.default.get('api/job', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(function () {
     cb(false);
   });
 }
 
 function getUniversityList(cb) {
-  _index2.default.get('/api/getUniversityList').then(cb).catch(function () {
+  _index2.default.get('/api/university').then(cb).catch(function () {
     cb(false);
   });
 }
 
 function getMajors(cb) {
-  _index2.default.get('/api/getMajors').then(cb).catch(function () {
+  _index2.default.get('/api/major').then(cb).catch(function () {
     cb(false);
   });
 }
@@ -116962,20 +116962,22 @@ function checkSession(cb) {
   if (!(0, _utils.getAuthToken)()) {
     cb(false);
   } else {
-    _index2.default.get('/api/getSession', {
+    _index2.default.get('/api/session', {
       headers: {
         Authorization: (0, _utils.getAuthToken)()
       }
     }).then(function (res) {
-      cb(res.data.user);
+      console.log(res);
+      cb(res.data.data.user);
     }).catch(function () {
       cb(false);
     });
   }
 }
 
-function login(email, password, cb) {
-  _index2.default.post('/api/login', { EmailID: email, Password: password }).then(function (res) {
+function login(email_address, password, cb) {
+  _index2.default.post('/api/session', { email_address: email_address, password: password }).then(function (res) {
+    console.log(res);
     cb(res);
     console.log(res);
   }).catch(function (err) {
@@ -117079,7 +117081,7 @@ function user() {
 
   switch (action.type) {
     case _user.LOGIN_USER:
-      return action.user;
+      return action.user; // changed to data.user
     default:
       return state;
   }
@@ -117485,7 +117487,7 @@ var Company = function (_Component) {
               recs.push(temp[i]);
             }
           }
-          if (_this2.props.user.isHeadRecruiter) {
+          if (_this2.props.user.user_type === 2) {
             _this2.setState({
               companyRecruiters: recs
             });
@@ -117513,21 +117515,21 @@ var Company = function (_Component) {
             'Loading Content'
           )
         );
-      } else if (this.props.user.isHeadRecruiter) {
+      } else if (this.props.user.user_type === 2) {
         return _react2.default.createElement(
           _semanticUiReact.Grid,
           { centered: true, columns: 2 },
           _react2.default.createElement(_JobListing2.default, this.props),
           _react2.default.createElement(_Recruiters2.default, _extends({ companyRecruiters: this.state.companyRecruiters, headRecruiter: this.state.headRecruiter }, this.props))
         );
-      } else if (this.props.user.isAdmin) {
+      } else if (this.props.user.user_type === 3) {
         // IS ADMIN
         return _react2.default.createElement(
           _semanticUiReact.Grid,
           { centered: true, columns: 2 },
           _react2.default.createElement(_Recruiters2.default, _extends({ companyRecruiters: this.state.companyRecruiters, headRecruiter: this.state.headRecruiter }, this.props))
         );
-      } else if (this.props.user.isStudent) {
+      } else if (this.props.user.user_type === 0) {
         return _react2.default.createElement(
           _semanticUiReact.Grid,
           { centered: true, columns: 2 },
@@ -117567,7 +117569,7 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Company);
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -117603,245 +117605,245 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Home = function (_Component) {
-    _inherits(Home, _Component);
+  _inherits(Home, _Component);
 
-    function Home(props) {
-        _classCallCheck(this, Home);
+  function Home(props) {
+    _classCallCheck(this, Home);
 
-        var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
-        _this.getHomeComponent = _this.getHomeComponent.bind(_this);
-        _this.showSupp = _this.showSupp.bind(_this);
-        _this.hideSupp = _this.hideSupp.bind(_this);
-        _this.suppApply = _this.suppApply.bind(_this);
-        _this.handleChange = _this.handleChange.bind(_this);
-        _this.state = {
-            jobs: [],
-            openModal: false,
+    _this.getHomeComponent = _this.getHomeComponent.bind(_this);
+    _this.showSupp = _this.showSupp.bind(_this);
+    _this.hideSupp = _this.hideSupp.bind(_this);
+    _this.suppApply = _this.suppApply.bind(_this);
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.state = {
+      jobs: [],
+      openModal: false,
+      idJob: '',
+      supplementaryQ: '',
+      supplementaryA: ''
+    };
+    return _this;
+  }
+
+  _createClass(Home, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      (0, _api.getEveryJobAndDetail)(function (res) {
+        if (res) {
+          var jobsRes = res.data.response;
+          for (var i = 0; i < jobsRes.length; i++) {
+            jobsRes[i].applied = 0;
+          }
+          console.log('jobs: ' + jobsRes);
+          _this2.setState({ jobs: jobsRes });
+        }
+      });
+    }
+  }, {
+    key: 'showSupp',
+    value: function showSupp(e, _ref) {
+      var idjob = _ref.idjob;
+
+      var jobs = this.state.jobs;
+      for (var i = 0; i < jobs.length; i++) {
+        if (jobs[i].idJobs == idjob) {
+          if (jobs[i].SupplementaryQs == 'None' || jobs[i].SupplementaryQs == 'No Supp Questions') {
+            // apply();
+            jobs[i].applied = 1;
+            console.log('apply no supp->');
+            this.setState({ jobs: jobs });
+            break;
+          } else {
+            var stateVars = {
+              openModal: true,
+              supplementaryQ: jobs[i].SupplementaryQs,
+              idJob: idjob
+            };
+            this.setState(stateVars);
+          }
+        }
+      }
+    }
+  }, {
+    key: 'suppApply',
+    value: function suppApply() {
+      var jobs = this.state.jobs;
+      for (var i = 0; i < jobs.length; i++) {
+        if (jobs[i].idJobs == this.state.idJob) {
+          jobs[i].applied = 1;
+          console.log('suppApply: ' + this.state.supplementaryA);
+          var stateVars = {
+            jobs: jobs,
             idJob: '',
+            openModal: false,
             supplementaryQ: '',
             supplementaryA: ''
-        };
-        return _this;
+          };
+          this.setState(stateVars);
+          break;
+        }
+      }
     }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(e, _ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
 
-    _createClass(Home, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var _this2 = this;
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'hideSupp',
+    value: function hideSupp() {
+      this.setState({
+        openModal: false,
+        idJob: '',
+        supplementaryQ: '',
+        supplementaryA: ''
+      });
+    }
+  }, {
+    key: 'getHomeComponent',
+    value: function getHomeComponent() {
+      var _this3 = this;
 
-            (0, _api.getEveryJobAndDetail)(function (res) {
-                if (res) {
-                    var jobsRes = res.data.response;
-                    for (var i = 0; i < jobsRes.length; i++) {
-                        jobsRes[i].applied = 0;
-                    }
-                    console.log('jobs: ' + jobsRes);
-                    _this2.setState({ jobs: jobsRes });
-                }
-            });
-        }
-    }, {
-        key: 'showSupp',
-        value: function showSupp(e, _ref) {
-            var idjob = _ref.idjob;
-
-            var jobs = this.state.jobs;
-            for (var i = 0; i < jobs.length; i++) {
-                if (jobs[i].idJobs == idjob) {
-                    if (jobs[i].SupplementaryQs == "None" || jobs[i].SupplementaryQs == "No Supp Questions") {
-                        //apply();
-                        jobs[i].applied = 1;
-                        console.log('apply no supp->');
-                        this.setState({ jobs: jobs });
-                        break;
-                    } else {
-                        var stateVars = {
-                            openModal: true,
-                            supplementaryQ: jobs[i].SupplementaryQs,
-                            idJob: idjob
-                        };
-                        this.setState(stateVars);
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'suppApply',
-        value: function suppApply() {
-            var jobs = this.state.jobs;
-            for (var i = 0; i < jobs.length; i++) {
-                if (jobs[i].idJobs == this.state.idJob) {
-                    jobs[i].applied = 1;
-                    console.log('suppApply: ' + this.state.supplementaryA);
-                    var stateVars = {
-                        jobs: jobs,
-                        idJob: '',
-                        openModal: false,
-                        supplementaryQ: '',
-                        supplementaryA: ''
-                    };
-                    this.setState(stateVars);
-                    break;
-                }
-            }
-        }
-    }, {
-        key: 'handleChange',
-        value: function handleChange(e, _ref2) {
-            var name = _ref2.name,
-                value = _ref2.value;
-
-            this.setState(_defineProperty({}, name, value));
-        }
-    }, {
-        key: 'hideSupp',
-        value: function hideSupp() {
-            this.setState({
-                openModal: false,
-                idJob: '',
-                supplementaryQ: '',
-                supplementaryA: ''
-            });
-        }
-    }, {
-        key: 'getHomeComponent',
-        value: function getHomeComponent() {
-            var _this3 = this;
-
-            console.log('Logging', this.props.user);
-            if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
-                return _react2.default.createElement(
-                    _semanticUiReact.Loader,
-                    { size: 'massive', style: { marginTop: '4em' }, active: true, inline: 'centered' },
-                    'Loading Content'
-                );
-            } else if (this.props.user.isHeadRecruiter) {
-                return _react2.default.createElement(
-                    _reactRouterDom.Link,
-                    { to: '/company/' + this.props.user.idCompany },
-                    'My Company Page'
-                );
-            } else if (this.props.user.isAdmin) {
-                return _react2.default.createElement(_AdminDashboard2.default, null);
-            } else if (this.props.user.isStudent) {
-                var jobs = this.state.jobs;
-                var jobListItems = jobs.map(function (job) {
-                    return _react2.default.createElement(
-                        _semanticUiReact.Grid.Row,
-                        { stretched: true, key: job.idJobs },
-                        _react2.default.createElement(
-                            _semanticUiReact.Grid.Column,
-                            { width: 5 },
-                            _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '/company/' + job.idCompany },
-                                _react2.default.createElement(
-                                    'h1',
-                                    null,
-                                    job.CompanyName
-                                )
-                            ),
-                            job.JobName
-                        ),
-                        _react2.default.createElement(
-                            _semanticUiReact.Grid.Column,
-                            { width: 8 },
-                            _react2.default.createElement(
-                                'h3',
-                                null,
-                                ' ',
-                                job.Description
-                            ),
-                            ' ',
-                            job.SupplementaryQs != '' ? _react2.default.createElement(
-                                'span',
-                                { style: { textAlign: "right" } },
-                                'Supplementary Q Required'
-                            ) : null,
-                            job.type,
-                            _react2.default.createElement('br', null),
-                            'Deadline: ',
-                            job.Deadline
-                        ),
-                        _react2.default.createElement(
-                            _semanticUiReact.Grid.Column,
-                            { width: 3 },
-                            job.applied == 1 ? _react2.default.createElement(
-                                _semanticUiReact.Button,
-                                { positive: true, idjob: job.idJobs, disabled: true },
-                                'Applied'
-                            ) : _react2.default.createElement(
-                                _semanticUiReact.Button,
-                                { primary: true, idjob: job.idJobs, onClick: _this3.showSupp },
-                                'Apply'
-                            )
-                        )
-                    );
-                });
-                return _react2.default.createElement(
-                    _semanticUiReact.Grid,
-                    { celled: true },
-                    jobListItems
-                );
-            }
-            return _react2.default.createElement(
+      console.log('Logging', this.props.user);
+      if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
+        return _react2.default.createElement(
+          _semanticUiReact.Loader,
+          { size: 'massive', style: { marginTop: '4em' }, active: true, inline: 'centered' },
+          'Loading Content'
+        );
+      } else if (this.props.user.user_type === 2) {
+        return _react2.default.createElement(
+          _reactRouterDom.Link,
+          { to: '/company/' + this.props.user.company_id },
+          'My Company Page'
+        );
+      } else if (this.props.user.user_type === 3) {
+        return _react2.default.createElement(_AdminDashboard2.default, null);
+      } else if (this.props.user.user_type === 0) {
+        var jobs = this.state.jobs;
+        var jobListItems = jobs.map(function (job) {
+          return _react2.default.createElement(
+            _semanticUiReact.Grid.Row,
+            { stretched: true, key: job.idJobs },
+            _react2.default.createElement(
+              _semanticUiReact.Grid.Column,
+              { width: 5 },
+              _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '/company/' + this.props.user.idCompany },
-                'My Company Page'
-            );
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return _react2.default.createElement(
-                'div',
-                null,
+                { to: '/company/' + job.idCompany },
                 _react2.default.createElement(
-                    _MenuContainer2.default,
-                    { loggedIn: true },
-                    this.getHomeComponent(),
-                    _react2.default.createElement(
-                        _semanticUiReact.Modal,
-                        { size: 'small', open: this.state.openModal, onClose: this.hideSupp },
-                        _react2.default.createElement(
-                            _semanticUiReact.Modal.Header,
-                            null,
-                            'Please Answer The Following Supplementary Question To Complete This Application'
-                        ),
-                        _react2.default.createElement(
-                            _semanticUiReact.Modal.Content,
-                            null,
-                            _react2.default.createElement(
-                                'p',
-                                null,
-                                this.state.supplementaryQ
-                            ),
-                            _react2.default.createElement(_semanticUiReact.Input, { fluid: true, name: 'supplementaryA', placeholder: 'Answer...', onChange: this.handleChange })
-                        ),
-                        _react2.default.createElement(
-                            _semanticUiReact.Modal.Actions,
-                            null,
-                            _react2.default.createElement(
-                                _semanticUiReact.Button,
-                                { negative: true, onClick: this.hideSupp },
-                                'No'
-                            ),
-                            _react2.default.createElement(_semanticUiReact.Button, { positive: true, icon: 'checkmark', labelPosition: 'right', content: 'Apply', onClick: this.suppApply })
-                        )
-                    )
+                  'h1',
+                  null,
+                  job.CompanyName
                 )
-            );
-        }
-    }]);
+              ),
+              job.JobName
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Grid.Column,
+              { width: 8 },
+              _react2.default.createElement(
+                'h3',
+                null,
+                ' ',
+                job.Description
+              ),
+              ' ',
+              job.SupplementaryQs != '' ? _react2.default.createElement(
+                'span',
+                { style: { textAlign: 'right' } },
+                'Supplementary Q Required'
+              ) : null,
+              job.type,
+              _react2.default.createElement('br', null),
+              'Deadline: ',
+              job.Deadline
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Grid.Column,
+              { width: 3 },
+              job.applied == 1 ? _react2.default.createElement(
+                _semanticUiReact.Button,
+                { positive: true, idjob: job.idJobs, disabled: true },
+                'Applied'
+              ) : _react2.default.createElement(
+                _semanticUiReact.Button,
+                { primary: true, idjob: job.idJobs, onClick: _this3.showSupp },
+                'Apply'
+              )
+            )
+          );
+        });
+        return _react2.default.createElement(
+          _semanticUiReact.Grid,
+          { celled: true },
+          jobListItems
+        );
+      }
+      return _react2.default.createElement(
+        _reactRouterDom.Link,
+        { to: '/company/' + this.props.user.company_id },
+        'My Company Page'
+      );
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _MenuContainer2.default,
+          { loggedIn: true },
+          this.getHomeComponent(),
+          _react2.default.createElement(
+            _semanticUiReact.Modal,
+            { size: 'small', open: this.state.openModal, onClose: this.hideSupp },
+            _react2.default.createElement(
+              _semanticUiReact.Modal.Header,
+              null,
+              'Please Answer The Following Supplementary Question To Complete This Application'
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Modal.Content,
+              null,
+              _react2.default.createElement(
+                'p',
+                null,
+                this.state.supplementaryQ
+              ),
+              _react2.default.createElement(_semanticUiReact.Input, { fluid: true, name: 'supplementaryA', placeholder: 'Answer...', onChange: this.handleChange })
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Modal.Actions,
+              null,
+              _react2.default.createElement(
+                _semanticUiReact.Button,
+                { negative: true, onClick: this.hideSupp },
+                'No'
+              ),
+              _react2.default.createElement(_semanticUiReact.Button, { positive: true, icon: 'checkmark', labelPosition: 'right', content: 'Apply', onClick: this.suppApply })
+            )
+          )
+        )
+      );
+    }
+  }]);
 
-    return Home;
+  return Home;
 }(_react.Component);
 
 var mapStateToProps = function mapStateToProps(state) {
-    return {
-        user: state.user
-    };
+  return {
+    user: state.user
+  };
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Home);
@@ -118340,8 +118342,8 @@ var Login = function (_Component) {
 
       (0, _session.login)(email, password, function (res) {
         if (res) {
-          _this2.props.loginUser(res.data.user);
-          document.cookie = 'token=' + res.data.token;
+          _this2.props.loginUser(res.data.data.user);
+          document.cookie = 'token=' + res.data.data.token;
           _this2.props.history.push('/home');
         } else {
           _this2.setState({ didError: true });
@@ -119207,6 +119209,7 @@ var Register = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      console.log('mounting!');
       getCompanyList(function (res) {
         if (!res) {
           console.log('Could not get company list');

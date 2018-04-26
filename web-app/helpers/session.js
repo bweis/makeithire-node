@@ -5,13 +5,14 @@ function checkSession(cb) {
   if (!getAuthToken()) {
     cb(false);
   } else {
-    axios.get('/api/getSession', {
+    axios.get('/api/session', {
       headers: {
         Authorization: getAuthToken(),
       },
     })
       .then((res) => {
-        cb(res.data.user);
+        console.log(res);
+        cb(res.data.data.user);
       })
       .catch(() => {
         cb(false);
@@ -19,9 +20,10 @@ function checkSession(cb) {
   }
 }
 
-function login(email, password, cb) {
-  axios.post('/api/login', { EmailID: email, Password: password })
+function login(email_address, password, cb) {
+  axios.post('/api/session', { email_address, password })
     .then((res) => {
+      console.log(res);
       cb(res);
       console.log(res);
     })

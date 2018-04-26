@@ -36,7 +36,7 @@ async function createSession(req) {
       password,
     } = req.body;
 
-    db.query(`SELECT * FROM user WHERE email_address = '${email_address}'`, (err, user_res) => { // Dont know how to make it work with ?
+    db.query(`SELECT * FROM user left join recruiter r ON user.id = r.id WHERE email_address = '${email_address}'`, (err, user_res) => {
       if (err) {
         return reject(response.buildDatabaseError(err));
       }
@@ -48,6 +48,7 @@ async function createSession(req) {
         middle_name,
         last_name,
         password: hash,
+        company_id,
       } = user_res[0];
 
       bcrypt.compare(password, hash, (err, auth_res) => {
@@ -59,9 +60,21 @@ async function createSession(req) {
             first_name,
             middle_name,
             last_name,
+            company_id,
           };
-          const token = { token: jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: '3h' }) };
-          return resolve(response.buildSuccess('Successfully retrieved token', token));
+          const user = { // stuff being passed back to redux
+            id,
+            email_address,
+            user_type,
+            first_name,
+            middle_name,
+            last_name,
+            company_id,
+          };
+          return resolve(response.buildSuccess(
+            'Successfully retrieved token',
+            { token: jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: '3h' }), user },
+          ));
         }
         return reject(response.buildParamError('Username/Password incorrect'));
       });

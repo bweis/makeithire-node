@@ -34,8 +34,8 @@ class Login extends Component {
     const { email, password } = this.state;
     login(email, password, (res) => {
       if (res) {
-        this.props.loginUser(res.data.user);
-        document.cookie = `token=${res.data.token}`;
+        this.props.loginUser(res.data.data.user);
+        document.cookie = `token=${res.data.data.token}`;
         this.props.history.push('/home');
       } else {
         this.setState({ didError: true });

@@ -25,7 +25,7 @@ class Recruiter extends Component {
   }
 
   getHR() {
-    if (this.props.user.isAdmin) {
+    if (this.props.user.user_type === 3) {
     return (<Card.Group>
       <Card fluid key={this.props.headRecruiter.idUser}>
         <Card.Content>
@@ -86,7 +86,7 @@ class Recruiter extends Component {
     var emailID = {
       EmailID: this.state.recruiterToAdd
     };
-    if (this.props.user.isAdmin) {
+    if (this.props.user.user_type === 3) {
       adminAddRecruiter((res) => {
         if (!res) {
           console.log('Could not add recruiter');
@@ -127,7 +127,7 @@ class Recruiter extends Component {
   render() {
     return (
       <Grid.Column>
-        {this.props.user.isAdmin &&
+        {this.props.user.user_type === 3 &&
         <Grid.Row>
           <Header size='large'>
             Head Recruiter

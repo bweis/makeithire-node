@@ -2,8 +2,8 @@ import axios from 'axios/index';
 
 const utils = require('./utils');
 
-function getCompanyList(cb) {
-  axios.get('/api/company').then(cb).catch(() => { cb(false); });
+async function getCompanyList(cb) {
+  axios.get('/api/company').then(cb).catch((err) => { cb(err); });
 }
 
 function getUserDetails(cb) {
@@ -22,7 +22,6 @@ function updateCompanyDetails(company, cb) {
   axios.post('/api/updateCompanyDetails/', company, { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
-
 function getStudentDetails(cb) {
   axios.get('/api/getStudentDetails', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
@@ -36,15 +35,15 @@ function getJobDetails(id, cb) {
 }
 
 function getEveryJobAndDetail(cb) {
-  axios.get('api/getEveryJobAndDetail', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
+  axios.get('api/job', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); });
 }
 
 function getUniversityList(cb) {
-  axios.get('/api/getUniversityList').then(cb).catch(() => { cb(false); });
+  axios.get('/api/university').then(cb).catch(() => { cb(false); });
 }
 
 function getMajors(cb) {
-  axios.get('/api/getMajors').then(cb).catch(() => { cb(false); });
+  axios.get('/api/major').then(cb).catch(() => { cb(false); });
 }
 
 function getDegrees(cb) {

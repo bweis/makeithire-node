@@ -16,7 +16,7 @@ class Company extends Component {
     this.state = {
       companyDetails: {},
       companyRecruiters: [],
-      headRecruiter: {}
+      headRecruiter: {},
     };
   }
 
@@ -33,24 +33,24 @@ class Company extends Component {
 
     getRecruiters(this.companyId, (res, err) => {
       if (res) {
-        var temp = res.data.response;
-        var recs = [];
-        var hr = {};
-        for(var i = 0; i < temp.length; i++) {
-          if(temp[i].idUser == this.state.companyDetails.idHeadRecruiter) {
+        const temp = res.data.response;
+        const recs = [];
+        let hr = {};
+        for (let i = 0; i < temp.length; i++) {
+          if (temp[i].idUser == this.state.companyDetails.idHeadRecruiter) {
             hr = temp[i];
           } else {
             recs.push(temp[i]);
           }
         }
-        if (this.props.user.isHeadRecruiter) {
+        if (this.props.user.user_type === 2) {
           this.setState({
-            companyRecruiters: recs
+            companyRecruiters: recs,
           });
         }
         this.setState({
           companyRecruiters: recs,
-          headRecruiter: hr
+          headRecruiter: hr,
         });
       } else {
         console.log(err);
@@ -62,34 +62,34 @@ class Company extends Component {
     console.log(this.state.companyRecruiters);
     if (Object.keys(this.props.user).length === 0 && this.props.user.constructor === Object) {
       return (
-          <Grid centered columns={2}>
-            <Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>
-          </Grid>
+        <Grid centered columns={2}>
+          <Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>
+        </Grid>
       );
-    } else if (this.props.user.isHeadRecruiter) {
+    } else if (this.props.user.user_type === 2) {
       return (
-      <Grid centered columns={2}>
+        <Grid centered columns={2}>
           <JobListing {...this.props} />
-          <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
-      </Grid>
+          <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props} />
+        </Grid>
       );
-    } else if (this.props.user.isAdmin) { // IS ADMIN
+    } else if (this.props.user.user_type === 3) { // IS ADMIN
       return (
-          <Grid centered columns={2}>
-            <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
-          </Grid>
+        <Grid centered columns={2}>
+          <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props} />
+        </Grid>
       );
-    } else if (this.props.user.isStudent) {
+    } else if (this.props.user.user_type === 0) {
       return (
-          <Grid centered columns={2}>
-            <JobListing {...this.props}/>
-          </Grid>
+        <Grid centered columns={2}>
+          <JobListing {...this.props} />
+        </Grid>
       );
     }
     return (
-        <Grid centered columns={2}>
-          <JobListing {...this.props} jobs={this.state.jobs}/>
-        </Grid>
+      <Grid centered columns={2}>
+        <JobListing {...this.props} jobs={this.state.jobs} />
+      </Grid>
     );
   }
 

@@ -33,6 +33,7 @@ class Register extends Component {
   }
 
   componentDidMount() {
+    console.log('mounting!')
     getCompanyList((res) => {
       if (!res) {
         console.log('Could not get company list');

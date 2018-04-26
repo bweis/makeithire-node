@@ -10,6 +10,7 @@ router.get('/', expressJwt({ secret: process.env.JWT_SECRET }), async (req, res)
     const data = await sessionHandler.checkSession(req.user.email_address);
     return response.sendSuccess(res, data);
   } catch (err) {
+    console.log('NO LONGER LOGGED IN!');
     return response.sendError(res, err);
   }
 });
