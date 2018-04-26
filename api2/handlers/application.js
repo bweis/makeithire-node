@@ -8,7 +8,7 @@ async function create(application_params) {
       if (err) {
         return reject(response.buildDatabaseError(err));
       }
-      return resolve(response.buildSuccess('Successfully created application', { application_id: res.insertId }));
+      return resolve(response.buildSuccess('Successfully created application', { chat_id: res.insertId }));
     });
   });
 }
