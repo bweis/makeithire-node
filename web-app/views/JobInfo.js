@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Grid, Card, Header, Input, Button, Icon} from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-
+import {Form, Grid, Card, Header, Input, Button} from 'semantic-ui-react';
 
 import MenuContainer from '../containers/MenuContainer';
 
@@ -16,7 +14,7 @@ class JobInfo extends Component {
         this.getApps = this.getApps.bind(this);
         this.apply = this.apply.bind(this);
         this.state = {
-            isRecruiter: true,
+            isRecruiter: false,
             jobDescr: {
                 JobName: '',
                 DateAdded: '',
@@ -37,6 +35,7 @@ class JobInfo extends Component {
 
     componentWillMount() {
 
+
         getCompanyDetails(this.props.match.params.companyId, (res) => {
                 if (res) {
                     console.log(res.data.response.CompanyName);
@@ -49,7 +48,9 @@ class JobInfo extends Component {
         getJobDetails(this.props.match.params.jobId, (res) => {
             if (res) {
                 console.log(res.data.response[0]);
-                this.setState({jobDescr: res.data.response[0]});
+                this.setState({jobDescr: res.data.response[0]})
+
+
             }
         });
         
@@ -79,23 +80,7 @@ class JobInfo extends Component {
     getApps() {
         console.log(this.state.applicants);
         return this.state.applicants.map((item, index) => (
-             <Card fluid key={item.idUser}>
-                <Card.Header>
-                    <Grid>
-                        <Grid.Column width={10}>
-                            {item.FirstName + ' ' + item.LastName}
-                        </Grid.Column>
-                        <Grid.Column width={6}>
-                            <Link to="/chat">
-                                <Icon name="comment" size="large" style={{float: "right"}}/>
-                            </Link>
-                        </Grid.Column>
-                    </Grid>
-                </Card.Header>
-                 <Card.Meta>
-                     {item.SubmissionDate}
-                 </Card.Meta>
-             </Card>
+             <Card fluid key={item.idUser} header={item.FirstName + ' ' + item.LastName} meta={item.SubmissionDate} />
          ));
 
     }
@@ -136,14 +121,12 @@ class JobInfo extends Component {
                 </Form>
                 <br />
                 {this.state.isRecruiter && <Grid centered>
-                    <Grid.Column width={8}>
                     <Form>
                     <Form.Input label="Filter" name="filter" placeholder="filter" />
-                    <Button onClick={this.applyFilter}>Apply Filter</Button>
+                    <Button onClick={this.applyFilter}>Apply</Button>
                     </Form>
                     <Header size="medium">Applicants</Header>
-                        {this.getApps()}
-                    </Grid.Column>
+                {this.getApps()}
                 </Grid>}
             </MenuContainer>
         );

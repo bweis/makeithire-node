@@ -67,22 +67,13 @@ function adminDeleteRecruiter(cb, EmailID) {
   axios.post('/api/adminDeleteRecruiter', EmailID, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
-function getApplicants(cb, id) {
-  axios.post('/api/getApplicants', id, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+function getApplicants(cb, idJob) {
+  axios.post('/api/getApplicants', idJob, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
 function getCompanyJobs(cb, idCompany) {
   axios.post('/api/getCompanyJobs', idCompany, {headers: {Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
-
-function getRecruiterChats(cb) {
-  axios.post('/api/getRecruiterChats', {}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
-}
-function getStudentChats(cb) {
-  axios.post('/api/getStudentChats', {}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
-}
-
-
 
 module.exports = {
   getCompanyList,
@@ -94,8 +85,8 @@ module.exports = {
   updateStudentDetails,
   getUniversityList,
   getMajors,
-  getEveryJobAndDetail,
-  getJobDetails,
+    getEveryJobAndDetail,
+    getJobDetails,
   getDegrees,
   addJobPosting,
   requestRecruiter,
@@ -103,6 +94,4 @@ module.exports = {
   adminDeleteRecruiter,
   getApplicants,
   getCompanyJobs,
-  getRecruiterChats,
-  getStudentChats,
 };
