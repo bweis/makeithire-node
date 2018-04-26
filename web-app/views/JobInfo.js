@@ -12,6 +12,7 @@ class JobInfo extends Component {
         this.state = {};
         console.log(this.props.match.params.jobId);
         this.getApps = this.getApps.bind(this);
+        this.apply = this.apply.bind(this);
         this.state = {
             isRecruiter: false,
             jobDescr: {
@@ -19,11 +20,13 @@ class JobInfo extends Component {
                 DateAdded: '',
                 Deadline: '',
                 Description: '',
-                Tags: ''
+                Tags: '',
+                SupplementaryQs: ''
             },
+            SupplementaryA: '',
             companyName: "",
             applicants: [],
-            filter: ''
+            filter: '',
         };
         if (this.state.isRecruiter) {
             console.log('is recruiter');
@@ -49,11 +52,12 @@ class JobInfo extends Component {
 
 
             }
-        })
+        });
         
         getUserDetails((res) => {
                 if (res) {
                     if (res.data.response.idCompany != 0) {
+                        console.log('recruiter');
                         this.state.isRecruiter = true;
                     }
                 }
@@ -86,12 +90,15 @@ class JobInfo extends Component {
 
     }
 
+    apply() {
+        console.log('apply');
+
+    }
 
     render() {
         return (
             <MenuContainer loggedIn>
                 <h1>Job Detailed Information</h1>
-
                 <Form>
                     <Form.Group widths='equal'>
                         <Form.Input fluid label='Company' value={this.state.companyName} readOnly/>
@@ -108,16 +115,19 @@ class JobInfo extends Component {
                     <Form.TextArea label='Job Description' placeholder='Job description...'
                                    value={this.state.jobDescr.Description} name='description' readOnly/>
                     <Form.Input label='Tags' placeholder='Tags' name='tags' value={this.state.jobDescr.Tags} readOnly/>
+                    {this.state.jobDescr.SupplementaryQs && <h3>Supplementary Question</h3>}
+                    {this.state.jobDescr.SupplementaryQs && <Form.TextArea label={this.state.jobDescr.SupplementaryQs} name="SupplementaryA" />}
+                    {!this.state.isRecruiter && <Button positive icon='checkmark' labelPosition='right' content='Apply' onClick={this.apply}/>}
                 </Form>
                 <br />
-                <Grid centered>
+                {this.state.isRecruiter && <Grid centered>
                     <Form>
                     <Form.Input label="Filter" name="filter" placeholder="filter" />
                     <Button onClick={this.applyFilter}>Apply</Button>
                     </Form>
                     <Header size="medium">Applicants</Header>
                 {this.getApps()}
-                </Grid>
+                </Grid>}
             </MenuContainer>
         );
     }
