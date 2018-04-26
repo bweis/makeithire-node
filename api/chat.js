@@ -55,7 +55,7 @@ function getRecruiterChats(req, res) {
         .json({ error: err });
     }
     else {
-      const sql = 'SELECT * FROM Chat WHERE RecruiterID = ' + result[0].idUser;
+      const sql = 'SELECT idChat, RecruiterID, B.FirstName AS RecruiterFirstName, StudentID, C.FirstName AS StudentFirstName FROM (SELECT * FROM Chat WHERE RecruiterID = '+result[0].idUser+') AS A, User AS B, User AS C WHERE A.RecruiterID = B.idUser AND A.StudentID = C.idUser';
       db.query(sql, (err2, result2) => {
         if (err2) {
           return res.status(400)
@@ -77,7 +77,7 @@ function getStudentChats(req, res) {
         .json({ error: err });
     }
     else {
-      const sql = 'SELECT * FROM Chat WHERE StudentID = ' + result[0].idUser;
+      const sql = 'SELECT idChat, RecruiterID, B.FirstName AS RecruiterFirstName, StudentID, C.FirstName AS StudentFirstName FROM (SELECT * FROM Chat WHERE StudentID = '+result[0].idUser+') AS A, User AS B, User AS C WHERE A.RecruiterID = B.idUser AND A.StudentID = C.idUser';
       db.query(sql, (err2, result2) => {
         if (err) {
           return res.status(400)
@@ -120,24 +120,24 @@ function deleteChat(req, res) {
   });
 }
 
-function getReceiver(idChat) {
-  const sql = 'SELECT * FROM Chat WHERE idChat = ?';
-  db.query(sqlID, idChat, (err, result) => {
-    if (err) {
-      return res.status(400)
-        .json({ error: err });
-    }
-    const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID + '\'';
-    db.query(sql2, idChat, (err2, result2) => {
-      if (err2) {
-        return res.status(400)
-          .json({ error: err });
-      }
-      return res.status(200)
-        .json({ message: 'Success', response: result2[0].EmailID });
-    });
-  });
-}
+// function getReceiver(idChat) {
+//   const sql = 'SELECT * FROM Chat WHERE idChat = ?';
+//   db.query(sqlID, idChat, (err, result) => {
+//     if (err) {
+//       return res.status(400)
+//         .json({ error: err });
+//     }
+//     const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID + '\'';
+//     db.query(sql2, idChat, (err2, result2) => {
+//       if (err2) {
+//         return res.status(400)
+//           .json({ error: err });
+//       }
+//       return res.status(200)
+//         .json({ message: 'Success', response: result2[0].EmailID });
+//     });
+//   });
+// }
 
 // // SocketIO
 // function onConnect(socket) {
