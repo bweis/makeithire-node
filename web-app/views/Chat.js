@@ -31,37 +31,37 @@ const m = [
     {
         chatid: '0',
         message: 'Message 1 test',
-        sender: 'me',
+        sender: 175,
         time: '11:59am'
     },
     {
         chatid: '0',
         message: 'Message 2 test',
-        sender: 'recruiter',
+        sender: 0,
         time: '12:00pm'
     },
     {
         chatid: '0',
         message: 'Message 3 test',
-        sender: 'recruiter',
+        sender: 0,
         time: '12:15pm'
     },
     {
         chatid: '0',
         message: 'Message 4 test',
-        sender: 'me',
+        sender: 175,
         time: '12:30pm'
     },
     {
         chatid: '0',
         message: 'Message 5 test',
-        sender: 'recruiter',
+        sender: 0,
         time: '1:00pm'
     },
     {
         chatid: '0',
         message: 'Message 6 test',
-        sender: 'me',
+        sender: 175,
         time: '1:30pm'
     },
 
@@ -102,7 +102,7 @@ export default class Chat extends Component {
             'chatid': '0',
             'message': e,
             'time': '1:35',
-            'sender': 'me'
+            'sender': this.state.userInfo.idUser
         }
         m.push(newm);
         this.setState({messages: m});
@@ -139,7 +139,7 @@ export default class Chat extends Component {
     generateMessages() {
         const messages = this.state.messages;
         const messItems = messages.map(mess =>
-            <Message key={mess.time} date={mess.time} isOwn={mess.sender == 'me' ? true : false} authorName={mess.sender}>
+            <Message key={mess.time} date={mess.time} isOwn={mess.sender == this.state.userInfo.idUser} authorName={mess.sender}>
                 <MessageText>
                     {mess.message}
                 </MessageText>
