@@ -48,6 +48,7 @@ class MenuContainer extends Component {
               <Menu.Item><img alt='Logo' src='/img/logo.png' /></Menu.Item>
               {loggedIn ? this.createNavItem('Home', '/home') : null}
               {loggedIn ? this.createNavItem('Profile', '/profile') : null}
+              {loggedIn ? this.createNavItem('ChatView', '/chatview') : null}
               {loggedIn ? this.createNavItem('Job', '/job') : null}
               {loggedIn ? this.createNavItem('Chat', '/chat') : null}
               {loggedIn ? logoutMenuItem : loginMenuItem}
