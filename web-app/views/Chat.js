@@ -38,6 +38,7 @@ const m = [
         chatid: '0',
         message: 'Message 2 test',
         sender: 0,
+        sender: 'recruiter',
         time: '12:00pm'
     },
     {
