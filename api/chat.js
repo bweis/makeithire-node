@@ -103,6 +103,23 @@ function getMessages(req, res) {
   });
 }
 
+function deleteChat(req, res) {
+  var email = req.user.EmailID;
+  var sql = 'SELECT idUser FROM User WHERE EmailID = ?';
+  db.query(sql, email, (err1, result) => {
+    if (err1) {
+      return res.status(400).json({ error: err1 });
+    }
+    var sql2 = 'DELETE FROM Chat WHERE RecruiterID = ?'
+    db.query(sql2, result[0].idUser, (err2, result2) => {
+      if (err2) {
+        return res.status(400).json({ error: err2 });
+      }
+      return res.status(200).json({ message: 'Success' });
+    });
+  });
+}
+
 function getReceiver(idChat) {
   const sql = 'SELECT * FROM Chat WHERE idChat = ?';
   db.query(sqlID, idChat, (err, result) => {
