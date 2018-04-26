@@ -3,7 +3,7 @@
  ******************************** */
 
 require('dotenv/config');
-require('socket.io')(app);
+//require('socket.io')(app);
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
