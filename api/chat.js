@@ -93,7 +93,7 @@ function getStudentChats(req, res) {
 
 function getMessages(req, res) {
   const sql = 'SELECT Timestamp, idUser, Message FROM Message WHERE idChat = ' + req.body.idChat + ' ORDER BY Timestamp ASC';
-  db.query(sqlID, (err, result) => {
+  db.query(sql, (err, result) => {
     if (err) {
       return res.status(400)
         .json({ error: err });
