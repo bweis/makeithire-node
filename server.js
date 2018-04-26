@@ -7,7 +7,7 @@ require('socket.io')(app);
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressJwt = require('express-jwt');
-const chat = require('/api/chat');
+const chat = require('./api/chat');
 const api = require('./api/api');
 
 const app = express();
