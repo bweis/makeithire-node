@@ -99,19 +99,21 @@ function editJobPosting(req, res) {
 }
 
 function getEveryJobAndDetail(req, res) {
-  var email = req.user.EmailID;
-  var sql = 'SELECT idUser FROM User WHERE EmailID = ?';
-  db.query(sql, email, (err1, result) => {
-    if (err1) {
-      return res.status(400).json({ error: err1 });
-      const sql = 'SELECT B.idJobs, B.JobName, B.Description, C.CompanyName, B.DateAdded, B.Deadline, B.Tags, B.SupplementaryQs, B.idApplication FROM (Select J.idJobs, JobName, Description, idCompany, DateAdded, Deadline, Tags, SupplementaryQs, idApplication FROM Jobs AS J LEFT JOIN (SELECT * FROM Application WHERE idUser = ' + result[0].idUser + ') AS A ON A.idJobs = J.idJobs) AS B INNER JOIN Company AS C ON C.idCompany = B.idCompany'
-      db.query(sql, (err, result) => {
+  const sqlID = 'SELECT idUser FROM User WHERE EmailID = \'' + req.user.EmailID + '\'';
+  db.query(sqlID, (err, result) => {
+    if (err) {
+      return res.status(400)
+        .json({ error: err });
+    }
+    else {
+      var sql2 = 'SELECT B.idJobs, B.JobName, B.Description, C.CompanyName, B.DateAdded, B.Deadline, B.Tags, B.SupplementaryQs, B.idApplication FROM (Select J.idJobs, JobName, Description, idCompany, DateAdded, Deadline, Tags, SupplementaryQs, idApplication FROM Jobs AS J LEFT JOIN (SELECT * FROM Application WHERE idUser = ' + result[0].idUser + ') AS A ON A.idJobs = J.idJobs) AS B INNER JOIN Company AS C ON C.idCompany = B.idCompany'
+      db.query(sql2, (err2, result2) => {
         if (err) {
           return res.status(400)
-            .json({ error: err });
+            .json({ error: err2 });
         }
         return res.status(200)
-          .json({ message: 'Success', response: result });
+          .json({ message: 'Success', response: result2 });
       });
     }
   });
