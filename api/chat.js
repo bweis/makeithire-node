@@ -139,20 +139,35 @@ function getReceiver(idChat) {
   });
 }
 
-// // SocketIO
-// function onConnect(socket) {
-//   onlineUsers[req.user.EmailID] = socket;
+// SocketIO
+function onConnect(socket) {
+  onlineUsers[req.user.EmailID] = socket;
 
-//   // Disconnect
-//   socket.on('disconnect', function() {
+  // New Message Window
+  socket.on('new window', function(data, callback) {
+      if (data in onlineUsers) {
+        callback(false);
+      }
+      else {
+        callback(true);
+        socket.nickname = data;
+        onlineUsers[socket.nickname] = socket;
+      }
+  });
 
-//   });
+  // Disconnect
+  socket.on('disconnect', function() {
+    delete onlineUsers[socket.nickname];
+  });
 
-//   // Send Message
-//   socket.on('send message', function (data) {
-//     onlineUsers[req.user.EmailID].emit('new message', {message: data, sender: req.user.Email});
-//   });
-// }
+  // Send Message
+  socket.on('send message', function (data) {
+    var result = getReceiver(idChat);
+    if (result.response in onlineUsers) {
+      onlineUsers[result.response].emit('new message', {message: data.message, sender: socket.nickname});
+    }
+  });
+}
 
 module.exports = {
   onConnect,
@@ -173,11 +188,13 @@ module.exports = {
 // $messageForm.submit(function (e) {
 //   e.preventDefault(); // Prevent refresh
 //   // Send message from client to server
-//   socket.emit('send message', messageBox.val());
+//   msg.message = messageBox.val();
+//   msg.idChat = 0;
+//   socket.emit('send message', msg)
 //   messageBox.val('');   // Empty the message box
 // });
 
 // socket.on('new message'), function(data) {
 //   // Display the new message
-//   $chat.append(data + '<br/>');
-// }`
+//   $chat.append(data.sendet + ': '+data.message+'<br/>');
+// }
