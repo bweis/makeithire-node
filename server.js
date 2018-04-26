@@ -5,8 +5,6 @@
 require('dotenv/config');
 const express = require('express');
 const bodyParser = require('body-parser');
-const expressJwt = require('express-jwt');
-// const api = require('./api/api');
 const apiv2 = require('./api2/api');
 
 const app = express();
@@ -17,16 +15,8 @@ app.use(bodyParser.json());
 
 // Setting up the API
 // ============================================================================================
-const publicRoutes = [
-  '/api/login',
-  '/api/signUpStudent',
-  '/api/signUpRecruiter',
-  '/api/getCompanyList',
-  '/api/getMajors',
-  '/api/getDegrees',
-  '/api/getUniversityList',
-];
-// app.use('/api', expressJwt({ secret: process.env.JWT_SECRET }).unless({ path: publicRoutes }));
+
+// Add 'expressJwt({ secret: process.env.JWT_SECRET })' as middleware on any function you need.
 app.use('/api', apiv2);
 
 

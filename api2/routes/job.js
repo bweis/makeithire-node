@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const jobHandler = require('../handlers/job');
+const response = require('../util/response');
 
 // Forwards tag info
 router.use('/:id/tag/', (req, res, next) => {
@@ -6,24 +8,41 @@ router.use('/:id/tag/', (req, res, next) => {
   next();
 }, require('./job_tag'));
 
-router.get('/', (req, res) => {
-  console.log('find');
-  res.status(200).json({ status: 'job' });
+router.get('/', async (req, res) => {
+  try {
+    const data = await jobHandler.getAllJobs();
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
 router.post('/', async (req, res) => {
-  console.log('find');
-  res.status(200).json({ status: 'job' });
+  try {
+    const data = await jobHandler.create(req.body);
+    console.log(data);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.get('/:id', (req, res) => {
-  console.log('get');
-  res.status(200).json({ status: 'job' });
+router.get('/:id', async (req, res) => {
+  try {
+    const data = await jobHandler.getById(req.params.id);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.patch('/:id', (req, res) => {
-  console.log('patch');
-  res.status(200).json({ status: 'job' });
+router.patch('/:id', async (req, res) => {
+  try {
+    const data = await jobHandler.updateById(req.params.id, req.body);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
 

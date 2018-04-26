@@ -1,4 +1,6 @@
 const app = require('express');
+const companyHandler = require('../handlers/company');
+const response = require('../util/response');
 
 const router = app.Router();
 
@@ -8,31 +10,52 @@ router.use('/:id/tag/', (req, res, next) => {
   next();
 }, require('./company_tag'));
 
-router.get('/', (req, res) => {
-  console.log('find company');
-  res.status(200).json({ status: 'success' });
+router.get('/', async (req, res) => {
+  try {
+    const data = await companyHandler.getAllCompanies(req.query.hasJobs);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.post('/', (req, res) => {
-  console.log('post company');
-  res.status(200).json({ status: 'success' });
+router.post('/', async (req, res) => {
+  try {
+    const data = await companyHandler.create(req.body);
+    console.log(data);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.get('/:id', (req, res) => {
-  console.log('get company');
-  res.status(200).json({ status: 'success' });
+router.get('/:id', async (req, res) => {
+  try {
+    const company = await companyHandler.getById(req.params.id);
+    const recruiters = await companyHandler.getAllCompanyRecruiters(req.params.id);
+
+    const data = company;
+    data.data[0].recruiters = recruiters.data;
+    console.log(data);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.patch('/:id', (req, res) => {
-  console.log('patch company');
-  res.status(200).json({ status: 'success' });
+router.patch('/:id', async (req, res) => {
+  try {
+    const data = await companyHandler.updateById(req.params.id, req.body);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-
-router.delete('/:id', (req, res) => {
-  console.log('delete company');
-  res.status(200).json({ status: 'success' });
-});
+// router.delete('/:id', (req, res) => {
+//   console.log('delete company');
+//   res.status(200).json({ status: 'success' });
+// });
 
 module.exports = router;
 

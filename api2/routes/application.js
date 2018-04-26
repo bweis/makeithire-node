@@ -1,13 +1,23 @@
 const router = require('express').Router();
+const response = require('../util/response');
+const applicationHandler = require('../handlers/application');
+const expressJwt = require('express-jwt');
 
 router.get('/', (req, res) => {
   console.log('find');
   res.status(200).json({ status: 'application' });
 });
 
-router.post('/', async (req, res) => {
-  console.log('find');
-  res.status(200).json({ status: 'application' });
+router.post('/', expressJwt({ secret: process.env.JWT_SECRET }), async (req, res) => {
+  try {
+    const application_params = req.body;
+    application_params.user_id = req.user.id;
+    const data = await applicationHandler.create(application_params);
+    console.log(data);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
 router.get('/:id', (req, res) => {

@@ -83,6 +83,38 @@ async function create(user_params) {
   });
 }
 
+async function getById(user_id) {
+  return new Promise((resolve, reject) => {
+    const sql = 'SELECT id, user_type, first_name, middle_name, last_name, email_address FROM user WHERE id = ?';
+    db.query(sql, user_id, (err, res) => {
+      if (err) {
+        return reject(response.buildDatabaseError(err));
+      }
+      return resolve(response.buildSuccess('Found User', res));
+    });
+  });
+}
+
+async function updateById(user_id, user_params) {
+  return new Promise((resolve, reject) => {
+    const allowedFields = [ 'first_name', 'middle_name', 'last_name' ];
+    const formattedParams = {};
+    allowedFields.forEach((field) => {
+      if (field in user_params) formattedParams[field] = user_params[field];
+    });
+
+    const sql = 'update user SET ? WHERE id = ?';
+    db.query(sql, [ formattedParams, user_id ], (err, res) => {
+      if (err) {
+        return reject(response.buildDatabaseError(err));
+      }
+      console.log(res);
+      return resolve(response.buildSuccess('Successfully updated', formattedParams));
+    });
+  });
+}
 module.exports = {
   create,
+  getById,
+  updateById,
 };

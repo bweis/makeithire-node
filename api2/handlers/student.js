@@ -15,20 +15,38 @@ async function create(student_params) {
   });
 }
 
-async function patch(student_params) {
-  const {
-    user_id,
-  } = student_params;
+async function updateById(student_id, student_params) {
   return new Promise((resolve, reject) => {
-    db.query('INSERT INTO student (id) VALUES (?)', user_id, (err, res) => {
+    const allowedFields = [
+      'university_id',
+      'major_id',
+      'graduation_year',
+      'pursuing_degree',
+      'highest_degree',
+      'skills',
+      'projects',
+      'biography',
+      'phone_number',
+      'github_url',
+      'linkedin_url',
+    ];
+    const formattedParams = {};
+    allowedFields.forEach((field) => {
+      formattedParams[field] = student_params[field];
+    });
+
+    const sql = 'update student SET ? WHERE id = ?';
+    db.query(sql, [ formattedParams, student_id ], (err, res) => {
       if (err) {
         return reject(response.buildDatabaseError(err));
       }
+      console.log(res);
+      return resolve(response.buildSuccess('Successfully updated', formattedParams));
     });
-    return resolve(response.buildSuccess('Successfully added user', user_id));
   });
 }
 
 module.exports = {
   create,
+  updateById
 };
