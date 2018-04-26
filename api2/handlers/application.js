@@ -13,75 +13,61 @@ async function create(application_params) {
   });
 }
 
-//
-// async function getAllCompanies(hasJobs) {
-//   return new Promise((resolve, reject) => {
-//     let sql = 'SELECT id, name, description, head_recruiter_id, email_domain FROM company';
-//     let message = 'Found Companies';
-//     if (hasJobs === 'true') {
-//       sql = 'SELECT id, name, description, head_recruiter_id, email_domain FROM company WHERE id IN (SELECT DISTINCT company_id FROM job)';
-//       message = 'Found Companies with at least 1 job'
-//     }
-//     db.query(sql, (err, res) => {
-//       if (err) {
-//         return reject(response.buildDatabaseError(err));
-//       }
-//       return resolve(response.buildSuccess(message, res));
-//     });
-//   });
-// }
-//
-// async function getById(user_id) {
-//   return new Promise((resolve, reject) => {
-//     const sql = 'SELECT id, name, description, head_recruiter_id, email_domain FROM company WHERE id = ?';
-//     db.query(sql, user_id, (err, res) => {
-//       if (err) {
-//         return reject(response.buildDatabaseError(err));
-//       }
-//       return resolve(response.buildSuccess('Found Company', res));
-//     });
-//   });
-// }
-//
-// async function getAllCompanyRecruiters(company_id) {
-//   return new Promise((resolve, reject) => {
-//     const sql = 'select id, user_type, first_name, middle_name, last_name, email_address from user where id in (select id from recruiter where' +
-//       ' company_id = ?)';
-//     db.query(sql, company_id, (err, res) => {
-//       if (err) {
-//         return reject(response.buildDatabaseError(err));
-//       }
-//       return resolve(response.buildSuccess('Found Company', res));
-//     });
-//   });
-// }
-//
-// async function updateById(company_id, company_params) {
-//   return new Promise((resolve, reject) => {
-//     const allowedFields = [ 'name', 'description' ];
-//     const formattedParams = {};
-//     allowedFields.forEach((field) => {
-//       console.log(typeof company_params[field]);
-//       if (field in company_params) formattedParams[field] = company_params[field];
-//     });
-//
-//     console.log(formattedParams, company_id)
-//     const sql = 'update company SET ? WHERE id = ?';
-//     db.query(sql, [ formattedParams, company_id ], (err, res) => {
-//       if (err) {
-//         return reject(response.buildDatabaseError(err));
-//       }
-//       console.log(res);
-//       return resolve(response.buildSuccess('Successfully updated', formattedParams));
-//     });
-//   });
-// }
+async function getById(user_id) {
+  return new Promise((resolve, reject) => {
+    const sql = 'SELECT id, user_id, job_id, submitted, supplementary_answer answer FROM application WHERE id = ?';
+    db.query(sql, user_id, (err, res) => {
+      if (err) {
+        return reject(response.buildDatabaseError(err));
+      }
+      return resolve(response.buildSuccess('Found application', res));
+    });
+  });
+}
 
+async function getAllApplications(query_params) {
+  return new Promise((resolve, reject) => {
+    const {
+      user_id,
+      job_id,
+    } = query_params;
+    let sql = 'SELECT id, user_id, job_id, submitted, supplementary_answer FROM application';
+    if (user_id) {
+      sql = 'SELECT id, user_id, job_id, submitted, supplementary_answer FROM application WHERE user_id = ?';
+    } else if (job_id) {
+      sql = 'SELECT id, user_id, job_id, submitted, supplementary_answer FROM application WHERE job_id = ?';
+    }
+
+    db.query(sql, user_id || job_id, (err, res) => {
+      if (err) {
+        return reject(response.buildDatabaseError(err));
+      }
+      return resolve(response.buildSuccess('Found Companies', res));
+    });
+  });
+}
+
+async function updateById(application_id, application_params) {
+  return new Promise((resolve, reject) => {
+    const allowedFields = [ 'supplementary_answer' ];
+    const formattedParams = {};
+    allowedFields.forEach((field) => {
+      if (field in application_params) formattedParams[field] = application_params[field];
+    });
+
+    const sql = 'update application SET ? WHERE id = ?';
+    db.query(sql, [ formattedParams, application_id ], (err, res) => {
+      if (err) {
+        return reject(response.buildDatabaseError(err));
+      }
+      return resolve(response.buildSuccess('Successfully updated', formattedParams));
+    });
+  });
+}
 
 module.exports = {
   create,
-  // getById,
-  // getAllCompanyRecruiters,
-  // getAllCompanies,
-  // updateById,
+  getById,
+  getAllApplications,
+  updateById,
 };

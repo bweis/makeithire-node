@@ -3,9 +3,13 @@ const response = require('../util/response');
 const applicationHandler = require('../handlers/application');
 const expressJwt = require('express-jwt');
 
-router.get('/', (req, res) => {
-  console.log('find');
-  res.status(200).json({ status: 'application' });
+router.get('/', async (req, res) => {
+  try {
+    const data = await applicationHandler.getAllApplications(req.query);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
 router.post('/', expressJwt({ secret: process.env.JWT_SECRET }), async (req, res) => {
@@ -20,21 +24,28 @@ router.post('/', expressJwt({ secret: process.env.JWT_SECRET }), async (req, res
   }
 });
 
-router.get('/:id', (req, res) => {
-  console.log('get');
-  res.status(200).json({ status: 'application' });
+router.get('/:id', async (req, res) => {
+  try {
+    const data = await applicationHandler.getById(req.params.id);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
 
-router.patch('/:id', (req, res) => {
-  console.log('patch');
-  res.status(200).json({ status: 'application' });
+router.patch('/:id', async (req, res) => {
+  try {
+    const data = await applicationHandler.updateById(req.params.id, req.body);
+    return response.sendSuccess(res, data);
+  } catch (err) {
+    return response.sendError(res, err);
+  }
 });
-
-
-router.delete('/:id', (req, res) => {
-  console.log('delete');
-  res.status(200).json({ status: 'application' });
-});
+//
+// router.delete('/:id', (req, res) => {
+//   console.log('delete');
+//   res.status(200).json({ status: 'application' });
+// });
 
 
 module.exports = router;

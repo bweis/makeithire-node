@@ -19,7 +19,7 @@ async function getAllCompanies(hasJobs) {
     let message = 'Found Companies';
     if (hasJobs === 'true') {
       sql = 'SELECT id, name, description, head_recruiter_id, email_domain FROM company WHERE id IN (SELECT DISTINCT company_id FROM job)';
-      message = 'Found Companies with at least 1 job'
+      message = 'Found Companies with at least 1 job';
     }
     db.query(sql, (err, res) => {
       if (err) {
@@ -60,11 +60,8 @@ async function updateById(company_id, company_params) {
     const allowedFields = [ 'name', 'description' ];
     const formattedParams = {};
     allowedFields.forEach((field) => {
-      console.log(typeof company_params[field]);
       if (field in company_params) formattedParams[field] = company_params[field];
     });
-
-    console.log(formattedParams, company_id)
     const sql = 'update company SET ? WHERE id = ?';
     db.query(sql, [ formattedParams, company_id ], (err, res) => {
       if (err) {
