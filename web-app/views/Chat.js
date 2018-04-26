@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, TextInput, SendButton, Row, Title, Subtitle, TextComposer, MessageList, Message, MessageGroup, MessageButtons, MessageMedia, MessageTitle, MessageText, FixedWrapper } from '@livechat/ui-kit'
-import { getUserDetails} from '../helpers/api'
+import { getUserDetails, getStudentChats, getRecruiterChats} from '../helpers/api'
 import { Button, Input, Grid, TextArea, Image, Form, Header  } from 'semantic-ui-react';
 import axios from 'axios/index';
 
@@ -72,13 +72,16 @@ export default class Chat extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chats: c,
+            chats: [],
             messages: [],
             message: '',
             chatid: '',
-            userInfo: {}
+            userInfo: {},
+            selectedChat: '',
+            chatSelected: false,
         };
         this.getChats = this.getChats.bind(this);
+        this.generateChats = this.generateChats.bind(this);
         this.getMessages = this.getMessages.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
@@ -87,12 +90,12 @@ export default class Chat extends Component {
                 console.log('Could not get user details');
             } else {
                 this.setState({ userInfo: res.data.response});
+                this.getChats();
             }
         });
     }
 
     handleChange(e) {
-
 
     }
 
@@ -109,19 +112,42 @@ export default class Chat extends Component {
         this.setState({messages: m});
     }
 
-
     getChats() {
+        if (this.state.userInfo) {
+            console.log(this.state.userInfo);
+            if (this.state.userInfo.idCompany == 0) {
+                getStudentChats((res) => {
+                    if (!res) {
+                        console.log('Could not get student chats');
+                    } else {
+                        this.setState({chats: res.data.response});
+                    }
+                })
+            } else {
+                getRecruiterChats((res) => {
+                    if (!res) {
+                        console.log('Could not get recruiter chats');
+                    } else {
+                        this.setState({chats: res.data.response});
+                    }
+                })
+            }
+        }
+    }
+
+    generateChats() {
+        console.log(this.state.chats);
         const chats = this.state.chats;
         const chatItems = chats.map(chat =>
-                <ChatListItem key={chat.id} chatid={chat.id} onClick={this.getMessages}>
+                <ChatListItem key={chat.idChat} chatid={chat.idChat} onClick={() => this.getMessages(chat.idChat)}>
                     <Avatar letter="K" />
                     <Column fill>
                         <Row justify>
-                            <Title ellipsis>{chat.recruiter}</Title>
-                            <Subtitle nowrap>{chat.time}</Subtitle>
+                            <Title ellipsis>{chat.Recruiter}</Title>
+                            <Subtitle nowrap>test</Subtitle>
                         </Row>
                         <Subtitle ellipsis>
-                            {chat.company}
+                            Company
                         </Subtitle>
                     </Column>
                 </ChatListItem>
@@ -133,14 +159,15 @@ export default class Chat extends Component {
         )
     }
 
-    getMessages() {
-        this.setState({ messages: m });
+    getMessages(id) {
+        console.log('chat id: ' + id);
+        this.setState({ messages: m, selectedChat: id, chatSelected: true});
     }
 
     generateMessages() {
         const messages = this.state.messages;
         const messItems = messages.map(mess =>
-            <Message key={mess.time} date={mess.time} isOwn={mess.sender == this.state.userInfo.idUser} authorName={mess.sender}>
+            <Message key={mess.time} date={mess.time} isOwn={mess.sender == this.state.userInfo.idUser} authorName="blah">
                 <MessageText>
                     {mess.message}
                 </MessageText>
@@ -148,22 +175,26 @@ export default class Chat extends Component {
         );
         return (
             <Grid.Column width={10}>
+                {!this.state.chatSelected &&
+                <Header>
+                    No chat selected
+                </Header>}
                     <MessageList active style={{overflowY:'auto', whiteSpace:'nowrap'}}>
                         {messItems}
                     </MessageList>
-                    <TextComposer value="" onSend={this.sendMessage}>
+                {this.state.chatSelected && <TextComposer value="" onSend={this.sendMessage}>
                         <Row align="center">
                             <TextInput fill />
                             <SendButton fit />
                         </Row>
-                    </TextComposer>
+                    </TextComposer>}
                 </Grid.Column>
         )
     }
 
     render() {
         return (
-            <MenuContainer>
+            <MenuContainer loggedIn>
                 <ThemeProvider>
                     <Grid style={{height: '85vh'}} >
                         <Grid.Column width={6} >
@@ -172,7 +203,7 @@ export default class Chat extends Component {
                                     Chats
                                 </Header.Content>
                             </Header>
-                            {this.getChats()}
+                            {this.generateChats()}
                         </Grid.Column>
                         {this.generateMessages()}
                     </Grid>

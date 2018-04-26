@@ -59,12 +59,10 @@ class JobListing extends Component {
 
   render() {
     return (
-
       <Grid.Column centered>
         <Header size='large'>
-                        Job Listings <Link to={`/company/${this.props.match.params.companyId}/newJob`}><Button circular icon='add circle' size='medium' floated='right' /></Link>
+            Job Listings <Link to={`/company/${this.props.match.params.companyId}/newJob`}><Button circular icon='add circle' size='medium' floated='right' /></Link>
         </Header>
-
         <Card.Group>
           {this.makeTiles()}
         </Card.Group>
