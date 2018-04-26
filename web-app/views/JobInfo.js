@@ -57,6 +57,7 @@ class JobInfo extends Component {
         getUserDetails((res) => {
                 if (res) {
                     if (res.data.response.idCompany != 0) {
+                        console.log('recruiter');
                         this.state.isRecruiter = true;
                     }
                 }
