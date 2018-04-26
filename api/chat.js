@@ -56,13 +56,13 @@ function getRecruiterChats(req, res) {
     }
     else {
       const sql = 'SELECT * FROM Chat WHERE RecruiterID = ' + result[0].idUser;
-      db.query(sql, (err, result) => {
-        if (err) {
+      db.query(sql, (err2, result2) => {
+        if (err2) {
           return res.status(400)
-            .json({ error: err });
+            .json({ error: err2 });
         }
         else {
-          return res.status(200).json({ message: 'Success', response: result });
+          return res.status(200).json({ message: 'Success', response: result2 });
         }
       });
     }
@@ -78,13 +78,13 @@ function getStudentChats(req, res) {
     }
     else {
       const sql = 'SELECT * FROM Chat WHERE StudentID = ' + result[0].idUser;
-      db.query(sql, (err, result) => {
+      db.query(sql, (err2, result2) => {
         if (err) {
           return res.status(400)
-            .json({ error: err });
+            .json({ error: err2 });
         }
         else {
-          return res.status(200).json({ message: 'Success', response: result });
+          return res.status(200).json({ message: 'Success', response: result2 });
         }
       });
     }
@@ -98,12 +98,15 @@ function getReceiver(idChat) {
       return res.status(400)
         .json({ error: err });
     }
-   
-    '${result[0].StudentID}'
-    
-      const sql2 = 'SELECT EmailID FROM User WHERE (idUser = '+result[0].RecruiterID+' OR idUser = '+result[0].RecruiterID+') AND EmailID != req.user.EmailID';
+    const sql2 = 'SELECT EmailID FROM User WHERE (idUser = ' + result[0].RecruiterID + ' OR idUser = ' + result[0].RecruiterID + ') AND EmailID != \'' + req.user.EmailID+'\'';
+    db.query(sql2, idChat, (err2, result2) => {
+      if (err2) {
+        return res.status(400)
+          .json({ error: err });
+      }
       return res.status(200)
-        .json({message: 'Success', response: result[0].EmailID});
+        .json({ message: 'Success', response: result2[0].EmailID });
+    });
   });
 }
 
@@ -147,4 +150,4 @@ module.exports = {
 // socket.on('new message'), function(data) {
 //   // Display the new message
 //   $chat.append(data + '<br/>');
-// }
+// }`
