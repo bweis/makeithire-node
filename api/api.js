@@ -26,7 +26,7 @@ apiRouter.post('/signUpRecruiter', registration.signUpRecruiter);
 
 // User Routes
 apiRouter.get('/getUserDetails', user.getUserDetails);
-apiRouter.post('/getOtherUserDetails', getOtherUserDetails);
+apiRouter.post('/getOtherUserDetails', user.getOtherUserDetails);
 
 // Student Routes
 apiRouter.get('/uploadResume', student.uploadResume);
