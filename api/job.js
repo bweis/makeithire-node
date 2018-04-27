@@ -48,7 +48,7 @@ function addJobPosting(req, res) {
   const deadline = req.body.Deadline;
   const tags = req.body.Tags;
   const supplementaryQs = req.body.SupplementaryQs;
-  var currDate = new Date.UTC().toISOString().slice(0, 19).replace('T', ' ');
+  var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const post = {
     JobName: jobName,
     Description: description,
