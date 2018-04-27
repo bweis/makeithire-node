@@ -167,12 +167,13 @@ class Home extends Component {
     } else if (this.props.user.isAdmin) {
       return (<AdminDashboard />);
     } else if (this.props.user.isStudent) {
-      const jobs = this.state.results.length === 0 ? this.state.jobs : this.state.results;
+      const jobs = this.state.results.length !== 0 ? this.state.results : this.state.jobs;
       const jobListItems = jobs.map(job =>
         (<Grid.Row stretched key={job.idJobs}>
           <Grid.Column width={5}>
             <Link to={`/company/${job.idCompany}`}><h1>{job.CompanyName}</h1></Link>
-            {job.JobName}
+            {job.JobName}<br/>
+            Tags: {job.Tags}
           </Grid.Column>
           <Grid.Column width={8}>
             <h3> {job.Description}</h3> {job.SupplementaryQs != '' ? <span style={{ textAlign: 'right' }}>Supplementary Q Required</span> : null}

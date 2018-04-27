@@ -9,7 +9,10 @@ import { getCompanyList } from '../helpers/api';
 class Companies extends Component {
   constructor(props) {
     super(props);
-    this.state = { companies: [] };
+    this.state = {
+      companies: [],
+      results: [],
+    };
     this.makeTiles = this.makeTiles.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleResultSelect = this.handleResultSelect.bind(this);
@@ -22,6 +25,8 @@ class Companies extends Component {
           key: company.idCompany,
           value: company.idCompany,
           title: company.CompanyName,
+          hashTags: company.HashTags,
+          description: company.Description,
         }));
 
         companyOptions = companyOptions.filter(obj => obj.key !== -1);
@@ -53,8 +58,9 @@ class Companies extends Component {
       if (this.state.value.length < 1) return this.resetComponent();
 
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-      const isMatch = result => re.test(result.title);
-      console.log(this.state.companies);
+      const isMatch = result => re.test(result.title) || re.test(result.hashTags);
+      console.log('companies', this.state.companies);
+      console.log('filtered', _.filter(this.state.companies, isMatch));
       this.setState({
         isLoading: false,
         results: _.filter(this.state.companies, isMatch),
@@ -67,9 +73,16 @@ class Companies extends Component {
   }
 
   makeTiles() {
-    return this.state.companies.map(item => (
-      <Card fluid key={item.key} href={`/company/${item.value}`} header={item.title} meta={item.type} description={item.description} />
-    ));
+    const companyList = this.state.results.length !== 0 ? this.state.results : this.state.companies;
+    return companyList.map(item => (
+      <Card fluid key={item.key} href={`/company/${item.value}`} meta={item.type} description={item.description} >
+        <Card.Content header={item.title} />
+        <Card.Content description={item.description} />
+        <Card.Content extra>
+          {item.hashTags}
+        </Card.Content>
+      </Card>
+    ));;
   }
   render() {
     const { isLoading, value, results } = this.state;
@@ -90,6 +103,7 @@ class Companies extends Component {
             results={results}
             value={value}
             resultRenderer={resultRenderer}
+            open={false}
           />
         </Grid.Row>
         <Grid.Row>
