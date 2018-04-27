@@ -99,7 +99,19 @@ function apply(cb, idJobs, SupplementaryAs) {
 }
 
 function deleteCompany(cb, idCompany) {
-  axios.post('/api/deleteCompany', {idCompany}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+  axios.post('/api/deleteCompany', { idCompany }, { headers: { Authorization: utils.getAuthToken() } })
+    .then(cb)
+    .catch(() => {
+      cb(false);
+    });
+}
+
+function getApplication(cb, idApplication) {
+  axios.post('/api/getApplication', { idApplication: idApplication }, { headers: { Authorization: utils.getAuthToken() } })
+    .then(cb)
+    .catch(() => {
+      cb(false);
+    });
 }
 
 module.exports = {
@@ -127,5 +139,9 @@ module.exports = {
   replyMessage,
   createMessage,
   apply,
+<<<<<<< HEAD
   deleteCompany,
+=======
+  getApplication,
+>>>>>>> 69dd1c19af99ddf456281ba795c9cadf5a489bae
 };

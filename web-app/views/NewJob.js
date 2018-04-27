@@ -320,7 +320,9 @@ class NewJob extends Component {
       if (!res) {
         console.log('Could not get student details');
       } else {
-        console.log('updated!')
+        console.log('updated!');
+        alert('Job created');
+        setTimeout(()=> this.props.history.push(`/company/${this.props.match.params.companyId}`), 1000);
       }
     }, this.state.jobInfo);
   }
