@@ -98,6 +98,9 @@ function apply(cb, idJobs, SupplementaryAs) {
   axios.post('/api/apply', {idJobs: idJobs, SupplementaryAs: SupplementaryAs}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
+function deleteCompany(cb, idCompany) {
+  axios.post('/api/deleteCompany', {idCompany}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+}
 
 module.exports = {
   getCompanyList,
@@ -123,5 +126,6 @@ module.exports = {
   getMessages,
   replyMessage,
   createMessage,
-  apply
+  apply,
+  deleteCompany,
 };

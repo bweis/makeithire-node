@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Grid, Loader } from 'semantic-ui-react';
+import { Grid, Loader, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { getCompanyDetails, getRecruiters, getEveryJobAndDetail } from '../helpers/api';
+import { getCompanyDetails, getRecruiters, getEveryJobAndDetail, updateCompanyDetails, deleteCompany } from '../helpers/api';
 
 import MenuContainer from '../containers/MenuContainer';
 import CompanyInfo from '../components/CompanyInfo';
@@ -12,6 +12,7 @@ class Company extends Component {
   constructor(props) {
     super(props);
     this.getCompanyComponent = this.getCompanyComponent.bind(this);
+    this.handleDeleteCompany = this.handleDeleteCompany.bind(this);
     this.companyId = this.props.match.params.companyId;
     this.state = {
       companyDetails: {},
@@ -77,6 +78,9 @@ class Company extends Component {
       return (
           <Grid centered columns={2}>
             <Recruiters companyRecruiters={this.state.companyRecruiters} headRecruiter={this.state.headRecruiter} {...this.props}/>
+            <Grid.Row>
+              <Button onClick={this.handleDeleteCompany} negative>Delete Company</Button>
+            </Grid.Row>
           </Grid>
       );
     } else if (this.props.user.isStudent) {
@@ -91,6 +95,17 @@ class Company extends Component {
           <JobListing {...this.props} jobs={this.state.jobs}/>
         </Grid>
     );
+  }
+
+  handleDeleteCompany() {
+    deleteCompany((res, err) => {
+      if (res) {
+        this.props.history.push('/home');
+      } else {
+        console.log(err);
+        console.log('COULD NOT DELETE');
+      }
+    }, this.companyId);
   }
 
   render() {
