@@ -15,8 +15,8 @@ function getApplicants(req, res) {
 }
 
 function getApplication(req, res) {
-    const sql = 'SELECT * FROM Application WHERE idUser = ?';
-    db.query(sql, req.body.idUser, (err, result) => {
+    const sql = 'SELECT * FROM Application WHERE idApplication = ?';
+    db.query(sql, req.body.idApplication, (err, result) => {
       if (err) {
         return res.status(400)
           .json({ error: err });
