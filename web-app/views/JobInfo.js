@@ -56,7 +56,7 @@ class JobInfo extends Component {
                 this.setState({jobDescr: res.data.response[0]});
             }
         });
-        
+
         getUserDetails((res) => {
                 if (res) {
                     if (res.data.response.idCompany != 0) {
@@ -216,10 +216,10 @@ class JobInfo extends Component {
                 <br />
                 {this.state.isRecruiter && <Grid centered>
                     <Grid.Column width={8}>
-                    <Form>
-                    <Form.Input label="Filter" name="filter" placeholder="filter" />
-                    <Button onClick={this.applyFilter}>Apply Filter</Button>
-                    </Form>
+                    {/*<Form>*/}
+                    {/*<Form.Input label="Filter" name="filter" placeholder="filter" />*/}
+                    {/*<Button onClick={this.applyFilter}>Apply Filter</Button>*/}
+                    {/*</Form>*/}
                     <Header size="medium">Applicants</Header>
                         {this.getApps()}
                     </Grid.Column>
