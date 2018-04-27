@@ -12,8 +12,8 @@ class AdminDashboard extends Component {
     console.log('Admin Dash', this.props);
     return (
       <Grid centered columns={2} padded>
-        <Statistics />
-        <Companies />
+        <Statistics {...this.props}/>
+        <Companies {...this.props}/>
       </Grid>
     );
   }

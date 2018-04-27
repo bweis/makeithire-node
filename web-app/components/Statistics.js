@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { getCompanyList } from '../helpers/api';
+import { getCompanyList, adminGetNumUsers,
+    adminGetNumJobs,
+    adminGetNumApplications,
+    adminNumCompany,
+    adminNumStudents } from '../helpers/api';
 
 import { Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-react';
 
@@ -7,14 +11,51 @@ class Statistics extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      companies: 5,
-      users: 40,
-      students: 30,
-      recruiters: 10,
-      applications: 0,
-      jobs: 5,
+      companies: '',
+      users: '',
+      students: '',
+      applications: '',
+      jobs: '',
     };
   }
+
+    componentDidMount() {
+        adminGetNumUsers((res) => {
+            if (!res) {
+                console.log('could not get users');
+            } else {
+                this.setState({users: res.data.response[0].num});
+            }
+        })
+        adminGetNumJobs((res) => {
+            if (!res) {
+                console.log('could not get jobs');
+            } else {
+                this.setState({jobs: res.data.response[0].num});
+            }
+        })
+        adminGetNumApplications((res) => {
+            if (!res) {
+                console.log('could not get applications');
+            } else {
+                this.setState({applications: res.data.response[0].num});
+            }
+        })
+        adminNumCompany((res) => {
+            if (!res) {
+                console.log('could not get compaines');
+            } else {
+                this.setState({companies: res.data.response[0].num});
+            }
+        })
+        adminNumStudents((res) => {
+            if (!res) {
+                console.log('could not get students');
+            } else {
+                this.setState({students: res.data.response[0].num});
+            }
+        })
+    }
 
   render() {
     return (
@@ -43,12 +84,6 @@ class Statistics extends Component {
             header='Students'
             meta='Number of Active Students'
             description={this.state.students}
-            raised
-          />
-          <Card
-            header='Recruiters'
-            meta='Number of Active Recruiters'
-            description={this.state.recruiters}
             raised
           />
         </Card.Group>
