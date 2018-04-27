@@ -139,9 +139,6 @@ module.exports = {
   replyMessage,
   createMessage,
   apply,
-<<<<<<< HEAD
   deleteCompany,
-=======
   getApplication,
->>>>>>> 69dd1c19af99ddf456281ba795c9cadf5a489bae
 };
