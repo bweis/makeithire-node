@@ -42,19 +42,18 @@ const LandingPage = () => (
       <Grid container stackable verticalAlign='middle'>
         <Grid.Row>
           <Grid.Column width={8}>
-            <Header as='h3' style={{ fontSize: '2em' }}>Lorem Ipsum</Header>
+            <Header as='h3' style={{ fontSize: '2em' }}>Who We Are</Header>
             <p style={{ fontSize: '1.33em' }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tempor dolor a urna semper egestas.
-              In hac habitasse platea dictumst. Duis porta ex ac justo egestas placerat. Donec at ante porttitor,
-              facilisis orci eu, pulvinar erat. Aliquam sollicitudin odio vitae magna dictum finibus. Sed placerat
-              congue augue sed pharetra. Praesent tempus malesuada sem. Donec scelerisque finibus elementum.
+              MakeItHire is an American worldwide employment-related search engine for job listings,
+              launched in April 2018 and is headquartered in West Lafayette, IN.
             </p>
-            <Header as='h3' style={{ fontSize: '2em' }}>Lorem Ipsum</Header>
+            <Header as='h3' style={{ fontSize: '2em' }}>Features</Header>
             <p style={{ fontSize: '1.33em' }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tempor dolor a urna semper egestas.
-              In hac habitasse platea dictumst. Duis porta ex ac justo egestas placerat. Donec at ante porttitor,
-              facilisis orci eu, pulvinar erat. Aliquam sollicitudin odio vitae magna dictum finibus. Sed placerat
-              congue augue sed pharetra. Praesent tempus malesuada sem. Donec scelerisque finibus elementum.
+              -Apply With Once Click
+              <br />
+              -Say goodbye to long applications. Upload your resume and apply to jobs in a click or a tap.
+              <br />
+              -Now with Live Chat!
             </p>
           </Grid.Column>
           <Grid.Column floated='right' width={6}>
