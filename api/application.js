@@ -58,6 +58,7 @@ function apply(req, res) {
 }
 
 module.exports = {
+  getApplication,
   getApplicants,
   apply
 };
