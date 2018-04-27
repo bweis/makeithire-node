@@ -7,7 +7,7 @@ const generator = require('generate-password');
 // Adds recruiter and sends email with info
 function adminAddRecruiter(req, res) {
   // Validate Email Format
-  if (!validateEmail(req.body.EmailID)) {
+  if (!validateEmail(req.user.EmailID)) {
     res.status(400)
       .json({ error: 'Bad Email Format' });
   }
