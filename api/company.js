@@ -21,6 +21,16 @@ function getCompanyDetails(req, res) {
   });
 }
 
+function adminDeleteCompany(req, res) {
+  const sql = 'DELETE FROM Company WHERE idCompany = ?';
+  db.query(sql, req.body.idCompany, (err, result) => {
+    if (err) {
+      return res.status(400).json({ message: err });
+    }
+    return res.status(200).json({ message: 'Success', response: result[0] });
+  });
+}
+
 // POST: Update Company Details
 function updateCompanyDetails(req, res) {
   const companyname = req.body.CompanyName;
