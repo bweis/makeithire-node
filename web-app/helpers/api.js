@@ -94,7 +94,7 @@ function createMessage(cb, idStudent, message) {
   axios.post('/api/createMessage', {StudentID: idStudent, Message: message}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
-function apply(cb, idJob, SupplementaryAs) {
+function apply(cb, idJobs, SupplementaryAs) {
   axios.post('/api/apply', {idJobs: idJobs, SupplementaryAs: SupplementaryAs}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 

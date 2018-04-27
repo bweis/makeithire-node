@@ -24,25 +24,25 @@ function apply(req, res) {
     }
     else {
       userId = result[0].idUser;
+      var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      const post = {
+        idUser : userId,
+        idJobs : req.body.idJobs,
+        SubmissionDate : currDate,
+        SupplementaryAs : req.body.SupplementaryAs
+      }
+      const sql = "INSERT INTO Application SET ?";
+      db.query(sql , post, (err, result) => {
+        if (err) {
+          return res.status(400)
+              .json({ error: err });
+        }
+        return res.status(200)
+            .json({ message: 'Success', response: result });
+      });
     }
   });
-  
-  var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const post = {
-    idUser : userId,
-    idJobs : req.body.idJobs,
-    SubmissionDate : currDate,
-    SupplementaryAs : req.body.SupplementaryAs
-  }
-  const sql = "INSERT INTO Application SET ?";
-    db.query(sql , post, (err, result) => {
-    if (err) {
-      return res.status(400)
-        .json({ error: err });
-    }
-    return res.status(200)
-      .json({ message: 'Success', response: result });
-  });
+
 }
 
 module.exports = {
