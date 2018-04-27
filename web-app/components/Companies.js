@@ -54,7 +54,8 @@ class Companies extends Component {
 
       const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
       const isMatch = result => re.test(result.title);
-      console.log(this.state.companies);
+      console.log('companies', this.state.companies);
+      console.log('filtered', _.filter(this.state.companies, isMatch));
       this.setState({
         isLoading: false,
         results: _.filter(this.state.companies, isMatch),
