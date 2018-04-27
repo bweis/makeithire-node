@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import MenuContainer from '../containers/MenuContainer';
 
-import {getCompanyDetails, getJobDetails, getApplicants, getUserDetails, createMessage, getStudentChats, getRecruiterChats} from '../helpers/api'
+import {getCompanyDetails, getJobDetails, getApplicants, getUserDetails, createMessage, getStudentChats, getRecruiterChats, apply} from '../helpers/api'
 
 class JobInfo extends Component {
 
@@ -16,6 +16,7 @@ class JobInfo extends Component {
         this.getApps = this.getApps.bind(this);
         this.apply = this.apply.bind(this);
         this.chat = this.chat.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             isRecruiter: true,
             jobDescr: {
@@ -31,6 +32,7 @@ class JobInfo extends Component {
             companyName: "",
             applicants: [],
             filter: '',
+            applied: true
         };
         if (this.state.isRecruiter) {
             console.log('is recruiter');
@@ -60,6 +62,8 @@ class JobInfo extends Component {
                     if (res.data.response.idCompany != 0) {
                         console.log('recruiter');
                         this.setState({isRecruiter: true, userInfo: res.data.response})
+                    } else {
+                        this.setState({isRecruiter: false, userInfo: res.data.response});
                     }
                 }
             });
@@ -72,7 +76,19 @@ class JobInfo extends Component {
                 console.log('could not get applicants')
             } else {
                 console.log('get applicants ' + res.data.response);
-                this.setState({applicants: res.data.response})
+                var applicants = res.data.response;
+                var found = false;
+                for (var i = 0; i < applicants.length; i++) {
+                    if (applicants[i].idUser == this.state.userInfo.idUser) {
+                        console.log('already applied');
+                        found = true;
+                        this.setState({applied: true, applicants: res.data.response, SupplementaryA: applicants[i].SupplementaryAs});
+                        break;
+                    }
+                }
+                if (!found) {
+                    this.setState({applicants: res.data.response, isRecruiter: false, applied: false});
+                }
             }
         }, idJob)
 
@@ -98,6 +114,10 @@ class JobInfo extends Component {
              </Card>
          ));
 
+    }
+
+    handleChange(e, { value }) {
+        this.setState({SupplementaryA: value});
     }
 
     componentDidMount() {
@@ -129,8 +149,15 @@ class JobInfo extends Component {
     }
 
     apply() {
-        console.log('apply');
+        apply((res) => {
+            if (!res) {
+                console.log('could not apply');
+            } else {
+                alert('applied');
+                this.setState({applied: true});
 
+            }
+        }, this.props.match.params.jobId, this.state.SupplementaryA);
     }
 
     chat(idStudent, firstName) {
@@ -183,8 +210,8 @@ class JobInfo extends Component {
                                    value={this.state.jobDescr.Description} name='description' readOnly/>
                     <Form.Input label='Tags' placeholder='Tags' name='tags' value={this.state.jobDescr.Tags} readOnly/>
                     {this.state.jobDescr.SupplementaryQs && <h3>Supplementary Question</h3>}
-                    {this.state.jobDescr.SupplementaryQs && <Form.TextArea label={this.state.jobDescr.SupplementaryQs} name="SupplementaryA" />}
-                    {!this.state.isRecruiter && <Button positive icon='checkmark' labelPosition='right' content='Apply' onClick={this.apply}/>}
+                    {this.state.jobDescr.SupplementaryQs && <Form.TextArea label={this.state.jobDescr.SupplementaryQs} name="SupplementaryA" readOnly={this.state.applied} onChange={this.handleChange} value={this.state.SupplementaryA}/>}
+                    {(!this.state.isRecruiter && !this.state.applied) ? <Button positive idjob={this.props.match.params.jobId} onClick={this.apply}>Apply</Button> : <Button positive idjob={this.props.match.params.jobId} disabled>Applied</Button>}
                 </Form>
                 <br />
                 {this.state.isRecruiter && <Grid centered>
