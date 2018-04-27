@@ -14,6 +14,18 @@ function getApplicants(req, res) {
   });
 }
 
+function getApplication(req, res) {
+    const sql = 'SELECT * FROM Application WHERE idUser = ?';
+    db.query(sql, req.body.idUser, (err, result) => {
+      if (err) {
+        return res.status(400)
+          .json({ error: err });
+      }
+      return res.status(200)
+        .json({ message: 'Success', response: result });
+    });
+}
+
 function apply(req, res) {
   var userId;
   const sqlId = 'Select idUser FROM User WHERE EmailID = \'' + req.user.EmailID +'\'';
@@ -46,6 +58,7 @@ function apply(req, res) {
 }
 
 module.exports = {
+  getApplication,
   getApplicants,
   apply
 };

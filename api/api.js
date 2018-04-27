@@ -54,6 +54,7 @@ apiRouter.post('/editJobPosting', job.editJobPosting);
 // Application Routes
 apiRouter.post('/getApplicants', application.getApplicants);
 apiRouter.post('/apply/', application.apply);
+apiRouter.post('/getApplication/', application.getApplication);
 
 // Data Routes
 apiRouter.get('/getMajors', data.getMajors);
