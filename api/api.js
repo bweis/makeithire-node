@@ -64,6 +64,11 @@ apiRouter.get('/getCompanyList', data.getCompanyList);
 // Admin Routes
 apiRouter.post('/adminAddRecruiter', admin.adminAddRecruiter);
 apiRouter.post('/adminDeleteRecruiter', admin.adminDeleteRecruiter);
+apiRouter.get('/adminGetNumUsers', admin.adminGetNumUsers);
+apiRouter.get('/adminGetNumJobs', admin.adminGetNumJobs);
+apiRouter.get('/adminGetNumApplications', admin.adminGetNumApplications);
+apiRouter.get('/adminNumCompany', admin.adminNumCompany);
+apiRouter.get('/adminNumStudents', admin.adminNumStudents);
 
 // Chat Routes
 apiRouter.post('/createMessage', chat.createMessage);

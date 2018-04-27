@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const generator = require('generate-password');
 
-
 // Adds recruiter and sends email with info
 function adminAddRecruiter(req, res) {
   // Validate Email Format
@@ -100,7 +99,67 @@ function adminDeleteRecruiter(req, res) {
   });
 }
 
+function adminGetNumUsers(req, res) {
+  const sql = 'SELECT COUNT(*) AS num FROM User';
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
+    }
+
+    return res.status(200).json({ message: 'Success', response: result });
+  });
+}
+
+function adminGetNumJobs(req, res) {
+  var sql = 'SELECT COUNT(*) AS num FROM Jobs'
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
+    }
+
+    return res.status(200).json({ message: 'Success', response: result });
+  });
+}
+
+function adminGetNumApplications(req, res) {
+  const sql = 'SELECT COUNT(*) AS num FROM Application'
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
+    }
+
+    return res.status(200).json({ message: 'Success', response: result });
+  });
+}
+
+function adminNumCompany(req, res) {
+  const sql = 'SELECT COUNT(*) AS num FROM Company'
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
+    }
+
+    return res.status(200).json({ message: 'Success', response: result });
+  });
+}
+
+function adminNumStudents(req, res) {
+  const sql = 'SELECT COUNT(*) AS num FROM Student'
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err });
+    }
+
+    return res.status(200).json({ message: 'Success', response: result });
+  });
+}
+
 module.exports = {
   adminAddRecruiter,
   adminDeleteRecruiter,
+  adminGetNumUsers,
+  adminGetNumJobs,
+  adminGetNumApplications,
+  adminNumCompany,
+  adminNumStudents
 };
