@@ -21,7 +21,7 @@ function getCompanyDetails(req, res) {
   });
 }
 
-function adminDeleteCompany(req, res) {
+function deleteCompany(req, res) {
   const sql = 'DELETE FROM Company WHERE idCompany = ?';
   db.query(sql, req.body.idCompany, (err, result) => {
     if (err) {
@@ -83,4 +83,5 @@ module.exports = {
   getAllCompaniesWithJobs,
   getCompanyDetails,
   updateCompanyDetails,
+  deleteCompany,
 };

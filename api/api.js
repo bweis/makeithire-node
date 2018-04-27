@@ -42,6 +42,7 @@ apiRouter.get('/getRecruiters/:idCompany', recruiter.getRecruiters);
 apiRouter.get('/getAllCompaniesWithJobs', company.getAllCompaniesWithJobs);
 apiRouter.get('/getCompanyDetails/:idCompany', company.getCompanyDetails);
 apiRouter.post('/updateCompanyDetails', company.updateCompanyDetails);
+apiRouter.post('/deleteCompany', company.deleteCompany);
 
 // Job Routes
 apiRouter.get('/getAllJobs', job.getAllJobs);
