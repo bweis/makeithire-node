@@ -82,6 +82,14 @@ function getStudentChats(cb) {
   axios.post('/api/getStudentChats', {}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
+function getMessages(cb, idChat) {
+  axios.post('/api/getMessages', {idChat: idChat}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+}
+
+function replyMessage(cb, idChat, message) {
+  axios.post('/api/replyMessage', {idChat: idChat, Message: message}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); })
+}
+
 
 
 module.exports = {
@@ -105,4 +113,6 @@ module.exports = {
   getCompanyJobs,
   getRecruiterChats,
   getStudentChats,
+  getMessages,
+  replyMessage
 };
