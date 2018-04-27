@@ -6,6 +6,10 @@ import axios from 'axios/index';
 
 import MenuContainer from '../containers/MenuContainer';
 
+let idChat = '';
+let them = '';
+let me = '';
+
 const c = [
     {
         company: 'Salesforce',
@@ -171,13 +175,27 @@ export default class Chat extends Component {
     }
 
     getMessages(chat) {
+        if (chat) {
+            idChat = chat.idChat;
+            them = (this.state.userInfo.idCompany == 0) ? chat.RecruiterFirstName : chat.StudentFirstName;
+            me = this.state.userInfo.FirstName;
+        } else {
+            var rec = (this.state.userInfo.idCompany == 0) ? me : them;
+            var s = (rec == me ) ? them : me;
+            chat = {
+                idChat: idChat,
+                RecruiterFirstName: rec,
+                StudentFirstName: me
+            }
+        }
         console.log('getMessages - chat id: ' + chat.idChat);
-        var them = (this.state.userInfo.idCompany == 0) ? chat.RecruiterFirstName : chat.StudentFirstName;
-        var me = this.state.userInfo.FirstName;
+        var t = them
+        var m = me;
         getMessages((res) => {
             if (!res) {
                 console.log('Cannot get messages');
             } else {
+                setTimeout(this.getMessages, 1000);
                 this.setState({ messages: res.data.response, selectedChat: chat.idChat, chatSelected: true, myName: me, theirName: them});
             }
         }, chat.idChat);
