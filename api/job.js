@@ -106,7 +106,7 @@ function getEveryJobAndDetail(req, res) {
         .json({ error: err });
     }
     else {
-      var sql2 = 'SELECT B.idJobs, B.JobName, B.Description, C.CompanyName, B.DateAdded, B.Deadline, B.Tags, B.SupplementaryQs, B.idApplication FROM (Select J.idJobs, JobName, Description, idCompany, DateAdded, Deadline, Tags, SupplementaryQs, idApplication FROM Jobs AS J LEFT JOIN (SELECT * FROM Application WHERE idUser = ' + result[0].idUser + ') AS A ON A.idJobs = J.idJobs) AS B INNER JOIN Company AS C ON C.idCompany = B.idCompany'
+      var sql2 = 'SELECT B.idJobs, B.JobName, B.Description, C.CompanyName, C.idCompany, B.DateAdded, B.Deadline, B.Tags, B.SupplementaryQs, B.idApplication FROM (Select J.idJobs, JobName, Description, idCompany, DateAdded, Deadline, Tags, SupplementaryQs, idApplication FROM Jobs AS J LEFT JOIN (SELECT * FROM Application WHERE idUser = ' + result[0].idUser + ') AS A ON A.idJobs = J.idJobs) AS B INNER JOIN Company AS C ON C.idCompany = B.idCompany'
       db.query(sql2, (err2, result2) => {
         if (err) {
           return res.status(400)
