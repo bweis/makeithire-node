@@ -82,7 +82,8 @@ class Home extends Component {
     for (let i = 0; i < jobs.length; i++) {
       if (jobs[i].idJobs == idjob) {
         if (jobs[i].SupplementaryQs == '') {
-          apply(jobs[i].idJobs);
+            console.log('in showSupp ' + jobs[i].idJobs);
+          this.apply(jobs[i].idJobs);
           break;
         } else {
           const stateVars = {
@@ -98,32 +99,48 @@ class Home extends Component {
   }
 
   apply(idJobs) {
+      console.log('in apply: ' + idJobs);
     apply((res) => {
       if (!res) {
         console.log('Could not apply for job');
       } else {
         console.log('Applied');
+          var j = this.state.jobs;
+          for (var i = 0; i < j.length; i++) {
+              if (j[i].idJobs == idJobs) {
+                  j[i].idApplication = 1;
+                  break;
+              }
+          }
+          this.setState({jobs: j});
       }
-    });
+    }, idJobs, "");
   }
 
   suppApply() {
     const jobs = this.state.jobs;
-    for (let i = 0; i < jobs.length; i++) {
-      if (jobs[i].idJobs == this.state.idJob) {
-        jobs[i].applied = 1;
-        console.log(`suppApply: ${this.state.supplementaryA}`);
-        const stateVars = {
-          jobs,
-          idJob: '',
-          openModal: false,
-          supplementaryQ: '',
-          supplementaryA: '',
-        };
-        this.setState(stateVars);
-        break;
-      }
-    }
+      console.log(this.state.idJob);
+      apply((res) => {
+          if (!res) {
+              console.log('could not apply');
+          } else {
+              console.log('applied');
+              var j = this.state.jobs;
+              for (var i = 0; i < j.length; i++) {
+                  if (j[i].idJobs == this.state.idJob) {
+                      j[i].idApplication = 1;
+                      break;
+                  }
+              }
+              this.setState({
+                  jobs: j,
+                  idJob: '',
+                  openModal: false,
+                  supplementaryQ: '',
+                  supplementaryA: '',
+              });
+          }
+      }, this.state.idJob, this.state.supplementaryA);
   }
 
   handleChange(e, { name, value }) {
