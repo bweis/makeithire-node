@@ -90,7 +90,11 @@ function replyMessage(cb, idChat, message) {
   axios.post('/api/replyMessage', {idChat: idChat, Message: message}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
-function apply(cb, idJob, SupplementaryAs) {
+function createMessage(cb, idStudent, message) {
+  axios.post('/api/createMessage', {StudentID: idStudent, Message: message}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
+}
+
+function apply(cb, idJobs, SupplementaryAs) {
   axios.post('/api/apply', {idJobs: idJobs, SupplementaryAs: SupplementaryAs}, {headers: { Authorization: utils.getAuthToken()} }).then(cb).catch(() => {cb(false); });
 }
 
@@ -118,5 +122,6 @@ module.exports = {
   getStudentChats,
   getMessages,
   replyMessage,
+  createMessage,
   apply
 };

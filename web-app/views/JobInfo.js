@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import MenuContainer from '../containers/MenuContainer';
 
-import {getCompanyDetails, getJobDetails, getApplicants, getUserDetails} from '../helpers/api'
+import {getCompanyDetails, getJobDetails, getApplicants, getUserDetails, createMessage, getStudentChats, getRecruiterChats} from '../helpers/api'
 
 class JobInfo extends Component {
 
@@ -15,6 +15,7 @@ class JobInfo extends Component {
         console.log(this.props.match.params.jobId);
         this.getApps = this.getApps.bind(this);
         this.apply = this.apply.bind(this);
+        this.chat = this.chat.bind(this);
         this.state = {
             isRecruiter: true,
             jobDescr: {
@@ -25,6 +26,7 @@ class JobInfo extends Component {
                 Tags: '',
                 SupplementaryQs: ''
             },
+            userInfo: {},
             SupplementaryA: '',
             companyName: "",
             applicants: [],
@@ -57,7 +59,7 @@ class JobInfo extends Component {
                 if (res) {
                     if (res.data.response.idCompany != 0) {
                         console.log('recruiter');
-                        this.state.isRecruiter = true;
+                        this.setState({isRecruiter: true, userInfo: res.data.response})
                     }
                 }
             });
@@ -86,9 +88,7 @@ class JobInfo extends Component {
                             {item.FirstName + ' ' + item.LastName}
                         </Grid.Column>
                         <Grid.Column width={6}>
-                            <Link to="/chat">
-                                <Icon name="comment" size="large" style={{float: "right"}}/>
-                            </Link>
+                            <Button icon="comment" style={{float: "right"}} onClick={() => this.chat(item.idUser, item.FirstName)}/>
                         </Grid.Column>
                     </Grid>
                 </Card.Header>
@@ -100,6 +100,29 @@ class JobInfo extends Component {
 
     }
 
+    componentDidMount() {
+        if (this.state.userInfo) {
+            console.log("getChats: " + this.state.userInfo);
+            if (this.state.userInfo.idCompany == 0) {
+                getStudentChats((res) => {
+                    if (!res) {
+                        console.log('Could not get student chats');
+                    } else {
+                        this.setState({chats: res.data.response});
+                    }
+                })
+            } else {
+                getRecruiterChats((res) => {
+                    if (!res) {
+                        console.log('Could not get recruiter chats');
+                    } else {
+                        this.setState({chats: res.data.response});
+                    }
+                })
+            }
+        }
+    }
+
     applyFilter() {
        alert('Rajat Srivastava');
 
@@ -107,6 +130,35 @@ class JobInfo extends Component {
 
     apply() {
         console.log('apply');
+
+    }
+
+    chat(idStudent, firstName) {
+        var found = false;
+        for (var i = 0; i < this.state.chats.length; i++) {
+            if (this.state.chats[i].StudentID == idStudent) {
+                this.props.history.push('/chat');
+                found = true;
+            }
+        }
+        if (!found) {
+            var message = `Hi ${firstName}, this is ${this.state.userInfo.FirstName} ${this.state.userInfo.LastName} from ${this.state.companyName} and I would like to speak with you regarding the ${this.state.jobDescr.JobName} position you applied for.`;
+            alert('sending message:');
+            createMessage((res) => {
+                if (!res) {
+                    console.log('could not send message');
+                } else {
+                    alert('message sent');
+                    var c = this.state.chats;
+                    var temp = {
+                        StudentID: idStudent,
+                        RecruiterID: this.state.userInfo.idUser,
+                    }
+                    c.push(temp);
+                    this.setState({chats: c});
+                }
+            }, idStudent, message);
+        }
 
     }
 

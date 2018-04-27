@@ -9,7 +9,7 @@ function replyMessage(req, res) {
     if (err1) {
       return res.status(400).json({ error: err1 });
     }
-    var currDate = new Date.UTC().toISOString().slice(0, 19).replace('T', ' ');
+    var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const post = { idChat: req.body.idChat, Message: req.body.Message, Timestamp: currDate, idUser: result[0].idUser }
     var sql2 = 'INSERT INTO Message SET ?'
     db.query(sql2, post, (err2, result2) => {
@@ -34,7 +34,7 @@ function createMessage(req, res) {
       if (err2) {
         return res.status(400).json({ error: err2 });
       }
-      var currDate = new Date.UTC().toISOString().slice(0, 19).replace('T', ' ');
+      var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
       var sql3 = 'INSERT INTO Message SET ?'
       const post3 = { idChat: result2.insertId, Message: req.body.Message, Timestamp: currDate, idUser: result[0].idUser }
       db.query(sql3, post3, (err3, result3) => {
