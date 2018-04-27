@@ -40,6 +40,8 @@ class MenuContainer extends Component {
   }
   render() {
     const { children, loggedIn } = this.props;
+    const student = this.props.user.isStudent;
+    console.log(this.props);
     return (
       <div>
         <Segment textAlign='center' style={{ padding: '0em 0em' }} vertical>
@@ -47,10 +49,8 @@ class MenuContainer extends Component {
             <Container>
               <Menu.Item><img alt='Logo' src='/img/logo.png' /></Menu.Item>
               {loggedIn ? this.createNavItem('Home', '/home') : null}
-              {loggedIn ? this.createNavItem('Profile', '/profile') : null}
-              {loggedIn ? this.createNavItem('ChatView', '/chatview') : null}
-              {loggedIn ? this.createNavItem('Job', '/job') : null}
               {loggedIn ? this.createNavItem('Chat', '/chat') : null}
+              {(student && loggedIn) ? this.createNavItem('Profile', '/profile') : null}
               {loggedIn ? logoutMenuItem : loginMenuItem}
             </Container>
           </Menu>

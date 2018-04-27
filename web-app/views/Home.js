@@ -163,7 +163,7 @@ class Home extends Component {
       return (
         <Loader size='massive' style={{ marginTop: '4em' }} active inline='centered'>Loading Content</Loader>);
     } else if (this.props.user.isHeadRecruiter) {
-      return (<Link to={`/company/${this.props.user.idCompany}`}>My Company Page</Link>);
+      this.props.history.push(`/company/${this.props.user.idCompany}`);
     } else if (this.props.user.isAdmin) {
       return (<AdminDashboard />);
     } else if (this.props.user.isStudent) {
@@ -206,7 +206,7 @@ class Home extends Component {
           {jobListItems}
         </Grid>);
     }
-    return (<Link to={`/company/${this.props.user.idCompany}`}>My Company Page</Link>);
+      this.props.history.push(`/company/${this.props.user.idCompany}`);
   }
 
   render() {
