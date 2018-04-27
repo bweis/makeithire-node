@@ -7,7 +7,7 @@ import { Loader, Grid, Header, Card, Button, Modal, Input } from 'semantic-ui-re
 import MenuContainer from '../containers/MenuContainer';
 import AdminDashboard from '../views/AdminDashboard';
 
-import {getEveryJobAndDetail} from '../helpers/api'
+import {getEveryJobAndDetail, apply} from '../helpers/api'
 
 
 class Home extends Component {
@@ -46,11 +46,8 @@ class Home extends Component {
         var jobs = this.state.jobs;
         for (var i = 0; i < jobs.length; i++) {
             if (jobs[i].idJobs == idjob) {
-                if (jobs[i].SupplementaryQs == "None" || jobs[i].SupplementaryQs == "No Supp Questions") {
-                    //apply();
-                    jobs[i].applied = 1;
-                    console.log('apply no supp->');
-                    this.setState({jobs: jobs});
+                if (jobs[i].SupplementaryQs == "") {
+                    apply(jobs[i].idJobs);
                     break;
 
                 } else {
@@ -60,9 +57,20 @@ class Home extends Component {
                         idJob: idjob,
                     };
                     this.setState(stateVars);
+                    break;
                 }
             }
         }
+    }
+
+    apply(idJobs) {
+        apply((res) => {
+            if (!res) {
+                console.log('Could not apply for job');
+            } else {
+                console.log('Applied');
+            }
+        })
     }
 
     suppApply() {
@@ -121,7 +129,7 @@ class Home extends Component {
                   Deadline: {job.Deadline}
                 </Grid.Column>
                 <Grid.Column width={3}>
-                    {job.applied == 1 ? <Button positive idjob={job.idJobs} disabled>Applied</Button> : <Button primary idjob={job.idJobs} onClick={this.showSupp}>Apply</Button>}
+                    {job.idApplication == null ? <Button primary idjob={job.idJobs} onClick={this.showSupp}>Apply</Button> : <Button positive idjob={job.idJobs} disabled>Applied</Button>}
                 </Grid.Column>
               </Grid.Row>
           );

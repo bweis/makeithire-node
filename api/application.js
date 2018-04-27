@@ -26,11 +26,11 @@ function apply(req, res) {
       userId = result[0].idUser;
     }
   });
+  var currDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const post = {
-    idApplication : req.body.idApplication,
     idUser : userId,
-    idJob : req.body.idJob,
-    SubmissionDate : req.body.SubmissionDate,
+    idJobs : req.body.idJobs,
+    SubmissionDate : currDate,
     SupplementaryAs : req.body.SupplementaryAs
   }
   const sql = "INSERT INTO Application SET ?";
