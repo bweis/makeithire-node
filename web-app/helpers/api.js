@@ -114,6 +114,25 @@ function getApplication(cb, idApplication) {
     });
 }
 
+function adminGetNumUsers(cb) {
+  axios.get('/api/adminGetNumUsers',{ headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); }).then(cb).catch(() => { cb(false); });
+}
+function adminGetNumJobs(cb) {
+  axios.get('/api/adminGetNumJobs', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); }).then(cb).catch(() => { cb(false); });
+}
+
+function adminGetNumApplications(cb) {
+  axios.get('/api/adminGetNumApplications', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); }).then(cb).catch(() => { cb(false); });
+}
+
+function adminNumCompany(cb) {
+  axios.get('/api/adminNumCompany', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); }).then(cb).catch(() => { cb(false); });
+}
+
+function adminNumStudents(cb) {
+  axios.get('/api/adminNumStudents', { headers: { Authorization: utils.getAuthToken() } }).then(cb).catch(() => { cb(false); }).then(cb).catch(() => { cb(false); });
+}
+
 module.exports = {
   getCompanyList,
   getUserDetails,
@@ -141,4 +160,9 @@ module.exports = {
   apply,
   deleteCompany,
   getApplication,
+  adminGetNumUsers,
+  adminGetNumJobs,
+  adminGetNumApplications,
+  adminNumCompany,
+  adminNumStudents
 };

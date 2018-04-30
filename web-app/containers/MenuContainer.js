@@ -40,7 +40,8 @@ class MenuContainer extends Component {
   }
   render() {
     const { children, loggedIn } = this.props;
-    const student = this.props.user.isStudent;
+    const profile = this.props.user.isStudent && !this.props.user.isAdmin;
+    const chat = !this.props.user.isAdmin;
     console.log(this.props);
     return (
       <div>
@@ -49,8 +50,8 @@ class MenuContainer extends Component {
             <Container>
               <Menu.Item><img alt='Logo' src='/img/logo.png' /></Menu.Item>
               {loggedIn ? this.createNavItem('Home', '/home') : null}
-              {loggedIn ? this.createNavItem('Chat', '/chat') : null}
-              {(student && loggedIn) ? this.createNavItem('Profile', '/profile') : null}
+              {(chat && loggedIn) ? this.createNavItem('Chat', '/chat') : null}
+              {(profile && loggedIn) ? this.createNavItem('Profile', '/profile') : null}
               {loggedIn ? logoutMenuItem : loginMenuItem}
             </Container>
           </Menu>
